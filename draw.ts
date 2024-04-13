@@ -1,7 +1,9 @@
-import { Canvas } from "./game";
+
+import { Canvas } from "./canvas";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 
+export type Colors = "green" | "blue" | "lightgrey" | "lightgreen";
 export class Draw {
   static clear(canvas: Canvas) {
     canvas.clear();
@@ -22,9 +24,9 @@ export class Draw {
     })
   }
 
-  static drawFilledRectangle(cells: GridCell[], canvas: Canvas) {
+  static drawFilledRectangle(cells: GridCell[], canvas: Canvas, color: Colors = "green") {
     cells.forEach(cell => {
-      canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})));
+      canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
     })
   }
 }
