@@ -43,30 +43,13 @@ export class Canvas {
   drawFilledPolygon(points: Coords[]) {
     console.log(points);
     const region = new Path2D();
-    region.moveTo(points[0].x, points[0].y);
+    points[0] && region.moveTo(points[0].x, points[0].y);
     points.slice(1).forEach(p => {
       region.lineTo(p.x, p.y);
     });
-    // region.lineTo(points[0].x, points[0].y);
     region.closePath();
     this.ctx.fillStyle = "green";
     this.ctx.fill(region);
-
-    // this.test();
-  }
-
-  private test() {
-    const region = new Path2D();
-    region.moveTo(30, 90);
-    region.lineTo(110, 20);
-    region.lineTo(240, 130);
-    region.lineTo(60, 130);
-    region.lineTo(190, 20);
-    region.lineTo(270, 90);
-    region.closePath();
-
-    this.ctx.fillStyle = "green";
-    this.ctx.fill(region, "evenodd");
   }
 
   clear() {
@@ -85,19 +68,25 @@ export class Canvas {
     return y + this.screen.y;
   }
 }
+
 const game = new Game(30,30);
-const canvas = new Canvas((x, y) => {
+
+const clickHandler = (x: number, y: number) => {
   const closest = game.grid.closestPoint(x, y);
   closest
     ? console.log(`found: x: ${closest.x} y: ${closest.y}`)
     : console.log('none found');
   if (closest) {
-    game.grid.grid[closest.y][closest.x].isFilled = !game.grid.grid[closest.y][closest.x].isFilled;
+    closest.isFilled = !closest.isFilled;
   }
-  const filled = game.grid.grid.flat().filter(cell => cell.isFilled);
+  const filled = game.grid.gridCells.flat().filter(cell => cell.isFilled);
   Draw.clear(canvas);
-  Draw.drawFilledRectangle(filled, game.grid.grid, canvas);
+  Draw.drawFilledRectangle(filled, canvas);
   drawGrid();
-}, {x: 0, y: 0});
-const drawGrid = () => Draw.drawGrid(game.grid.grid, canvas);
+};
+
+const initialScreenPosition = {x: 0, y: 0};
+
+const canvas = new Canvas(clickHandler, initialScreenPosition);
+const drawGrid = () => Draw.drawGrid(game.grid.gridPoints, canvas);
 drawGrid();

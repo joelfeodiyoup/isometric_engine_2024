@@ -1,50 +1,55 @@
+import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Isometric } from "./isometric";
 
 export class Grid {
-  public readonly grid: GridPoint[][];
+  public readonly gridPoints: GridPoint[][];
+  public readonly gridCells: GridCell[][];
   private isometric: Isometric;
   constructor(width: number, height: number) {
     this.isometric = new Isometric()
-    this.grid = Array.from(Array(height), (_, row) => {
+
+    this.gridPoints = Array.from(Array(height), (_, row) => {
       return Array.from(Array(width), (_, col) => {
         const cell = new GridPoint(col, row, this.isometric);
         return cell;
       });
     });
-  }
 
-  private closestViaIntersection(x: number, y: number, grid: GridPoint[][]) {
-    const possibleClosest = this.grid.flat().filter(cel => {
-      const neighbours = cel.hasFourNeighbours(grid);
-      if (!neighbours) {
-        return false;
-      }
-      const isWithinBoundingCorners = neighbours.topLeft.coords.x < x
-        && neighbours.bottomRight.coords.x > x
-        && neighbours.bottomLeft.coords.y > y // y counts from top of screen. Value increases as we go down the screen
-        && neighbours.topRight.coords.y < y;
+    this.gridCells = this.gridPoints.map(row => {
+      return row.reduce((gridCells, gridPoint) => {
+        const topLeft = gridPoint;
+        const topRight = gridPoint.neighbours(this.gridPoints).east;
+        const bottomLeft = gridPoint.neighbours(this.gridPoints).south;
+        const bottomRight = bottomLeft?.neighbours(this.gridPoints).east;
+
+        if (!topLeft || !topRight || !bottomLeft || !bottomRight) {
+          return gridCells;
+        }
+
+        gridCells.push(new GridCell(topLeft, topRight, bottomLeft, bottomRight, gridPoint.x, gridPoint.y));
+        return gridCells;
+      }, [] as GridCell[])
+    })
+  }
+  
+  closestPoint(x: number, y: number) {
+    // the tricky thing in finding the closest point is that the edges of the cell
+    // can be weird shapes due to the heigh differences at the edges
+
+    // first go through each grid cell and just find the ones it could potentially be.
+    const withinBoundingCell = this.gridCells.flat().filter(cell => {
+      const isWithinBoundingCorners = cell.topLeft.coords.x < x
+        && cell.bottomRight.coords.x > x
+        && cell.bottomLeft.coords.y > y
+        && cell.topRight.coords.y < y;
       return isWithinBoundingCorners;
     });
-    const found = possibleClosest.filter(cell => {
-      return cell.isPointInsideCell({x, y}, grid);
+
+    // now for each of these, do a more thorough check on the boundaries of the cell
+    const isEntirelyWithinCell = withinBoundingCell.find(cell => {
+      return cell.isPointInsideCell({x, y});
     });
-    return found[0];
-  }
-
-  closestPoint(x: number, y: number) {
-    return this.closestViaIntersection(x, y, this.grid);
-    // const closest = this.grid.find(row => {
-    //   const c = row.find(cel => {
-    //     return x > cel.coords.x && y > cel.coords.y
-    //   });
-    //   return c;
-    // });
-
-    // const c = this.grid.reduce((closest, row) => {
-      
-    // }, null as null | GridPoint)
-    // const closest = this.isometric.inverse(x, y);
-    // return closest;
+    return isEntirelyWithinCell;
   }
 }

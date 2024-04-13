@@ -1,4 +1,5 @@
 import { Canvas } from "./game";
+import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 
 export class Draw {
@@ -21,15 +22,9 @@ export class Draw {
     })
   }
 
-  static drawFilledRectangle(cells: GridPoint[], grid: GridPoint[][], canvas: Canvas) {
+  static drawFilledRectangle(cells: GridCell[], canvas: Canvas) {
     cells.forEach(cell => {
-      const n = cell.hasFourNeighbours(grid);
-      if (!n) {
-        return;
-      }
-
-      // why am I doing a * -1 on y??
-      canvas.drawFilledPolygon([n.topLeft, n.topRight, n.bottomRight, n.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})));
+      canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})));
     })
   }
 }
