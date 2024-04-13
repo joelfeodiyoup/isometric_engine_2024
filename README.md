@@ -13,10 +13,10 @@ I'm deliberately trying to discover these things myself. I.e. I want to enjoy ma
 some tasks I could could do...
 
 - make consistent the screen position + where the mouse is
+- ~~figure out how to properly calculate the cell the mouse is over~~
 - make other canvas objects which sit above/below each other for different renderings, and to be able to make some of them transparent if I feel like it.
 - build a little more robust interface to interact with the game thing
 - some abstraction for being able to control which images are rendered in cells
-- figure out how to properly calculate the cell the mouse is over
 - find a way to highlight corners / edges when mouse is over them
 - build and animate a vehicle in blender to go into the game
 - fix the thing with passing around Grid

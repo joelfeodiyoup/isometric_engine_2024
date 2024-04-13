@@ -33,7 +33,7 @@ export class Grid {
     })
   }
   
-  closestPoint(x: number, y: number) {
+  closestCell(x: number, y: number) {
     // the tricky thing in finding the closest point is that the edges of the cell
     // can be weird shapes due to the heigh differences at the edges
 
@@ -51,5 +51,15 @@ export class Grid {
       return cell.isPointInsideCell({x, y});
     });
     return isEntirelyWithinCell;
+  }
+
+  closestPoint(x: number, y: number) {
+    return this.gridPoints.flat().reduce((closest, point) => {
+      const distance = point.distanceToPoint({x, y});
+      if (distance < closest.distance) {
+        closest = {point, distance};
+      }
+      return closest;
+    }, {point: null, distance: Infinity} as {point: GridPoint | null, distance: number})
   }
 }
