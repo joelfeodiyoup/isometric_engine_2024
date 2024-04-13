@@ -2,6 +2,12 @@ This is a casual attempt to make an isometric game / game engine.
 
 I'm deliberately trying to discover these things myself. I.e. I want to enjoy making the thing not just try to make it as quickly as possible.
 
+This basically is a grid of points and then a grid of cells, rendered onto an html canvas. Each cell can have its height adjusted. There is click handling to calculate which position the mouse is in when it clicks, and to adjust that cell, triggering a re-render of the canvas.
+
+Ideally I'll keep separate layers for the game engine and specific game things like images / specific interactions with the cells, so that it can be re-usable to make different sorts of things. I also want the rendering algorithms etc to be fairly hidden, so that these can be improved later (they seem to be okay right now, but I suspect a more optimal approach could be found if needed).
+
+<video controls src="isometric_grid_ui.mp4" title="Title"></video>
+
 ## to run
 
 - `npm install`
