@@ -6,7 +6,7 @@ This basically is a grid of points and then a grid of cells, rendered onto an ht
 
 Ideally I'll keep separate layers for the game engine and specific game things like images / specific interactions with the cells, so that it can be re-usable to make different sorts of things. I also want the rendering algorithms etc to be fairly hidden, so that these can be improved later (they seem to be okay right now, but I suspect a more optimal approach could be found if needed).
 
-<video controls src="isometric_grid_ui.mp4" title="Title"></video>
+![isometric grid interaction](isometric_grid_ui.gif)
 
 ## to run
 
