@@ -20,7 +20,7 @@ export class Isometric {
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
   constructor(private xStep = Math.sqrt(3) * 10, private yStep = 10 * 2, gridSize = {rows: 500, cols: 500}) {
-    this.initialPosition = {x: gridSize.cols, y: gridSize.rows * yStep};
+    this.initialPosition = {x: gridSize.cols, y: (gridSize.rows + 2) * yStep};
   }
 
   /**

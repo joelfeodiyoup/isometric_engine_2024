@@ -3,8 +3,12 @@ import { Canvas } from "./canvas";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
+// import { Color as Colors } from 'color';
 
-export type Colors = "black" | "green" | "blue" | "lightgrey" | "lightgreen" | "lightblue" | "white";
+// https://www.w3.org/TR/css-color-4/
+// export type Colors: Color;
+export type Colors = string;
+// export type Colors = "black" | "green" | "blue" | "lightgrey" | "lightgreen" | "lightblue" | "white" | "brown" | "chocolate" | "red";
 export class Draw {
   static clear(canvas: Canvas) {
     canvas.clear();
@@ -43,13 +47,21 @@ export class Draw {
       canvas.drawLine(underneathMiddle, middle, gridColor);
       canvas.drawLine(underneathMiddle, underneathRight, gridColor);
       canvas.drawLine(underneathRight, right, gridColor);
+
+      const soil = [...grid.map(row => row[0]!), underneathMiddle, underneathLeft];
+      canvas.drawFilledPolygon([...grid.map(row => row[0]!.coords), underneathMiddle, underneathLeft], "tan");
+      canvas.drawFilledPolygon([...grid[grid.length - 1]!.map(cell => cell.coords), underneathRight, underneathMiddle], "peru");
     }
   }
 
-  static drawFilledRectangle(cells: GridCell[], canvas: Canvas, color: Colors = "blue") {
+  static drawFilledRectangle(cells: GridCell[], canvas: Canvas, color: Colors = "green") {
     cells.forEach(cell => {
       canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
     })
+  }
+
+  static drawFilledPolygon(points: Coords[], canvas: Canvas, color: Colors) {
+    canvas.drawFilledPolygon(points, color);
   }
 
   static drawPoint(point: GridPoint, canvas: Canvas) {

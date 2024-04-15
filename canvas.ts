@@ -54,9 +54,9 @@ export abstract class Canvas {
     this.ctx.beginPath();
     const radius = 5;
     this.ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
-    // this.ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+    this.ctx.strokeStyle = "white";
     this.ctx.stroke();
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = "white";
     this.ctx.fill();
   }
 

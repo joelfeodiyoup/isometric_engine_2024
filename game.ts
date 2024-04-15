@@ -27,7 +27,7 @@ export class Game {
   }
 }
 
-const game = new Game({dimensions: {width: 20, height: 30}});
+const game = new Game({dimensions: {width: 10, height: 10}});
 
 const cellHandler = (x: number, y: number) => {
   const closest = game.grid.closestCell(x, y);
@@ -69,7 +69,7 @@ const setHoveredCell = (x: number, y: number) => {
   } else {
     hoveredCell = closestCell;
     canvasHover.clear();
-    closestCell && Draw.drawFilledRectangle([closestCell], canvasHover, "lightblue");
+    closestCell && Draw.drawFilledRectangle([closestCell], canvasHover, "darkgreen");
   }
 }
 const setHoveredPoint = (x: number, y: number) => {
@@ -92,6 +92,7 @@ const mouseHoverHandler = (x: number, y: number) => {
 const canvasGrid = new CanvasGrid(originElementPosition, clickHandler, mouseHoverHandler);
 const canvasHover = new CanvasHover(originElementPosition, clickHandler, mouseHoverHandler);
 const drawGrid = () => Draw.drawGrid(game.grid.gridPoints, canvasGrid);
+Draw.drawFilledRectangle(game.grid.gridCells.flat(), canvasGrid);
 drawGrid();
 
 const setupInterface = () => {

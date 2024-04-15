@@ -5,7 +5,7 @@ import { Coords } from "./isometric";
  * 
  */
 export class GridCell {
-  public isFilled = false;
+  public isFilled = true;
 
   constructor(
     public readonly topLeft: GridPoint,

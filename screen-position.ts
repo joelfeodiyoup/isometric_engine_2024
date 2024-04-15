@@ -23,8 +23,9 @@ export class ScreenPosition {
   ) {}
 
   public startScroll(x: number, y: number) {
-    this.originElementPosition.x = x;
-    this.originElementPosition.y = y;
+    // this.originElementPosition.x = x;
+    // this.originElementPosition.y = y;
+    this.originClickPosition = {x, y};
   }
 
   public endScroll(x: number, y: number) {
@@ -36,6 +37,7 @@ export class ScreenPosition {
   }
 
   public midScroll(x: number, y: number) {
+    if (!this.originClickPosition) { return; }
     const moveAmount = this.inProgressMoveAmount(x, y);
     const newPosition = {x: this.originElementPosition.x - moveAmount.x, y: this.originElementPosition.y - moveAmount.y};
     this.setPosition(newPosition);
@@ -49,8 +51,8 @@ export class ScreenPosition {
   private inProgressMoveAmount(x: number, y: number): Coords {
     if (this.originClickPosition) {
       return {
-        x: x - this.originClickPosition.x,
-        y: y - this.originClickPosition.y
+        x: -1 * (x - this.originClickPosition.x),
+        y: -1 * (y - this.originClickPosition.y)
       }
     } else {
       // I think this should be something...
