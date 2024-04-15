@@ -9,16 +9,19 @@ export type Coords = {
  * This class represents the grid as an isometric form.
  */
 export class Isometric {
+  private initialPosition: {x: number, y: number};
   private get c1() {
-    return {a: 2 * this.xStep, b: 2 * this.xStep, c: 0};
+    return {a: 2 * this.xStep, b: 2 * this.xStep, c: this.initialPosition.x};
   }
   private get c2() {
-    return {a: -1 * this.yStep, b: this.yStep, c: 0};
+    return {a: -1 * this.yStep, b: this.yStep, c: this.initialPosition.y};
   }
 
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
-  constructor(private xStep = Math.sqrt(3) * 10, private yStep = 10 * 2) {}
+  constructor(private xStep = Math.sqrt(3) * 10, private yStep = 10 * 2, gridSize = {rows: 500, cols: 500}) {
+    this.initialPosition = {x: gridSize.cols, y: gridSize.rows * yStep};
+  }
 
   /**
    * return screen coordinates for any x/y grid pair

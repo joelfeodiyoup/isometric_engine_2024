@@ -11,9 +11,19 @@
       height: 400px;
       width: 400px;
     }
+    #canvas-stage {
+      border: 1px solid black;
+      overflow: hidden;
+      height: 800px;
+      width: 800px;
+      background-image: url('./space_02.jpg');
+      background-size: cover;
+    }
+
     canvas {
       position: absolute;
       overflow: visible;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -32,7 +42,7 @@
       ></canvas>
     </div>
   </div>
-  <form>
+  <form style="z-index: 10; position: relative;">
     <fieldset>
       <legend>raise/lower</legend>
       <div>

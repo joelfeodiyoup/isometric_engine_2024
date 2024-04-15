@@ -1,12 +1,12 @@
 import { Colors } from "./draw";
-import { OriginPosition } from "./game";
 import { Coords } from "./isometric";
+import { ScreenPosition } from "./screen-position";
 
 export abstract class Canvas {
   protected abstract ctx: CanvasRenderingContext2D;
   
   constructor(
-    private position: OriginPosition
+    private position: ScreenPosition
   ) {
   }
 
@@ -16,18 +16,21 @@ export abstract class Canvas {
     onMouseMove: (x: number, y: number) => void
   ) {
     canvas.onclick = (event) => {
-      onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
+      onClick(event.offsetX, event.offsetY);
+      // onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
     }
     canvas.onmousemove = (event) => {
-      onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
+      // onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
+      onMouseMove(event.offsetX, event.offsetY);
     }
   }
 
-  drawLine(from: Coords, to: Coords) {
+  drawLine(from: Coords, to: Coords, color: Colors = "black") {
     this.ctx.beginPath();
     this.ctx.moveTo(this.translateX(from.x), this.translateY(from.y));
     this.ctx.moveTo(this.translateX(from.x), this.translateY(from.y));
     this.ctx.lineTo(this.translateX(to.x), this.translateY(to.y));
+    this.ctx.strokeStyle = color;
     this.ctx.stroke();
   }
 
@@ -58,17 +61,19 @@ export abstract class Canvas {
   }
 
   private translateX(x: number) {
-    return x + this.position.x;
+    // return x + this.position.x;
+    return x;
   }
   private translateY(y: number) {
-    return y + this.position.y;
+    // return y + this.position.y;
+    return y;
   }
 }
 
 export class CanvasHover extends Canvas {
   protected ctx: CanvasRenderingContext2D;
   constructor(
-    origin: OriginPosition,
+    origin: ScreenPosition,
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void,
   ) {
@@ -87,7 +92,7 @@ export class CanvasHover extends Canvas {
 export class CanvasGrid extends Canvas {
   protected ctx: CanvasRenderingContext2D;
   constructor(
-    origin: OriginPosition,
+    origin: ScreenPosition,
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void,
   ) {

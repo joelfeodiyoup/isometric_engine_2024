@@ -7,7 +7,7 @@ export class Grid {
   public readonly gridCells: GridCell[][];
   private isometric: Isometric;
   constructor(width: number, height: number) {
-    this.isometric = new Isometric()
+    this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height} )
 
     this.gridPoints = Array.from(Array(height), (_, row) => {
       return Array.from(Array(width), (_, col) => {

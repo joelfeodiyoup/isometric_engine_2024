@@ -3,15 +3,31 @@ import { Draw } from "./draw";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
+import { ScreenPosition } from "./screen-position";
+
+type GameOptions = {
+  dimensions: {width: number, height: number},
+}
+
+/**
+ * the client gets a function callback letting it know, when a user clicks,
+ * which grid cell and which point the user has clicked near
+ */
+type onClickScreen = (
+  grid: {x: number, y: number},
+  point: {x: number, y: number}
+) => void;
+
+
 
 export class Game {
   public readonly grid: Grid;
-  constructor(width = 10, height = 10) {
-    this.grid = new Grid(width, height);
+  constructor(options: GameOptions) {
+    this.grid = new Grid(options.dimensions.width, options.dimensions.height);
   }
 }
 
-const game = new Game(30,30);
+const game = new Game({dimensions: {width: 20, height: 30}});
 
 const cellHandler = (x: number, y: number) => {
   const closest = game.grid.closestCell(x, y);
@@ -24,10 +40,7 @@ let gameState = {
   "cell-point-toggle": "cell"
 };
 
-export class OriginPosition {
-  constructor(public x = 0, public y = 0) {}
-}
-const originElementPosition = new OriginPosition();
+const originElementPosition = new ScreenPosition({x: 0, y: 0}, ({x, y}: {x: number, y: number}) => {});
 
 const pointHandler = (x: number, y: number) => {
   const closest = game.grid.closestPoint(x, y);
@@ -56,7 +69,7 @@ const setHoveredCell = (x: number, y: number) => {
   } else {
     hoveredCell = closestCell;
     canvasHover.clear();
-    closestCell && Draw.drawFilledRectangle([closestCell], canvasHover, "lightgreen");
+    closestCell && Draw.drawFilledRectangle([closestCell], canvasHover, "lightblue");
   }
 }
 const setHoveredPoint = (x: number, y: number) => {
@@ -106,38 +119,29 @@ const setupInterface = () => {
     }, false,
   )
 }
-console.log('adding the event listener?');
 setupInterface();
+
+const setCameraPosition = ({x, y}: {x: number, y: number}) => {
+  if (container) {
+    container.style.left = `${x}px`;
+    container.style.top = `${y}px`;
+  }
+}
+const screenPosition = new ScreenPosition({x: 0, y: 0}, setCameraPosition);
 
 const stage = document.getElementById('canvas-stage');
 const container = document.getElementById('canvas-container');
-let originClickPosition = null as null | {x: number, y: number};
-
-
+const isRightClick = (event: MouseEvent) => event.button === 2;
 stage?.addEventListener("mousedown", event => {
-  originClickPosition = {x: event.clientX, y: event.clientY};
-  console.log(originClickPosition);
+  if (!isRightClick(event)) { return; }
+  screenPosition.startScroll(event.clientX, event.clientY)
   event.preventDefault();
 });
-const move = (x: number, y: number) => {
-  if (originClickPosition) {
-    return {x: x - originClickPosition.x, y: y - originClickPosition.y};
-  } else {
-    // what is this??
-    return {x, y};
-  }
-}
 stage?.addEventListener("mousemove", event => {
-  if (originClickPosition && container) {
-    const moveAmount = move(event.clientX, event.clientY);
-    const newPosition = {x: originElementPosition.x - moveAmount.x, y: originElementPosition.y - moveAmount.y};
-    container.style.left = `${newPosition.x}px`;
-    container.style.top = `${newPosition.y}px`;
-  }
+  screenPosition.midScroll(event.clientX, event.clientY);
 })
+
 stage?.addEventListener("mouseup", event => {
-  const moveAmount = move(event.clientX, event.clientY);
-  originElementPosition.x = originElementPosition.x - moveAmount.x
-  originElementPosition.y = originElementPosition.y - moveAmount.y;
-  originClickPosition = null;
+  if (!isRightClick(event)) { return; }
+  screenPosition.endScroll(event.clientX, event.clientY);
 })
