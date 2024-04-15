@@ -5,29 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    #canvas-stage {
+    #canvas-stage, #canvas-container {
       position: relative;
-      border: 1px solid black;
+      /* border: 1px solid black; */
       height: 400px;
       width: 400px;
     }
     canvas {
       position: absolute;
+      overflow: visible;
     }
   </style>
 </head>
 <body>
   <div id="canvas-stage">
-    <canvas
+    <div id="canvas-container" oncontextmenu="return false;">
+      <canvas
       id="canvas"
-      height="400"
-      width="400"
-    ></canvas>
-    <canvas
+      height="4000"
+      width="4000"
+      ></canvas>
+      <canvas
       id="canvas-hover"
-      height="400"
-      width="400"
-    ></canvas>
+      height="4000"
+      width="4000"
+      ></canvas>
+    </div>
   </div>
   <form>
     <fieldset>

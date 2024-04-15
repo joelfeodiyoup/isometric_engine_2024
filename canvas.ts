@@ -1,14 +1,26 @@
 import { Colors } from "./draw";
+import { OriginPosition } from "./game";
 import { Coords } from "./isometric";
 
 export abstract class Canvas {
   protected abstract ctx: CanvasRenderingContext2D;
   
   constructor(
-    onClick: (x: number, y: number) => void,
-    onMouseMove: (x: number, y: number) => void,
-    private screen: Coords = {x: 0, y: 0}
+    private position: OriginPosition
   ) {
+  }
+
+  protected setListeners(
+    canvas: HTMLCanvasElement,
+    onClick: (x: number, y: number) => void,
+    onMouseMove: (x: number, y: number) => void
+  ) {
+    canvas.onclick = (event) => {
+      onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
+    }
+    canvas.onmousemove = (event) => {
+      onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
+    }
   }
 
   drawLine(from: Coords, to: Coords) {
@@ -35,25 +47,32 @@ export abstract class Canvas {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
-  moveScreen(x: number, y: number) {
-    this.screen.x += x;
-    this.screen.y += y;
+  drawPoint(point: Coords) {
+    this.ctx.beginPath();
+    const radius = 5;
+    this.ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
+    // this.ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+    this.ctx.stroke();
+    this.ctx.fillStyle = "black";
+    this.ctx.fill();
   }
 
   private translateX(x: number) {
-    return x + this.screen.x;
+    return x + this.position.x;
   }
   private translateY(y: number) {
-    return y + this.screen.y;
+    return y + this.position.y;
   }
 }
 
 export class CanvasHover extends Canvas {
   protected ctx: CanvasRenderingContext2D;
-  constructor(onClick: (x: number, y: number) => void,
-  onMouseMove: (x: number, y: number) => void,
+  constructor(
+    origin: OriginPosition,
+    onClick: (x: number, y: number) => void,
+    onMouseMove: (x: number, y: number) => void,
   ) {
-    super(onClick, onMouseMove);
+    super(origin);
     const canvas = <HTMLCanvasElement>document.getElementById("canvas-hover");
 
     const ctx = canvas.getContext("2d");
@@ -62,20 +81,17 @@ export class CanvasHover extends Canvas {
     }
     this.ctx = ctx;
 
-    canvas.onclick = (event) => {
-      onClick(event.offsetX, event.offsetY);
-    }
-    canvas.onmousemove = (event) => {
-      onMouseMove(event.offsetX, event.offsetY);
-    }
+    super.setListeners(canvas, onClick, onMouseMove);
   }
 }
 export class CanvasGrid extends Canvas {
   protected ctx: CanvasRenderingContext2D;
-  constructor(onClick: (x: number, y: number) => void,
-  onMouseMove: (x: number, y: number) => void,
+  constructor(
+    origin: OriginPosition,
+    onClick: (x: number, y: number) => void,
+    onMouseMove: (x: number, y: number) => void,
   ) {
-    super(onClick, onMouseMove);
+    super(origin);
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
 
     const ctx = canvas.getContext("2d");

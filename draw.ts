@@ -29,4 +29,8 @@ export class Draw {
       canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
     })
   }
+
+  static drawPoint(point: GridPoint, canvas: Canvas) {
+    canvas.drawPoint(point.coords);
+  }
 }

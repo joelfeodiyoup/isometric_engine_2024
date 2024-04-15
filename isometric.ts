@@ -10,10 +10,10 @@ export type Coords = {
  */
 export class Isometric {
   private get c1() {
-    return [2 * this.xStep, 2 * this.xStep, 0];
+    return {a: 2 * this.xStep, b: 2 * this.xStep, c: 0};
   }
   private get c2() {
-    return [-1 * this.yStep, this.yStep, 0];
+    return {a: -1 * this.yStep, b: this.yStep, c: 0};
   }
 
   // constructor(private xStep = 14,
@@ -27,21 +27,22 @@ export class Isometric {
    * @returns
    */
   public coords(x: number, y: number): Coords {
+
     /**
      * This comes from so me linear algebra.
      * Basically map grid coordinates to isometric coordinates, make some linear equations, and then solve them
      */
     return {
-      x: x * this.c1[0] + y * this.c1[1] + this.c1[2],
-      y: x * this.c2[0] + y * this.c2[1] + this.c2[2],
+      x: x * this.c1.a + y * this.c1.b + this.c1.c,
+      y: x * this.c2.a + y * this.c2.b + this.c2.c,
     };
   }
 
   public inverse(x: number, y: number) {
     const yGrid =
-      (this.c2[0] * (this.c1[2] - x) + this.c1[0] * (y - this.c2[2])) /
-      (this.c1[0] * this.c2[1] - this.c2[0] * this.c1[1]);
-    const xGrid = (y - this.c2[2] - yGrid * this.c2[1]) / this.c2[0];
+      (this.c2.a * (this.c1.c - x) + this.c1.a * (y - this.c2.c)) /
+      (this.c1.a * this.c2.b - this.c2.a * this.c1.b);
+    const xGrid = (y - this.c2.c - yGrid * this.c2.b) / this.c2.a;
     return {
       y: Math.floor(xGrid),
       x: Math.floor(yGrid),
