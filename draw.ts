@@ -67,4 +67,8 @@ export class Draw {
   static drawPoint(point: GridPoint, canvas: Canvas) {
     canvas.drawPoint(point.coords);
   }
+
+  static drawImage(canvas: Canvas)  {
+    // canvas.drawImage();
+  }
 }

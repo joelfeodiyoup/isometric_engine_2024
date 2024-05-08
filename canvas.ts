@@ -3,11 +3,21 @@ import { Coords } from "./isometric";
 import { ScreenPosition } from "./screen-position";
 
 export abstract class Canvas {
-  protected abstract ctx: CanvasRenderingContext2D;
+  protected ctx: CanvasRenderingContext2D;
+  protected canvas: HTMLCanvasElement;
   
   constructor(
-    private position: ScreenPosition
+    // private position: ScreenPosition
+    canvasElementId: string
   ) {
+    const canvas = <HTMLCanvasElement>document.getElementById(canvasElementId);
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("couldn't find context for canvas");
+    }
+    this.canvas = canvas;
+    this.ctx = ctx;
   }
 
   protected setListeners(
@@ -60,6 +70,20 @@ export abstract class Canvas {
     this.ctx.fill();
   }
 
+  drawImage(topLeft: Coords, bottomRight: Coords, index: number) {
+    assets.load(["road.png"]).then((img) => {
+      // const img = assets.loadedAsset.images["road.png"];
+      // img!.id = "hello-fool";
+      // console.log(img);
+      // document.body.appendChild(img!);
+      const width = bottomRight.x - topLeft.x;
+      const height = bottomRight.y - topLeft.y;
+      console.log(`width: ${width} height: ${height}`)
+      this.ctx.drawImage(img!, topLeft.x, topLeft.y, width, height);
+      console.log(index);
+    })
+  }
+
   private translateX(x: number) {
     // return x + this.position.x;
     return x;
@@ -71,38 +95,67 @@ export abstract class Canvas {
 }
 
 export class CanvasHover extends Canvas {
-  protected ctx: CanvasRenderingContext2D;
+  // protected ctx: CanvasRenderingContext2D;
   constructor(
     origin: ScreenPosition,
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void,
   ) {
-    super(origin);
-    const canvas = <HTMLCanvasElement>document.getElementById("canvas-hover");
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("couldn't find context for canvas");
-    }
-    this.ctx = ctx;
-
-    super.setListeners(canvas, onClick, onMouseMove);
+    super("canvas-hover");
+    super.setListeners(this.canvas, onClick, onMouseMove);
   }
 }
 export class CanvasGrid extends Canvas {
-  protected ctx: CanvasRenderingContext2D;
   constructor(
-    origin: ScreenPosition,
-    onClick: (x: number, y: number) => void,
-    onMouseMove: (x: number, y: number) => void,
   ) {
-    super(origin);
-    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    super("canvas");
+  }
+}
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("couldn't find context for canvas");
-    }
-    this.ctx = ctx;
+const assets = {
+  toLoad: 0,
+  loaded: 0,
+  loadedAsset: {
+    images: {} as {[key in string]: HTMLImageElement}
+  },
+  imageExtensions: ["png", "jpg", "gif"],
+  load(sources: string[]) {
+    return new Promise<HTMLImageElement>(resolve => {
+      let loadHandler = (image: HTMLImageElement) => {
+        this.loaded += 1;
+        console.log(this.loaded);
+
+        //Check whether everything has loaded
+        if (this.toLoad === this.loaded) {
+
+          //Reset `toLoad` and `loaded` to `0` so you can use them
+          //to load more assets later if you need to
+          this.toLoad = 0;
+          this.loaded = 0;      
+          console.log("Assets finished loading");
+
+          //Resolve the promise
+          resolve(image);
+        } 
+      }
+      this.toLoad = sources.length;
+      sources.forEach(source => {
+        let extension = source.split(".").pop() ?? "";
+        if (this.imageExtensions.indexOf(extension) !== -1) {
+          this.loadImage(source, loadHandler);
+        }
+      })
+    })
+  },
+  loadImage(source: string, loadHandler: (image: HTMLImageElement) => void) {
+    // if (!this.loadedAsset.images[source]) { 
+      let image = new Image();
+      image.addEventListener("load", () => loadHandler(image), false);
+      // image.addEventListener("load", loadHandler(image), false);
+      this.loadedAsset.images[source] = image;
+      image.src = source;
+    // } else {
+    //   loadHandler();
+    // }
   }
 }

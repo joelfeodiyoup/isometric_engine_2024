@@ -27,7 +27,7 @@ export class Game {
   }
 }
 
-const game = new Game({dimensions: {width: 10, height: 10}});
+const game = new Game({dimensions: {width: 3, height: 3}});
 
 const cellHandler = (x: number, y: number) => {
   const closest = game.grid.closestCell(x, y);
@@ -89,11 +89,18 @@ const mouseHoverHandler = (x: number, y: number) => {
     : setHoveredPoint(x, y);
 }
 
-const canvasGrid = new CanvasGrid(originElementPosition, clickHandler, mouseHoverHandler);
+const canvasGrid = new CanvasGrid(/*originElementPosition, clickHandler, mouseHoverHandler*/);
 const canvasHover = new CanvasHover(originElementPosition, clickHandler, mouseHoverHandler);
 const drawGrid = () => Draw.drawGrid(game.grid.gridPoints, canvasGrid);
 Draw.drawFilledRectangle(game.grid.gridCells.flat(), canvasGrid);
 drawGrid();
+const drawCell = (cell: GridCell, i: number) => {
+  canvasGrid.drawImage({x: cell.topLeft.coords.x, y: cell.topRight.coords.y}, {x: cell.bottomRight.coords.x, y: cell.bottomLeft.coords.y}, i);
+}
+// drawCell(game.grid.gridCells.flat()[1]!);
+game.grid.gridCells.flat().forEach((cell, i) => {
+  drawCell(cell, i);
+})
 
 const setupInterface = () => {
   console.log('setting up?')
