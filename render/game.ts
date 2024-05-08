@@ -27,7 +27,7 @@ export class Game {
   }
 }
 
-const game = new Game({dimensions: {width: 3, height: 3}});
+const game = new Game({dimensions: {width: 5, height: 5}});
 
 const cellHandler = (x: number, y: number) => {
   const closest = game.grid.closestCell(x, y);
