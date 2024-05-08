@@ -19,7 +19,14 @@ Ideally I'll keep separate layers for the game engine and specific game things l
 - /render handles rendering of the game world, in this case an isometric grid, with things drawn onto it. It also handles clicking inside of it. render will output which cells were clicked
 - some kind of representation of the world
 - /ui an interface (in react, in this instance)
-- /store (or some other directory) 
+- /store (or some other directory) holds data about the state of the ui. E.g. 
+
+## technologies
+
+- **redux** used to record state that the UI has selected. I just want to use it.
+- **React** for the UI
+- **Canvas** for rendering stuff. Why not.
+- **Tailwindcss** ? For styling. I've never really used it, so I want to see what it's all about. The philosophy seems compelling.
 
 ## tasks
 
