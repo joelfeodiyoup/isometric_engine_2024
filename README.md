@@ -14,6 +14,13 @@ Ideally I'll keep separate layers for the game engine and specific game things l
 - `npm run dev`
 - spin up a web server to run `index.html` in the browser. e.g. in vscode you could use the extension `LiveServer`
 
+## General "architecture" overview
+
+- /render handles rendering of the game world, in this case an isometric grid, with things drawn onto it. It also handles clicking inside of it. render will output which cells were clicked
+- some kind of representation of the world
+- /ui an interface (in react, in this instance)
+- /store (or some other directory) 
+
 ## tasks
 
 some tasks I could could do...

@@ -1,3 +1,4 @@
+import { store } from "../app/store";
 import { CanvasGrid, CanvasHover } from "./canvas";
 import { Draw } from "./draw";
 import { Grid } from "./grid";
@@ -50,7 +51,8 @@ const pointHandler = (x: number, y: number) => {
 }
 
 const clickHandler = (x: number, y: number) => {
-  gameState["cell-point-toggle"] === "cell"
+  const state = store.getState();
+  state.highlightType.value === "cell"
     ? cellHandler(x, y)
     : pointHandler(x, y);
   const filled = game.grid.gridCells.flat().filter(cell => cell.isFilled);
@@ -84,7 +86,8 @@ const setHoveredPoint = (x: number, y: number) => {
   }
 }
 const mouseHoverHandler = (x: number, y: number) => {
-  gameState["cell-point-toggle"] === "cell"
+  const state = store.getState();
+  state.highlightType.value === "cell"
     ? setHoveredCell(x, y)
     : setHoveredPoint(x, y);
 }
