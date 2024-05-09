@@ -72,3 +72,8 @@ some tasks I could could do...
 - build and animate a vehicle in blender to go into the game
 - fix the thing with passing around Grid
 - ~~probably make the Draw class a property contained in the abstract Canvas class? Then we never need to worry about passing a canvas to Draw methods.~~
+
+- add a back end to do something
+- add a graphql server
+- add authentication / authorization
+- add rate limiting / traffic filtering for back end
