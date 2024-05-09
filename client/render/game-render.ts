@@ -118,7 +118,7 @@ export class GameRender {
       ? this.cellHandler(x, y)
       : this.pointHandler(x, y);
     const filled = this.grid.gridCells.flat().filter(cell => cell.isFilled);
-    this.canvasGrid.draw.clear;
+    this.canvasGrid.draw.clear();
     this.canvasGrid.draw.drawFilledRectangle(filled);
     this.drawGrid();
   };

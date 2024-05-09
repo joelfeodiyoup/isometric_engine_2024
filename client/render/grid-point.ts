@@ -12,6 +12,10 @@ export class GridPoint {
   protected height: number = 0;
   public isHighlighted = false;
 
+  public get coordsAtSeaLevel()  {
+    return {x: this.coords.x, y: this.coords.y - this.height * 15};
+  }
+
   constructor(public x: number, public y: number,
     private isometric: Isometric) {
     this.baseCoords = this.isometric.coords(x, y);

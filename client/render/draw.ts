@@ -39,12 +39,12 @@ export class Draw {
     if (showSubterrain) {
       const depth = 100;
       const underneath = ({x, y}: Coords) => ({x, y: y + depth});
-      const left = grid[0]![0]!.coords;
-      const underneathLeft = underneath(left);
-      const right = grid[grid.length - 1]![grid[0]!.length - 1]!.coords;
-      const underneathRight = underneath(right);
-      const middle = grid[grid.length - 1]![0]!.coords;
-      const underneathMiddle = underneath(middle);
+      const aboveAndBelow = (gridPoint: GridPoint) => {
+        return [gridPoint.coords, underneath(gridPoint.coordsAtSeaLevel)] as [Coords, Coords];
+      }
+      const [left, underneathLeft] = aboveAndBelow(grid[0]![0]!);
+      const [middle, underneathMiddle] = aboveAndBelow(grid[grid.length - 1]![0]!);
+      const [right, underneathRight] = aboveAndBelow(grid[grid.length - 1]![grid[0]!.length - 1]!);
       
       
       this.canvas.drawLine(left, underneathLeft, gridColor);
