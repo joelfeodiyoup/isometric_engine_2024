@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#ui-root {
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  position: absolute;
+}

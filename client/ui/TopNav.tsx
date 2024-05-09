@@ -5,6 +5,8 @@ export const TopNav = () => {
   const navItems = ["file", "options", "help"];
   const e = <p>blah</p>;
   return (<>
+  <section>
+
     <nav>
       <ul className="flex flex-row justify-between">
         {navItems.map(item => <li>{item}</li>)}
@@ -16,5 +18,6 @@ export const TopNav = () => {
         children: <p>blah</p>
       }}
     </DropdownMenu>
+      </section>
   </>)
 }
