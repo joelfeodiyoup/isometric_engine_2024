@@ -9,6 +9,11 @@ import { Coords } from "./isometric";
 // export type Colors: Color;
 export type Colors = string;
 // export type Colors = "black" | "green" | "blue" | "lightgrey" | "lightgreen" | "lightblue" | "white" | "brown" | "chocolate" | "red";
+
+/**
+ * Contains many static methods, which, when passed a Canvas class (which contains a ctx property,
+ * has methods to handle drawing onto those.
+ */
 export class Draw {
   static clear(canvas: Canvas) {
     canvas.clear();

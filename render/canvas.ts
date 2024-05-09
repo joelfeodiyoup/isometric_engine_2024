@@ -112,6 +112,9 @@ export class CanvasGrid extends Canvas {
   }
 }
 
+/**
+ * This handles loading up an array of images to be used later.
+ */
 const assets = {
   toLoad: 0,
   loaded: 0,

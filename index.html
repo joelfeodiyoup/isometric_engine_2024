@@ -26,7 +26,7 @@
       cursor: pointer;
     }
   </style>
-  <link href="./output.css" rel="stylesheet">
+  <link href="./dist/output.css" rel="stylesheet">
 </head>
 <body>
   <div id="root"></div>
@@ -44,30 +44,6 @@
       ></canvas>
     </div>
   </div>
-  <form style="z-index: 10; position: relative;">
-    <fieldset>
-      <legend>raise/lower</legend>
-      <div>
-        <input type="radio" id="raise" name="adjust-height" value="raise" checked />
-        <label for="raise">raise</label>
-      </div>
-      <div>
-        <input type="radio" id="lower" name="adjust-height" value="lower"/>
-        <label for="lower">lower</label>
-      </div>
-    </fieldset>
-    <fieldset>
-      <legend>fill/adjust</legend>
-      <div>
-        <input type="radio" id="cell" name="cell-point-toggle" value="cell" checked />
-        <label for="cell">cell</label>
-      </div>
-      <div>
-        <input type="radio" id="point" name="cell-point-toggle" value="point"/>
-        <label for="point">point</label>
-      </div>
-    </fieldset>
-  </form>
   <script src="dist/bundle.js"></script>
 </body>
 </html>
