@@ -7,6 +7,12 @@ import { useState } from 'react';
 import { Modal } from './layout-utilities/Modal';
 import { SideNav } from './SideNav';
 import { Layout } from './layout-utilities/Layout';
+import { Game } from '../render/game';
+import { Container } from './layout-utilities/Container';
+
+const game = new Game({dimensions: {width: 5, height: 5}});
+const canvasStage = game.element();
+const CanvasContainer = () => <Container child={canvasStage}></Container>
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -15,7 +21,8 @@ const App = () => {
       {{
         top: <TopNav />,
         side: <SideNav />,
-        modal: <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}><p>I am something in the modal</p></Modal>
+        modal: <CanvasContainer />
+        // modal: <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}><p>I am something in the modal</p></Modal>
       }}
     </Layout>
   </>)

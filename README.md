@@ -35,6 +35,7 @@ Ideally I'll keep separate layers for the game engine and specific game things l
 - **Canvas** for rendering stuff. Why not.
 - **Tailwindcss** ? For styling. I've never really used it, so I want to see what it's all about. The philosophy seems compelling.
 - **testing** ? I could.
+- **lit-html** for html templating outside react context (https://www.npmjs.com/package/lit-html) possibly. (originally I created a canvas element wrapped in some divs, to handle different things. It might be better or easier to use lit-html to define it in javascript. I just ran into this when exploring lit-elements, which is a framework to help make web-components)
 
 ## Inspiration
 
