@@ -3,16 +3,21 @@ import {store} from '../state/app/store';
 import { Provider } from 'react-redux';
 import { TopNav } from './TopNav';
 import { Terrain } from './Terrain';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from './layout-utilities/Modal';
 import { SideNav } from './SideNav';
 import { Layout } from './layout-utilities/Layout';
-import { Game } from '../render/game';
+import { GameRender } from '../render/game-render';
 import { Container } from './layout-utilities/Container';
 
-const game = new Game({dimensions: {width: 5, height: 5}});
-const canvasStage = game.element();
-const CanvasContainer = () => <Container child={canvasStage}></Container>
+/**
+ * I wish I didn't have to do this. Surely not?
+ */
+export type BaseProps = React.HTMLAttributes<HTMLElement>;
+
+const gameRender = new GameRender({dimensions: {width: 5, height: 5}});
+const canvasStage = gameRender.element();
+const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasStage}></Container>
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -21,8 +26,8 @@ const App = () => {
       {{
         top: <TopNav />,
         side: <SideNav />,
-        modal: <CanvasContainer />
-        // modal: <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}><p>I am something in the modal</p></Modal>
+        gameRender: <CanvasContainer />,
+        modal: <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}><p>I am something in the modal</p></Modal>
       }}
     </Layout>
   </>)

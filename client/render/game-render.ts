@@ -20,7 +20,7 @@ type onClickScreen = (
 
 
 
-export class Game {
+export class GameRender {
   public readonly grid: Grid;
   private canvasStage;
   private container;
