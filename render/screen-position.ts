@@ -1,8 +1,5 @@
 import { Coords } from "./isometric";
 
-class ContainerContext {
-  constructor() {}
-}
 
 /**
  * handle scrolling of the screen
