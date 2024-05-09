@@ -1,7 +1,11 @@
-const path = require('path');
+// const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = {
-  entry: ['/render/game.ts', './ui/app.tsx'],
+export default {
+  entry: ['/client/render/game.ts', '/client/ui/app.tsx'],
   module: {
     rules: [
       {
