@@ -56,8 +56,8 @@ const clickHandler = (x: number, y: number) => {
     ? cellHandler(x, y)
     : pointHandler(x, y);
   const filled = game.grid.gridCells.flat().filter(cell => cell.isFilled);
-  Draw.clear(canvasGrid);
-  Draw.drawFilledRectangle(filled, canvasGrid);
+  canvasGrid.draw.clear;
+  canvasGrid.draw.drawFilledRectangle(filled);
   drawGrid();
 };
 
@@ -71,7 +71,7 @@ const setHoveredCell = (x: number, y: number) => {
   } else {
     hoveredCell = closestCell;
     canvasHover.clear();
-    closestCell && Draw.drawFilledRectangle([closestCell], canvasHover, "darkgreen");
+    closestCell && canvasHover.draw.drawFilledRectangle([closestCell], "darkgreen");
   }
 }
 const setHoveredPoint = (x: number, y: number) => {
@@ -82,7 +82,7 @@ const setHoveredPoint = (x: number, y: number) => {
   } else {
     hoveredPoint = closestPoint;
     canvasHover.clear();
-    hoveredPoint && Draw.drawPoint(hoveredPoint, canvasHover)
+    hoveredPoint && canvasHover.draw.drawPoint(hoveredPoint)
   }
 }
 const mouseHoverHandler = (x: number, y: number) => {
@@ -94,8 +94,8 @@ const mouseHoverHandler = (x: number, y: number) => {
 
 const canvasGrid = new CanvasGrid(/*originElementPosition, clickHandler, mouseHoverHandler*/);
 const canvasHover = new CanvasHover(originElementPosition, clickHandler, mouseHoverHandler);
-const drawGrid = () => Draw.drawGrid(game.grid.gridPoints, canvasGrid);
-Draw.drawFilledRectangle(game.grid.gridCells.flat(), canvasGrid);
+const drawGrid = () => canvasGrid.draw.drawGrid(game.grid.gridPoints);
+canvasGrid.draw.drawFilledRectangle(game.grid.gridCells.flat());
 drawGrid();
 const drawCell = (cell: GridCell, i: number) => {
   canvasGrid.drawImage({x: cell.topLeft.coords.x, y: cell.topRight.coords.y}, {x: cell.bottomRight.coords.x, y: cell.bottomLeft.coords.y}, i);

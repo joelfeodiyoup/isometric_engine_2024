@@ -1,10 +1,11 @@
-import { Colors } from "./draw";
+import { Colors, Draw } from "./draw";
 import { Coords } from "./isometric";
 import { ScreenPosition } from "./screen-position";
 
 export abstract class Canvas {
   protected ctx: CanvasRenderingContext2D;
   protected canvas: HTMLCanvasElement;
+  public draw: Draw;
   
   constructor(
     // private position: ScreenPosition
@@ -18,6 +19,7 @@ export abstract class Canvas {
     }
     this.canvas = canvas;
     this.ctx = ctx;
+    this.draw = new Draw(this);
   }
 
   protected setListeners(

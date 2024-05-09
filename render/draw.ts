@@ -15,21 +15,22 @@ export type Colors = string;
  * has methods to handle drawing onto those.
  */
 export class Draw {
-  static clear(canvas: Canvas) {
-    canvas.clear();
+  constructor(private canvas: Canvas) {}
+  clear() {
+    this.canvas.clear();
   }
-  static drawGrid(grid: GridPoint[][], canvas: Canvas) {
+  drawGrid(grid: GridPoint[][]) {
 
     const gridColor: Colors = "lightgrey";
     grid.forEach(row => {
       row.forEach(col => {
         const east = col.neighbours(grid).east;
         if (east) {
-          canvas.drawLine(col.coords, east.coords, gridColor);
+          this.canvas.drawLine(col.coords, east.coords, gridColor);
         }
         const south = col.neighbours(grid).south;
         if (south) {
-          canvas.drawLine(col.coords, south.coords, gridColor);
+          this.canvas.drawLine(col.coords, south.coords, gridColor);
         }
       })
     })
@@ -47,33 +48,33 @@ export class Draw {
       const underneathMiddle = underneath(middle);
       
       
-      canvas.drawLine(left, underneathLeft, gridColor);
-      canvas.drawLine(underneathLeft, underneathMiddle, gridColor);
-      canvas.drawLine(underneathMiddle, middle, gridColor);
-      canvas.drawLine(underneathMiddle, underneathRight, gridColor);
-      canvas.drawLine(underneathRight, right, gridColor);
+      this.canvas.drawLine(left, underneathLeft, gridColor);
+      this.canvas.drawLine(underneathLeft, underneathMiddle, gridColor);
+      this.canvas.drawLine(underneathMiddle, middle, gridColor);
+      this.canvas.drawLine(underneathMiddle, underneathRight, gridColor);
+      this.canvas.drawLine(underneathRight, right, gridColor);
 
       const soil = [...grid.map(row => row[0]!), underneathMiddle, underneathLeft];
-      canvas.drawFilledPolygon([...grid.map(row => row[0]!.coords), underneathMiddle, underneathLeft], "tan");
-      canvas.drawFilledPolygon([...grid[grid.length - 1]!.map(cell => cell.coords), underneathRight, underneathMiddle], "peru");
+      this.canvas.drawFilledPolygon([...grid.map(row => row[0]!.coords), underneathMiddle, underneathLeft], "tan");
+      this.canvas.drawFilledPolygon([...grid[grid.length - 1]!.map(cell => cell.coords), underneathRight, underneathMiddle], "peru");
     }
   }
 
-  static drawFilledRectangle(cells: GridCell[], canvas: Canvas, color: Colors = "green") {
+  drawFilledRectangle(cells: GridCell[], color: Colors = "green") {
     cells.forEach(cell => {
-      canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
+      this.canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
     })
   }
 
-  static drawFilledPolygon(points: Coords[], canvas: Canvas, color: Colors) {
-    canvas.drawFilledPolygon(points, color);
+  drawFilledPolygon(points: Coords[], color: Colors) {
+    this.canvas.drawFilledPolygon(points, color);
   }
 
-  static drawPoint(point: GridPoint, canvas: Canvas) {
-    canvas.drawPoint(point.coords);
+  drawPoint(point: GridPoint) {
+    this.canvas.drawPoint(point.coords);
   }
 
-  static drawImage(canvas: Canvas)  {
+  drawImage()  {
     // canvas.drawImage();
   }
 }
