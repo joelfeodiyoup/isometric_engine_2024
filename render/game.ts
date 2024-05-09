@@ -1,4 +1,4 @@
-import { store } from "../app/store";
+import { store } from "../state/app/store";
 import { CanvasGrid, CanvasHover } from "./canvas";
 import { Draw } from "./draw";
 import { Grid } from "./grid";
@@ -36,17 +36,16 @@ const cellHandler = (x: number, y: number) => {
     closest.isFilled = !closest.isFilled;
   }
 }
-let gameState = {
-  "adjust-height": 'raise',
-  "cell-point-toggle": "cell"
-};
 
 const originElementPosition = new ScreenPosition({x: 0, y: 0}, ({x, y}: {x: number, y: number}) => {});
 
 const pointHandler = (x: number, y: number) => {
   const closest = game.grid.closestPoint(x, y);
   console.log(closest.point);
-  closest.point?.adjustHeight(gameState['adjust-height'] as "raise" | "lower" ?? 'raise');
+  const actionType = store.getState().clickAction.value;
+  if (actionType === "raise" || actionType === "lower") {
+    closest.point?.adjustHeight(actionType);
+  }
   return closest.point;
 }
 
@@ -104,33 +103,6 @@ const drawCell = (cell: GridCell, i: number) => {
 game.grid.gridCells.flat().forEach((cell, i) => {
   drawCell(cell, i);
 })
-
-const setupInterface = () => {
-  console.log('setting up?')
-  const form = document.querySelector("form");
-  if (!form) { return; }
-  form.addEventListener(
-    "change",
-    (event) => {
-      const data = new FormData(form);
-      console.log(data);
-      let output = "";
-      for (const entry of data) {
-        output = `${output}${entry[0]}=${entry[1]}\r`;
-        const key = entry[0];
-        if (key === "adjust-height") {
-          gameState[key] = entry[1] as "raise" | "lower";
-        }
-        if (key === "cell-point-toggle") {
-          gameState[key] = entry[1] as "cell" | "point";
-        }
-      }
-      console.log(output);
-      event.preventDefault();
-    }, false,
-  )
-}
-setupInterface();
 
 const setCameraPosition = ({x, y}: {x: number, y: number}) => {
   if (container) {

@@ -2,7 +2,8 @@ import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 
 /**
- * 
+ * Represents a rectangular area of the grid, defined by the points topLeft, topRight, etc.
+ * Also contains some methods to check things about this. i.e. "is some point in the cell"
  */
 export class GridCell {
   public isFilled = true;

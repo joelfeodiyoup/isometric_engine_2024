@@ -11,8 +11,7 @@ export type Colors = string;
 // export type Colors = "black" | "green" | "blue" | "lightgrey" | "lightgreen" | "lightblue" | "white" | "brown" | "chocolate" | "red";
 
 /**
- * Contains many static methods, which, when passed a Canvas class (which contains a ctx property,
- * has methods to handle drawing onto those.
+ * methods for drawing onto a Canvas object (which contains its context)
  */
 export class Draw {
   constructor(private canvas: Canvas) {}

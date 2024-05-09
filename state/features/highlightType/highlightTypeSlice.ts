@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
 /**
@@ -9,8 +9,9 @@ import { RootState } from '../../app/store';
  * highlighting an edge might allow you to add a wall along that edge.
  * These are just examples. It could also be something much scarier.
  */
+type HighlightTypes = "cell" | "corner";
 interface HighlightTypeState {
-  value: "cell" | "corner",
+  value: HighlightTypes,
 }
 const initialState: HighlightTypeState = {
   value: "cell"
@@ -27,9 +28,12 @@ export const highlightTypeSlice = createSlice({
         state.value = "cell";
       }
     },
+    setCellHighlightType: (state, action: PayloadAction<HighlightTypes>) => {
+      state.value = action.payload;
+    }
   }
 });
 
-export const { toggle } = highlightTypeSlice.actions;
+export const { toggle, setCellHighlightType } = highlightTypeSlice.actions;
 export const selectHighlightType = (state: RootState) => state.highlightType.value;
 export const highlightTypeReducer =  highlightTypeSlice.reducer;

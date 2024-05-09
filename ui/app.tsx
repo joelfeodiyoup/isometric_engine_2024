@@ -1,10 +1,11 @@
 import { createRoot } from 'react-dom/client';
-import {store} from './../app/store';
+import {store} from '../state/app/store';
 import { Provider } from 'react-redux';
-import { useAppDispatch, useAppSelector } from './../app/hooks';
-import { increment } from '../features/counter/counterSlice';
-import { toggle } from '../features/highlightType/highlightTypeSlice';
+import { useAppDispatch, useAppSelector } from '../state/app/hooks';
+import { increment } from '../state/features/counter/counterSlice';
+import { toggle } from '../state/features/highlightType/highlightTypeSlice';
 import { TopNav } from './TopNav';
+import { Terrain } from './Terrain';
 
 const App = () => {
   const count = useAppSelector((state) => state.counter.value);
@@ -17,6 +18,7 @@ const App = () => {
     <pre>t: {t}</pre>
     <button onClick={() => dispatch(toggle())}>toggle</button>
     <TopNav></TopNav>
+    <Terrain />
   </>)
 }
 
