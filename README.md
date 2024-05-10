@@ -36,6 +36,7 @@ Ideally I'll keep separate layers for the game engine and specific game things l
 - **Tailwindcss** ? For styling. I've never really used it, so I want to see what it's all about. The philosophy seems compelling.
 - **testing** ? I could.
 - **lit-html** for html templating outside react context (https://www.npmjs.com/package/lit-html) possibly. (originally I created a canvas element wrapped in some divs, to handle different things. It might be better or easier to use lit-html to define it in javascript. I just ran into this when exploring lit-elements, which is a framework to help make web-components)
+- **authorization/authentication** - I'll follow some guides on apollo graphql for this https://www.apollographql.com/docs/apollo-server/security/authentication/ 
 
 ## Inspiration
 
@@ -65,6 +66,12 @@ rollercoaster tycoon
 
 ![alt text](documentation/isometric_maths.png)
 
+## Authorization / authentication
+
+On the Apollo Server graphql server. Following this guide: https://www.apollographql.com/docs/apollo-server/security/authentication/ 
+
+A token attached to the header 'authorization'. Used to look up a user at the server level.
+
 ## tasks
 
 some tasks I could could do...
@@ -84,3 +91,4 @@ some tasks I could could do...
 - ~~add a graphql server~~
 - add authentication / authorization
 - add rate limiting / traffic filtering for back end
+- SSL / HTTPS for encryption

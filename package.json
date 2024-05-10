@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx webpack --watch & npx tailwindcss -i ./input.css -o ./dist/output.css --watch",
-    "compile-server": "tsc --build server -w",
+    "compile-server": "tsc --build server",
+    "compile-server-watch": "tsc --build server -w",
     "start-server": "npm run compile-server & nodemon ./server/dist/index.js"
   },
   "keywords": [],

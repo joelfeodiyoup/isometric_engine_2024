@@ -1,42 +1,14 @@
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+// import { Blah } from "./blah";
 
-const typeDefs = `#graphql
-  #comments
-  type Book {
-    title: String
-    author: String
-  }
+// const b = new Blah();
+// b.log();
+console.log('blah blah');
 
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books: {title: string, author: string}[] = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  }
-]
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  }
+class Blah {
+ public log() {
+  console.log('inside b')
+ }
 }
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-})
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-})
-
-console.log(`🚀 Server ready at: ${url}`);
+const b = new Blah();
+b.log();

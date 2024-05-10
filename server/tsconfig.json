@@ -8,9 +8,11 @@
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "strictNullChecks": true,
   },
   "exclude": [
     "./dist/**/*"
-  ]
+  ],
+  "include": ["src", "src/**/*.ts"]
 }
