@@ -1,22 +1,18 @@
 {
-  "name": "isometric_game_2024_04",
+  "name": "client",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx webpack --watch & npx tailwindcss -i ./input.css -o ./dist/output.css --watch",
-    "compile-server": "tsc --build server",
-    "compile-server-watch": "tsc --build server -w",
-    "start-server": "npm run compile-server & nodemon ./server/dist/index.js"
+    "dev": "npx webpack --watch & npx tailwindcss -i ./input.css -o ./dist/output.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/color": "^3.0.6",
-    "@types/node": "^20.12.11",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@types/webpack": "^5.28.5",
@@ -28,10 +24,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@apollo/server": "^4.10.4",
     "@reduxjs/toolkit": "^2.2.3",
-    "graphql": "^16.8.1",
-    "nodemon": "^3.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2"

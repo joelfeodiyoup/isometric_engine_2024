@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile-server": "tsc --build",
+    "compile-server-watch-OLD": "tsc --build server -w",
+    "compile-server-watch": "tsc --build -w",
+    "start-server": "npm run compile-server & nodemon ./dist/index.js",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.11",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.4",
+    "graphql": "^16.8.1",
+    "nodemon": "^3.1.0"
+  }
+}

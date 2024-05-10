@@ -5,7 +5,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  entry: [/*'/client/render/game-render.ts', */'/client/ui/app.tsx'],
+  entry: [/*'/client/render/game-render.ts', */'/ui/app.tsx'],
   module: {
     rules: [
       {
