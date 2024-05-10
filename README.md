@@ -72,6 +72,10 @@ On the Apollo Server graphql server. Following this guide: https://www.apollogra
 
 A token attached to the header 'authorization'. Used to look up a user at the server level.
 
+## Notes (for me)
+
+- apollo graphql playground (i.e. the thing running on localhost:4000) constantly polls the server to check the schema. This can be a little annoying if I want to set breakpoints in there. I could turn off that automatic polling: https://stackoverflow.com/questions/58038945/apollo-graphql-keeps-receiving-requests-with-no-queries-or-mutations-being-made 
+
 ## tasks
 
 some tasks I could could do...

@@ -33,7 +33,8 @@ export class Authentication {
       return Promise.resolve(null);
     } else {
       // 
-      return Promise.resolve(this.users.find(user => user.name === token) ?? null);
+      return Promise.resolve(this.authenticatedUsers.get(token) ?? null);
+      // return Promise.resolve(this.authenticatedUsers.find(user => user.name === token) ?? null);
     }
   }
 

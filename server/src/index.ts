@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { GraphQLError } from "graphql";
 import { Authentication, AuthenticationKey, UserInterface } from "./authentication.js";
+import { GraphQLResolveInfo } from "graphql";
 
 const authentication = new Authentication();
 
@@ -18,9 +19,10 @@ const typeDefs = `#graphql
 
   type Query {
     books: [Book]
+    user: [Book]
   }
   type Mutation {
-    login: AuthenticationToken
+    login(name: String!, password: String!): AuthenticationToken
   }
 `;
 
@@ -37,13 +39,15 @@ const books: {title: string, author: string}[] = [
 
 const resolvers = {
   Query: {
-    books: () => books,
+    books: (parent) => books,
+    user: (parent, args, contextValue) => {
+      return books;
+    }
   },
   Mutation: {
     login: async (_, key: AuthenticationKey) => {
-      // const token = authentication.authenticate(key);
-      // return {token};
-      return {token: 'blah'}
+      const token = authentication.authenticate(key);
+      return {token};
     }
   }
 }
@@ -64,14 +68,14 @@ const { url } = await startStandaloneServer(server, {
   context: async({ req, res }) => {
     const token = req.headers.authorization || '';
     const user = await authentication.getUser(token);
-    if (!user) {
-      throw new GraphQLError('User is not authenticated', {
-        extensions: {
-          code: 'UNAUTHENTICATED',
-          http: { status: 401 },
-        },
-      });
-    }
+    // if (!user) {
+    //   throw new GraphQLError('User is not authenticated', {
+    //     extensions: {
+    //       code: 'UNAUTHENTICATED',
+    //       http: { status: 401 },
+    //     },
+    //   });
+    // }
     return { user }
   }
 })

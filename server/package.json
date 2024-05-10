@@ -9,7 +9,7 @@
     "compile-server": "tsc --build",
     "compile-server-watch-OLD": "tsc --build server -w",
     "compile-server-watch": "tsc --build -w",
-    "start-server": "npm run compile-server & nodemon ./dist/index.js",
+    "start-server": "npm run compile-server-watch & nodemon ./dist/index.js",
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js"
   },

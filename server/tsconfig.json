@@ -8,6 +8,7 @@
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "types": ["node"],
+    "sourceMap": true,
     "paths": {
       "@src/*": [
         "./src/*"
