@@ -1,4 +1,6 @@
+import { appendFile } from "fs";
 import { Grid } from "./grid";
+import { store } from "../state/app/store";
 
 export type Coords = {
   x: number;
@@ -9,6 +11,15 @@ export type Coords = {
  * This class represents the grid as an isometric form.
  */
 export class Isometric {
+  private _xStep: number = Math.sqrt(3) * 10;
+  private _yStep: number = 10 * 2;
+  public get xStep() {
+    return this._xStep;
+  };
+  public get yStep() {
+    return this._yStep;
+  };
+
   private initialPosition: {x: number, y: number};
   private get c1() {
     return {a: 2 * this.xStep, b: 2 * this.xStep, c: this.initialPosition.x};
@@ -19,8 +30,20 @@ export class Isometric {
 
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
-  constructor(private xStep = Math.sqrt(3) * 10, private yStep = 10 * 2, gridSize = {rows: 500, cols: 500}) {
+  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, gridSize = {rows: 500, cols: 500}) {
+    this.setScale(xStep, yStep);
     this.initialPosition = {x: gridSize.cols, y: (gridSize.rows + 2) * yStep};
+    const app = store.subscribe
+  }
+
+  private setScale(xStep: number, yStep: number) {
+    this._xStep = xStep;
+    this._yStep = yStep;
+  }
+
+  zoomIn() {
+    this._xStep = this._xStep * 2;
+    this._yStep = this._yStep * 2;
   }
 
   /**

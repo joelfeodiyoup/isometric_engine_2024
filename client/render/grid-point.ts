@@ -12,8 +12,17 @@ export class GridPoint {
   protected height: number = 0;
   public isHighlighted = false;
 
+  private get heightMultiplier() {
+    // the scaling of the height levels should be related to the isometric sizing
+    return this.isometric.xStep * 1;
+  }
+
+  private get scaledHeight() {
+    return this.heightMultiplier * this.height;
+  }
+
   public get coordsAtSeaLevel()  {
-    return {x: this.coords.x, y: this.coords.y - this.height * 15};
+    return {x: this.coords.x, y: this.coords.y - this.scaledHeight};
   }
 
   constructor(public x: number, public y: number,
@@ -23,7 +32,7 @@ export class GridPoint {
     if (x === 0 && y === 0) {
       this.height = 0;
     }
-    this.coords = {x: this.baseCoords.x, y: this.baseCoords.y + this.height * 15};
+    this.coords = {x: this.baseCoords.x, y: this.baseCoords.y + this.scaledHeight};
   }
 
   /**
@@ -45,7 +54,7 @@ export class GridPoint {
 
   public adjustHeight(direction: 'raise' | 'lower') {
     this.height += direction === 'raise' ? -1 : 1;
-    this.coords.y = this.baseCoords.y + this.height * 15;
+    this.coords.y = this.baseCoords.y + this.scaledHeight;
   }
 
   public distanceToPoint(point: Coords) {

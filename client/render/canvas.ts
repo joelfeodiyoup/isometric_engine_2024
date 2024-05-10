@@ -23,15 +23,14 @@ export abstract class Canvas {
   }
 
   protected setListeners(
-    canvas: HTMLCanvasElement,
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void
   ) {
-    canvas.onclick = (event) => {
+    this.canvas.onclick = (event) => {
       onClick(event.offsetX, event.offsetY);
       // onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
     }
-    canvas.onmousemove = (event) => {
+    this.canvas.onmousemove = (event) => {
       // onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
       onMouseMove(event.offsetX, event.offsetY);
     }
@@ -73,11 +72,7 @@ export abstract class Canvas {
   }
 
   drawImage(topLeft: Coords, bottomRight: Coords, index: number) {
-    assets.load(["road.png"]).then((img) => {
-      // const img = assets.loadedAsset.images["road.png"];
-      // img!.id = "hello-fool";
-      // console.log(img);
-      // document.body.appendChild(img!);
+    assets.load(["./../images/road.png"]).then((img) => {
       const width = bottomRight.x - topLeft.x;
       const height = bottomRight.y - topLeft.y;
       console.log(`width: ${width} height: ${height}`)
@@ -104,7 +99,7 @@ export class CanvasHover extends Canvas {
     onMouseMove: (x: number, y: number) => void,
   ) {
     super("canvas-hover");
-    super.setListeners(this.canvas, onClick, onMouseMove);
+    super.setListeners(onClick, onMouseMove);
   }
 }
 export class CanvasGrid extends Canvas {

@@ -15,7 +15,7 @@ import { Container } from './layout-utilities/Container';
  */
 export type BaseProps = React.HTMLAttributes<HTMLElement>;
 
-const gameRender = new GameRender({dimensions: {width: 5, height: 5}});
+const gameRender = new GameRender({dimensions: {width: 50, height: 50}});
 const canvasStage = gameRender.element();
 const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasStage}></Container>
 

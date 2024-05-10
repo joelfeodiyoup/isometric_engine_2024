@@ -3,7 +3,6 @@ import { DropdownMenu } from "./DropdownMenu";
 
 export const TopNav = () => {
   const navItems = ["file", "options", "help"];
-  const e = <p>blah</p>;
   return (<>
   <section>
 
