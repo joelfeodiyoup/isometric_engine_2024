@@ -6,7 +6,12 @@ export class Grid {
   public readonly gridPoints: GridPoint[][];
   public readonly gridCells: GridCell[][];
   private isometric: Isometric;
-  constructor(width: number, height: number) {
+  constructor(
+    width: number, height: number,
+    drawCellFill: (cell: GridCell) => void,
+    drawCellImage: (cell: GridCell) => void,
+    drawBaseCellFill: (cell: GridCell) => void,
+  ) {
     this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height} )
 
     this.gridPoints = Array.from(Array(height), (_, row) => {
@@ -27,7 +32,17 @@ export class Grid {
           return gridCells;
         }
 
-        gridCells.push(new GridCell(topLeft, topRight, bottomLeft, bottomRight, gridPoint.x, gridPoint.y));
+        gridCells.push(new GridCell(
+          topLeft,
+          topRight,
+          bottomLeft,
+          bottomRight,
+          gridPoint.x,
+          gridPoint.y,
+          drawCellFill,
+          drawCellImage,
+          drawBaseCellFill
+        ));
         return gridCells;
       }, [] as GridCell[])
     })

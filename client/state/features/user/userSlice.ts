@@ -5,6 +5,7 @@ type User = {
   isLoggedIn: boolean,
     name: string,
     token: string,
+    color: string,
 };
 interface UserState {
   value: User
@@ -14,6 +15,7 @@ const initialState: UserState = {
     isLoggedIn: false,
     name: '',
     token: '',
+    color: 'grey',
   },
 }
 

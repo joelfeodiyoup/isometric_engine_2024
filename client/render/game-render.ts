@@ -1,5 +1,5 @@
 import { store } from "../state/app/store";
-import { Canvas, CanvasGrid, CanvasHover } from "./canvas";
+import { Canvas, CanvasWithMouseLiseners } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
@@ -18,17 +18,28 @@ type onClickScreen = (
   point: {x: number, y: number}
 ) => void;
 
+/**
+ * I'm not sure what will be the best way to implement. So this is a WIP.
+ * Basically I want the "game renderer" to be fairly generic.
+ * I want to be able to implement this and have the "consumer" determine how different types of cells would be handled on render
+ * So possibly this renderer just says "these are the possibilities" (it could be rendered as a filled colour, or as an image, etc)
+ * And then the caller of this class can pass in a function that uses the game logic to choose which of these is used, without worrying about implementation details.
+ */
+type CellBuildRenderTypes = "filled" | "image";
 
-
-export class GameRender {
+export class GameRender  {
   public readonly grid: Grid;
   private canvasStage;
   private container;
-  private canvasGrid: Canvas;
-  private canvasHover: Canvas;
   private hoveredCell = null as null | GridCell;
   private hoveredPoint = null as null | GridPoint;
   private screenPosition: ScreenPosition;
+
+  private canvases: {
+    canvasHover: Canvas,
+    canvasGrid: Canvas,
+    canvasBuild: Canvas,
+  }
 
   /**
    * there will be a few different canvas elements inside the wrapper
@@ -38,7 +49,13 @@ export class GameRender {
   private canvasElementIds = ["canvas", "canvas-hover"];
 
   constructor(options: GameOptions) {
-    this.grid = new Grid(options.dimensions.width, options.dimensions.height);
+    this.grid = new Grid(
+      options.dimensions.width,
+      options.dimensions.height,
+      this.drawCellFill.bind(this),
+      this.drawCellImage.bind(this),
+      this.drawBaseCellFill.bind(this),
+    );
     /** I'm doing an assertion that these exist. I don't like that. */
     this.canvasStage = document.getElementById("canvas-stage")!;
     this.container = document.getElementById('canvas-container')!;
@@ -46,8 +63,15 @@ export class GameRender {
     const originElementPosition = new ScreenPosition({x: 0, y: 0}, ({x, y}: {x: number, y: number}) => {});
     this.screenPosition = new ScreenPosition({x: 0, y: 0}, this.setCameraPosition.bind(this));
 
-    this.canvasGrid = new CanvasGrid(/*originElementPosition, clickHandler, mouseHoverHandler*/);
-    this.canvasHover = new CanvasHover(originElementPosition, this.clickHandler.bind(this), this.mouseHoverHandler.bind(this));
+    this.canvases = {
+      canvasHover: new CanvasWithMouseLiseners(
+        "canvas-hover",
+        this.clickHandler.bind(this),
+        this.mouseHoverHandler.bind(this)
+      ),
+      canvasGrid: new Canvas("canvas"),
+      canvasBuild: new Canvas("canvas-build"),
+    };
 
     this.setup();
   }
@@ -61,15 +85,39 @@ export class GameRender {
     return this.canvasStage;
   }
 
+  /**
+   * Each cell can be filled. This function tells each cell how it should render that.
+   * @param cell 
+   * @param color 
+   */
+  private drawCellFill(cell: GridCell) {
+    if (cell.isFilled && cell.color) {
+      this.canvases.canvasGrid.draw.drawFilledRectangle([cell], cell.color);
+    }
+    else {
+      cell.drawBaseCellFill(cell);
+    }
+  }
+
+  /**
+   * Todo: each cell could have an image draw onto it.
+   * This function tells how that should happen.
+   * @param cell 
+   */
+  private drawCellImage(cell: GridCell) {
+
+  }
+
+  private drawBaseCellFill(cell: GridCell) {
+    this.canvases.canvasGrid.draw.drawFilledRectangle([cell], "green");
+  }
+
   private setup() {
     // draw all the filled squares
-    this.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
+    this.grid.gridCells.flat().forEach(cell => cell.drawBaseCellFill(cell));
+    // this.canvases.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
     // draw the grid (the lines)
-    this.drawGrid();
-
-    this.grid.gridCells.flat().forEach((cell, i) => {
-      this.drawCell(cell, i);
-    })
+    this.redrawRender();
 
     this.canvasStage.addEventListener("mousedown", event => {
       if (!this.isRightClick(event)) { return; }
@@ -98,13 +146,21 @@ export class GameRender {
   private cellHandler(x: number, y: number) {
     const closest = this.grid.closestCell(x, y);
     if (closest) {
-      closest.isFilled = !closest.isFilled;
+      const userColor = store.getState().user.value.color;
+      if (closest.color === userColor) {
+        closest.color = null;
+        closest.isFilled = false;
+      } else {
+        closest.isFilled = true;
+        closest.color = userColor;
+      }
+      closest.drawFill(closest);
+      console.log(closest);
     }
   }
   
   private pointHandler (x: number, y: number) {
     const closest = this.grid.closestPoint(x, y);
-    console.log(closest.point);
     const actionType = store.getState().gameControls.value.clickAction;
     if (actionType === "raise" || actionType === "lower") {
       closest.point?.adjustHeight(actionType);
@@ -117,10 +173,14 @@ export class GameRender {
     state.gameControls.value.highlightType === "cell"
       ? this.cellHandler(x, y)
       : this.pointHandler(x, y);
-    const filled = this.grid.gridCells.flat().filter(cell => cell.isFilled);
-    this.canvasGrid.draw.clear();
-    this.canvasGrid.draw.drawFilledRectangle(filled);
-    this.drawGrid();
+
+    /**
+     * whenever the action was raising or lowering a part of the grid,
+     * Then the grid needs to be drawn again.
+     */
+    if (state.gameControls.value.clickAction === "lower" || state.gameControls.value.clickAction === "raise") {
+      this.redrawRender();
+    }
   };
 
   private setHoveredCell(x: number, y: number) {
@@ -130,8 +190,10 @@ export class GameRender {
     
     } else {
       this.hoveredCell = closestCell;
-      this.canvasHover.clear();
-      closestCell && this.canvasHover.draw.drawFilledRectangle([closestCell], "darkgreen");
+      this.canvases.canvasHover.clear();
+      // draw a transparent rectangle over the cell.
+      closestCell && this.canvases.canvasHover.draw.drawFilledRectangle([closestCell], "rgba(255,255,255,0.5");
+      console.log('drawing hover');
     }
   }
   private setHoveredPoint (x: number, y: number) {
@@ -141,8 +203,8 @@ export class GameRender {
   
     } else {
       this.hoveredPoint = closestPoint;
-      this.canvasHover.clear();
-      this.hoveredPoint && this.canvasHover.draw.drawPoint(this.hoveredPoint)
+      this.canvases.canvasHover.clear();
+      this.hoveredPoint && this.canvases.canvasHover.draw.drawPoint(this.hoveredPoint)
     }
   }
   private mouseHoverHandler (x: number, y: number) {
@@ -151,15 +213,22 @@ export class GameRender {
       ? this.setHoveredCell(x, y)
       : this.setHoveredPoint(x, y);
   }
+
+  private redrawRender() {
+    this.canvases.canvasGrid.draw.clear();
+    this.drawCells();
+    this.drawGrid();
+  }
   
   private drawGrid() {
-    this.canvasGrid.draw.drawGrid(this.grid.gridPoints);
+    this.canvases.canvasGrid.draw.drawGrid(this.grid.gridPoints);
   }
-  
-  private drawCell(cell: GridCell, i: number) {
-    this.canvasGrid.drawImage({x: cell.topLeft.coords.x, y: cell.topRight.coords.y}, {x: cell.bottomRight.coords.x, y: cell.bottomLeft.coords.y}, i);
+
+  private drawCells() {
+    this.grid.gridCells.flat().forEach((cell, i) => {
+      cell.drawFill(cell);
+    })
   }
-  // drawCell(game.grid.gridCells.flat()[1]!);
   
   private setCameraPosition({x, y}: {x: number, y: number}) {
     if (this.container) {

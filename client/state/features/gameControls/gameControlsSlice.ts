@@ -37,7 +37,6 @@ export const clickActionSlice = createSlice({
     },
     setGridHighlightType: (state, action: PayloadAction<HighlightTypes>) => {
       state.value = {...state.value, highlightType: action.payload};
-      console.log(state);
     },
     toggleGridHighlightType: (state) => {
       if (state.value.highlightType === "cell") {

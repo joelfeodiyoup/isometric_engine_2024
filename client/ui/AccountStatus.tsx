@@ -18,7 +18,6 @@ export const AccountStatus = () => {
   const [newUser, setNewUser] = useState<{name: string, password: string}>({name: '', password: ''});
   const [login, {data, loading, error}] = useMutation(LOGIN);
   useEffect(() => {
-    console.log(`dataChanged: ${data?.login?.token}`);
     const token = data?.login?.token as string;
     if (token) {
       // I think I shouldn't do this actually.

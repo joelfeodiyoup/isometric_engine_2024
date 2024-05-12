@@ -1,3 +1,4 @@
+import { store } from "../state/app/store";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 
@@ -7,6 +8,14 @@ import { Coords } from "./isometric";
  */
 export class GridCell {
   public isFilled = true;
+  public color: string | null = "green";
+
+  /**
+   * Todo: find some way for each cell to say which image it should render.
+   * Possibly it'll reference some other file which contains keys for images.
+   * Not sure yet.
+   */
+  public image: any;
 
   constructor(
     public readonly topLeft: GridPoint,
@@ -15,7 +24,11 @@ export class GridCell {
     public readonly bottomRight: GridPoint,
     public readonly x: number,
     public readonly y: number,
-  ) {}
+    public drawFill: (cell: GridCell) => void,
+    public drawImage: (cell: GridCell) => void,
+    public drawBaseCellFill: (cell: GridCell) => void,
+  ) {
+  }
 
   public isPointInsideCell(point: Coords): boolean {
     const topLine = this.getLineParameters(this.topLeft, this.topRight);

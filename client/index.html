@@ -30,7 +30,7 @@
 </head>
 <body>
   <div id="ui-root"></div>
-  <div id="canvas-stage">
+  <div id="canvas-stage" style="isolation: isolate">
     <div id="canvas-container" oncontextmenu="return false;">
       <canvas
       id="canvas"
@@ -38,9 +38,15 @@
       width="4000"
       ></canvas>
       <canvas
+      id="canvas-build"
+      height="4000"
+      width="4000"
+      ></canvas>
+      <canvas
       id="canvas-hover"
       height="4000"
       width="4000"
+      style="z-index: 10" <!-- this element needs to be above the other canvases, because its the one which handles the click events --></canvas>
       ></canvas>
     </div>
   </div>

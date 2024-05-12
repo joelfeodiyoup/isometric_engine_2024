@@ -61,7 +61,14 @@ export class Draw {
 
   drawFilledRectangle(cells: GridCell[], color: Colors = "green") {
     cells.forEach(cell => {
-      this.canvas.drawFilledPolygon([cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft].map(cell => ({x: cell.coords.x, y: cell.coords.y})), color);
+      this.canvas.drawFilledPolygon([
+        cell.topLeft,
+        cell.topRight,
+        cell.bottomRight,
+        cell.bottomLeft
+      ].map(
+        cell => ({x: cell.coords.x, y: cell.coords.y})
+      ), color);
     })
   }
 

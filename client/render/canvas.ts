@@ -2,7 +2,7 @@ import { Colors, Draw } from "./draw";
 import { Coords } from "./isometric";
 import { ScreenPosition } from "./screen-position";
 
-export abstract class Canvas {
+export class Canvas {
   protected ctx: CanvasRenderingContext2D;
   protected canvas: HTMLCanvasElement;
   public draw: Draw;
@@ -91,21 +91,17 @@ export abstract class Canvas {
   }
 }
 
-export class CanvasHover extends Canvas {
-  // protected ctx: CanvasRenderingContext2D;
+/**
+ * Only some of the canvases need to have a click handler on them.
+ */
+export class CanvasWithMouseLiseners extends Canvas {
   constructor(
-    origin: ScreenPosition,
+    domElementId: string,
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void,
   ) {
-    super("canvas-hover");
+    super(domElementId);
     super.setListeners(onClick, onMouseMove);
-  }
-}
-export class CanvasGrid extends Canvas {
-  constructor(
-  ) {
-    super("canvas");
   }
 }
 
