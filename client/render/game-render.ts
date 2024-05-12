@@ -3,7 +3,7 @@ import { Canvas, CanvasWithMouseLiseners } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
-import { ScreenPosition } from "./screen-position";
+import { MoveScreenHandler } from "./screen-position";
 
 type GameOptions = {
   dimensions: {width: number, height: number},
@@ -33,7 +33,7 @@ export class GameRender  {
   private container;
   private hoveredCell = null as null | GridCell;
   private hoveredPoint = null as null | GridPoint;
-  private screenPosition: ScreenPosition;
+  private moveScreenHandler: MoveScreenHandler;
 
   private canvases: {
     canvasHover: Canvas,
@@ -60,9 +60,6 @@ export class GameRender  {
     this.canvasStage = document.getElementById("canvas-stage")!;
     this.container = document.getElementById('canvas-container')!;
 
-    const originElementPosition = new ScreenPosition({x: 0, y: 0}, ({x, y}: {x: number, y: number}) => {});
-    this.screenPosition = new ScreenPosition({x: 0, y: 0}, this.setCameraPosition.bind(this));
-
     this.canvases = {
       canvasHover: new CanvasWithMouseLiseners(
         "canvas-hover",
@@ -72,6 +69,12 @@ export class GameRender  {
       canvasGrid: new Canvas("canvas"),
       canvasBuild: new Canvas("canvas-build"),
     };
+
+    this.moveScreenHandler = new MoveScreenHandler(
+      this.canvasStage,
+      {x: 0, y: 0},
+      this.setCameraPosition.bind(this)
+    )
 
     this.setup();
   }
@@ -118,29 +121,6 @@ export class GameRender  {
     // this.canvases.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
     // draw the grid (the lines)
     this.redrawRender();
-
-    this.canvasStage.addEventListener("mousedown", event => {
-      if (!this.isRightClick(event)) { return; }
-      this.screenPosition.startScroll(event.clientX, event.clientY)
-      event.preventDefault();
-    });
-    this.canvasStage.addEventListener("mousemove", event => {
-      this.screenPosition.midScroll(event.clientX, event.clientY);
-    })
-    
-    this.canvasStage.addEventListener("mouseup", event => {
-      if (!this.isRightClick(event)) { return; }
-      this.screenPosition.endScroll(event.clientX, event.clientY);
-    })
-  }
-
-  private isRightClick(event: MouseEvent) {
-    return event.button === 2;
-  }
-
-  public onWindowResize(widthPx: number, heightPx: number) {
-    this.canvasStage.style.width = `${widthPx}px`;
-    this.canvasStage.style.height = `${heightPx}px`;
   }
 
   private cellHandler(x: number, y: number) {

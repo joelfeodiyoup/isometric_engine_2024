@@ -1,6 +1,5 @@
 import { Colors, Draw } from "./draw";
 import { Coords } from "./isometric";
-import { ScreenPosition } from "./screen-position";
 
 export class Canvas {
   protected ctx: CanvasRenderingContext2D;
@@ -8,7 +7,6 @@ export class Canvas {
   public draw: Draw;
   
   constructor(
-    // private position: ScreenPosition
     canvasElementId: string
   ) {
     const canvas = <HTMLCanvasElement>document.getElementById(canvasElementId);

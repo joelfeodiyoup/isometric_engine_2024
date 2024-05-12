@@ -1,41 +1,68 @@
 import { Coords } from "./isometric";
 
+type ClickHandlerArguments = {
+  screenX: number,
+  screenY: number,
+  clickType: "right" | "left"
+}
+/**
+ * function signature for handling clicks.
+ */
+type ClickHandlerFunction = (args: ClickHandlerArguments) => void;
+
+abstract class ClickAndDragHandler {
+  constructor(
+    element: HTMLElement
+  ) {
+    element.addEventListener("mousedown", event => {
+      this.handleClick(this.onStartClick.bind(this), event);
+    });
+    element.addEventListener("mousemove", event => {
+      this.onMidClick && this.handleClick(this.onMidClick.bind(this), event);
+    })
+    element.addEventListener("mouseup", event => {
+      this.handleClick(this.onEndClick.bind(this), event);
+    })
+  }
+  abstract onStartClick(args: ClickHandlerArguments): void;
+  abstract onEndClick(args: ClickHandlerArguments): void;
+  abstract onMidClick?(args: ClickHandlerArguments): void;
+
+  private handleClick(f: ClickHandlerFunction, event: MouseEvent) {
+    f({screenX: event.clientX, screenY: event.clientY, clickType: this.clickType(event)});
+  }
+
+  private clickType(event: MouseEvent) {
+    return event.button === 2 ? "right" : "left";
+  }
+}
 
 /**
- * handle scrolling of the screen
+ * This abstracts the handling of moving the screen around by clicking and holding right click.
+ * When the user does that I need to do some calculations from the original position and the new position
  */
-export class ScreenPosition {
+export class MoveScreenHandler extends ClickAndDragHandler {
   private originClickPosition = null as null | Coords;
-
-  public get x() {
-    return this.originElementPosition.x;
-  }
-  public get y() {
-    return this.originElementPosition.y;
-  }
-
   constructor(
+    element: HTMLElement,
     private originElementPosition: {x: number, y: number} = {x: 0, y: 0},
     private setPosition: ({x, y}: {x: number, y: number}) => void
-  ) {}
-
-  public startScroll(x: number, y: number) {
-    // this.originElementPosition.x = x;
-    // this.originElementPosition.y = y;
-    this.originClickPosition = {x, y};
+  ) {
+    super(element);
   }
-
-  public endScroll(x: number, y: number) {
-    const totalMoveAmount = this.inProgressMoveAmount(x, y);
+  onStartClick(args: ClickHandlerArguments): void {
+    this.originClickPosition = {x: args.screenX, y: args.screenY};
+  }
+  onEndClick(args: ClickHandlerArguments): void {
+    const totalMoveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     this.originElementPosition.x = this.originElementPosition.x - totalMoveAmount.x;
     this.originElementPosition.y = this.originElementPosition.y - totalMoveAmount.y;
     this.originClickPosition = null;
     this.setPosition(this.originElementPosition);
   }
-
-  public midScroll(x: number, y: number) {
+  onMidClick?(args: ClickHandlerArguments): void {
     if (!this.originClickPosition) { return; }
-    const moveAmount = this.inProgressMoveAmount(x, y);
+    const moveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     const newPosition = {x: this.originElementPosition.x - moveAmount.x, y: this.originElementPosition.y - moveAmount.y};
     this.setPosition(newPosition);
   }
@@ -56,5 +83,4 @@ export class ScreenPosition {
       return {x, y}
     }
   }
-
 }
