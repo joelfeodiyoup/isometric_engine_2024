@@ -127,7 +127,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     this.calculateStartEndRange(args);
   }
   onMidClick(args: ClickHandlerArguments): void {
-    this.calculateStartEndRange(args);
+    // this.calculateStartEndRange(args);
   }
 
   /**
@@ -151,11 +151,12 @@ export class SelectMultipleCells extends ClickAndDragHandler {
       const end = this.convertScreenCoordsToCell(this.end);
       // return {start: start, end : end};
       start && end && this.handleMultipleCellsSelected(start, end);
-    } 
-    const start = this.convertScreenCoordsToPoint(this.start);
-    const end = this.convertScreenCoordsToPoint(this.end);
-    // return {start: start, end: end};
-    start && end && this.handleMultiplePointsSelected(start, end);
+    } else {
+      const start = this.convertScreenCoordsToPoint(this.start);
+      const end = this.convertScreenCoordsToPoint(this.end);
+      // return {start: start, end: end};
+      start && end && this.handleMultiplePointsSelected(start, end);
+    }
   }
 
 }
