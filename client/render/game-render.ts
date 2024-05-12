@@ -39,16 +39,10 @@ export class GameRender  {
 
   private canvases: {
     canvasHover: Canvas,
+    canvasBase: Canvas,
     canvasGrid: Canvas,
     canvasBuild: Canvas,
   }
-
-  /**
-   * there will be a few different canvas elements inside the wrapper
-   * Sometimes I want to resize them.
-   * There's probably a better way to do this. I'll figure it out later.
-   * */
-  private canvasElementIds = ["canvas", "canvas-hover"];
 
   constructor(options: GameOptions) {
     this.grid = new Grid(
@@ -63,17 +57,18 @@ export class GameRender  {
     this.container = document.getElementById('canvas-container')!;
 
     this.canvases = {
-      canvasHover: new Canvas(
-        "canvas-hover",
-        // this.clickHandler.bind(this),
-        // this.mouseHoverHandler.bind(this)
-      ),
-      // canvasHover: new CanvasWithMouseLiseners(
+      // canvasHover: new Canvas(
       //   "canvas-hover",
-      //   this.clickHandler.bind(this),
-      //   this.mouseHoverHandler.bind(this)
+      //   // this.clickHandler.bind(this),
+      //   // this.mouseHoverHandler.bind(this)
       // ),
-      canvasGrid: new Canvas("canvas"),
+      canvasHover: new CanvasWithMouseLiseners(
+        "canvas-hover",
+        this.clickHandler.bind(this),
+        this.mouseHoverHandler.bind(this)
+      ),
+      canvasBase: new Canvas("canvas-base"),
+      canvasGrid: new Canvas("canvas-grid"),
       canvasBuild: new Canvas("canvas-build"),
     };
 
@@ -88,7 +83,7 @@ export class GameRender  {
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
       (start: GridCell, end: GridCell) => {
         this.grid.subArrayCells(start, end).flat().forEach(cell => this.handleCellClicked(cell));
-        this.drawGrid();
+        // this.drawGrid();
       },
       (start: GridPoint, end: GridPoint) => {
         console.log(start);
@@ -117,7 +112,7 @@ export class GameRender  {
    */
   private drawCellFill(cell: GridCell) {
     if (cell.isFilled && cell.color) {
-      this.canvases.canvasGrid.draw.drawFilledRectangle([cell], cell.color);
+      this.canvases.canvasBase.draw.drawFilledRectangle([cell], cell.color);
     }
     else {
       cell.drawBaseCellFill(cell);
@@ -134,7 +129,7 @@ export class GameRender  {
   }
 
   private drawBaseCellFill(cell: GridCell) {
-    this.canvases.canvasGrid.draw.drawFilledRectangle([cell], "green");
+    this.canvases.canvasBase.draw.drawFilledRectangle([cell], "green");
   }
 
   private setup() {

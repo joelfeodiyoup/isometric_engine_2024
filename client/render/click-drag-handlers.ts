@@ -124,6 +124,19 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     }
   }
   onEndClick(args: ClickHandlerArguments): void {
+    this.calculateStartEndRange(args);
+  }
+  onMidClick(args: ClickHandlerArguments): void {
+    // do nothing
+  }
+
+  /**
+   * I want to display some stuff when the user is still dragging
+   * So the "end" and "mid" events will do about the same thing.
+   * @param args 
+   * @returns 
+   */
+  calculateStartEndRange(args: ClickHandlerArguments) {
     if (args.clickType !== "left") {
       return;
     }
@@ -142,9 +155,6 @@ export class SelectMultipleCells extends ClickAndDragHandler {
       const endPoint = this.convertScreenCoordsToPoint(this.end);
       startPoint && endPoint && this.handleMultiplePointsSelected(startPoint, endPoint);
     }
-  }
-  onMidClick(args: ClickHandlerArguments): void {
-    // do nothing
   }
 
 }
