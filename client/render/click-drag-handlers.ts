@@ -127,7 +127,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     this.calculateStartEndRange(args);
   }
   onMidClick(args: ClickHandlerArguments): void {
-    // do nothing
+    this.calculateStartEndRange(args);
   }
 
   /**
@@ -138,23 +138,24 @@ export class SelectMultipleCells extends ClickAndDragHandler {
    */
   calculateStartEndRange(args: ClickHandlerArguments) {
     if (args.clickType !== "left") {
-      return;
+      return {start: null, end: null};
     }
     this.end = {x: args.offsetX, y: args.offsetY};
-
+    
     if (!this.start || !this.end) {
-      return;
+      return {start: null, end: null};
     }
 
     if (this.shouldSelectCell()) {
-      const startCell = this.convertScreenCoordsToCell(this.start);
-      const endCell = this.convertScreenCoordsToCell(this.end);
-      startCell && endCell && this.handleMultipleCellsSelected(startCell, endCell);
-    } else {
-      const startPoint = this.convertScreenCoordsToPoint(this.start);
-      const endPoint = this.convertScreenCoordsToPoint(this.end);
-      startPoint && endPoint && this.handleMultiplePointsSelected(startPoint, endPoint);
-    }
+      const start = this.convertScreenCoordsToCell(this.start);
+      const end = this.convertScreenCoordsToCell(this.end);
+      // return {start: start, end : end};
+      start && end && this.handleMultipleCellsSelected(start, end);
+    } 
+    const start = this.convertScreenCoordsToPoint(this.start);
+    const end = this.convertScreenCoordsToPoint(this.end);
+    // return {start: start, end: end};
+    start && end && this.handleMultiplePointsSelected(start, end);
   }
 
 }

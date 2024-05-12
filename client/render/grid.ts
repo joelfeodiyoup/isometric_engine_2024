@@ -1,6 +1,6 @@
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
-import { Isometric } from "./isometric";
+import { Coords, Isometric } from "./isometric";
 
 export class Grid {
   public readonly gridPoints: GridPoint[][];
@@ -48,11 +48,17 @@ export class Grid {
     })
   }
 
-  public subArrayCells(start: GridCell, end: GridCell): GridCell[][] {
-    const topLeft = {x: Math.min(start.x, end.x), y: Math.min(start.y, end.y)};
-    const bottomRight = {x: Math.max(start.x, end.x) + 1, y: Math.max(start.y, end.y) + 1};
-    const subArray = this.gridCells.slice(topLeft.y, bottomRight.y).map(row => row.slice(topLeft.x, bottomRight.x));
+  public subArray<T extends Coords>(start: T, end: T, array: T[][]): T[][] {
+    const bounds = this.subArrayBounds(start, end);
+    const subArray = array.slice(bounds.y1, bounds.y2)
+      .map(row => row.slice(bounds.x1, bounds.x2));
     return subArray;
+  }
+
+  private subArrayBounds(start: Coords, end: Coords): {y1: number, y2: number, x1: number, x2: number} {
+    const topLeft = {x: Math.min(start.x, end.x), y: Math.min(start.y, end.y)};
+    const bottomRight = {x: Math.max(start.x, end.x), y: Math.max(start.y, end.y)};
+    return {y1: topLeft.y, y2: bottomRight.y + 1, x1: topLeft.x, x2: bottomRight.x + 1};
   }
   
   closestCell(x: number, y: number) {

@@ -82,11 +82,11 @@ export class GameRender  {
       (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
       (start: GridCell, end: GridCell) => {
-        this.grid.subArrayCells(start, end).flat().forEach(cell => this.handleCellClicked(cell));
-        // this.drawGrid();
+        this.grid.subArray(start, end, this.grid.gridCells).flat().forEach(cell => this.handleCellClicked(cell));
       },
       (start: GridPoint, end: GridPoint) => {
-        console.log(start);
+        const points = this.grid.subArray(start, end, this.grid.gridPoints);
+        this.handlePointClicked(points.flat(), start.height);
       },
       () => {
         return store.getState().gameControls.value.highlightType === "cell"
@@ -176,6 +176,21 @@ export class GameRender  {
     }
     return closest.point;
   }
+
+  private handlePointClicked(points: GridPoint[], firstCellHeight: number) {
+    const actionType = store.getState().gameControls.value.clickAction;
+
+    // if the user selects a lot of points, make all of those points the same height as the first on.
+    const makeAllSameHeight = points.length > 1;
+    if (makeAllSameHeight) {
+      const height = firstCellHeight ?? 0;
+      points.forEach(point => point.setHeight(height));
+    } else if(actionType === "raise" || actionType === "lower") {
+      // we're adjusting just one point, so just adjust it.
+      points[0]?.adjustHeight(actionType);
+    }
+    this.redrawRender();
+  }
   
   private clickHandler (x: number, y: number) {
     const state = store.getState();
@@ -202,7 +217,6 @@ export class GameRender  {
       this.canvases.canvasHover.clear();
       // draw a transparent rectangle over the cell.
       closestCell && this.canvases.canvasHover.draw.drawFilledRectangle([closestCell], "rgba(255,255,255,0.5");
-      console.log('drawing hover');
     }
   }
   private setHoveredPoint (x: number, y: number) {
@@ -225,6 +239,7 @@ export class GameRender  {
 
   private redrawRender() {
     this.canvases.canvasGrid.draw.clear();
+    this.canvases.canvasBase.draw.clear();
     this.drawCells();
     this.drawGrid();
   }

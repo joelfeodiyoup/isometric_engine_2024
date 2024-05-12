@@ -9,7 +9,7 @@ import { Coords, Isometric } from "./isometric";
 export class GridPoint {
   public readonly baseCoords: Coords;
   public readonly coords: Coords;
-  protected height: number = 0;
+  public height: number = 0;
   public isHighlighted = false;
 
   private get heightMultiplier() {
@@ -53,7 +53,12 @@ export class GridPoint {
 
 
   public adjustHeight(direction: 'raise' | 'lower') {
-    this.height += direction === 'raise' ? -1 : 1;
+    const newHeight = this.height + (direction === "raise" ? -1 : 1);
+    this.setHeight(newHeight);
+  }
+  
+  public setHeight(height: number) {
+    this.height = height;
     this.coords.y = this.baseCoords.y + this.scaledHeight;
   }
 
