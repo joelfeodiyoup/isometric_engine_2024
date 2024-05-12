@@ -116,7 +116,6 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     super(element);
   }
   onStartClick(args: ClickHandlerArguments): void {
-    console.log(args.screenX);
     if (args.clickType === "left") {
       this.start = {x: args.offsetX, y: args.offsetY};
     } else {

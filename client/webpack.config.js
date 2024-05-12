@@ -5,6 +5,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
+  mode: 'development',
   entry: [/*'/client/render/game-render.ts', */'/ui/app.tsx'],
   module: {
     rules: [
@@ -13,6 +14,12 @@ export default {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: [
+          'file-loader'
+        ]
+      }
     ],
   },
   resolve: {

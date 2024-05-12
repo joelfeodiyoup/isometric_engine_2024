@@ -1,5 +1,6 @@
 import { useAppDispatch } from "../state/app/hooks"
 import { setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
+import { Cluster } from "./layout-utilities/Cluster";
 
 export const Terrain = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,8 @@ export const Terrain = () => {
     }},
   ]
   return (<>
-    {buttons.map(button => <button onClick={button.action}>{button.text}</button>)}
+    <Cluster>
+      {buttons.map(button => <button onClick={button.action}>{button.text}</button>)}
+    </Cluster>
   </>)
 }
