@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../state/app/hooks"
-import { increaseZoom } from "../state/features/zoom/zoomSlice";
+import { increaseZoom } from "../state/features/gameControls/gameControlsSlice";
 
 export const Zoom = () => {
   const dispatch = useAppDispatch();

@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import { DropdownMenu } from "./DropdownMenu";
+import { AccountStatus } from "./AccountStatus";
 
 export const TopNav = () => {
   const navItems = ["file", "options", "help"];
@@ -11,6 +12,7 @@ export const TopNav = () => {
         {navItems.map(item => <li>{item}</li>)}
       </ul>
     </nav>
+    <AccountStatus />
     <DropdownMenu>
       {{
         top: <pre>I am the top</pre>,

@@ -9,13 +9,46 @@ import { SideNav } from './SideNav';
 import { Layout } from './layout-utilities/Layout';
 import { GameRender } from '../render/game-render';
 import { Container } from './layout-utilities/Container';
+import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
+const middleware = new ApolloLink((operation, forward) => {
+  const state = store.getState();
+  const authorizationToken = state.user.value.token ?? '';
+	const headers = {
+		authorization: authorizationToken,
+	};
+
+	// add the authorization to the headers
+	operation.setContext({
+		headers,
+	});
+
+	return forward(operation);
+});
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000',
+});
+const authLink = setContext((_, {headers}) => {
+  const authorization = store.getState().user.value.token;
+  return {
+    headers: {
+      ...headers,
+      authorization
+    }
+  }
+})
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
 
 /**
  * I wish I didn't have to do this. Surely not?
  */
 export type BaseProps = React.HTMLAttributes<HTMLElement>;
 
-const gameRender = new GameRender({dimensions: {width: 50, height: 50}});
+const gameRender = new GameRender({dimensions: {width: 10, height: 10}});
 const canvasStage = gameRender.element();
 const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasStage}></Container>
 
@@ -40,7 +73,9 @@ if (!domNode) {
 const root = createRoot(domNode);
 root.render(
   <Provider store={store}>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </Provider>
 );
 document.addEventListener("DOMContentLoaded", () => {

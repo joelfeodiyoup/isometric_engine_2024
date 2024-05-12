@@ -1,8 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { GraphQLError } from "graphql";
 import { Authentication, AuthenticationKey, UserInterface } from "./authentication.js";
-import { GraphQLResolveInfo } from "graphql";
 
 const authentication = new Authentication();
 
@@ -13,13 +11,17 @@ const typeDefs = `#graphql
     author: String
   }
 
+  type User {
+    name: String
+  }
+
   type AuthenticationToken {
     token: String
   }
 
   type Query {
     books: [Book]
-    user: [Book]
+    user: User
   }
   type Mutation {
     login(name: String!, password: String!): AuthenticationToken
@@ -41,7 +43,7 @@ const resolvers = {
   Query: {
     books: (parent) => books,
     user: (parent, args, contextValue) => {
-      return books;
+      return contextValue.user;
     }
   },
   Mutation: {

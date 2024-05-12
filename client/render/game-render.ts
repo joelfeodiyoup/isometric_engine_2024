@@ -105,7 +105,7 @@ export class GameRender {
   private pointHandler (x: number, y: number) {
     const closest = this.grid.closestPoint(x, y);
     console.log(closest.point);
-    const actionType = store.getState().clickAction.value;
+    const actionType = store.getState().gameControls.value.clickAction;
     if (actionType === "raise" || actionType === "lower") {
       closest.point?.adjustHeight(actionType);
     }
@@ -114,7 +114,7 @@ export class GameRender {
   
   private clickHandler (x: number, y: number) {
     const state = store.getState();
-    state.highlightType.value === "cell"
+    state.gameControls.value.highlightType === "cell"
       ? this.cellHandler(x, y)
       : this.pointHandler(x, y);
     const filled = this.grid.gridCells.flat().filter(cell => cell.isFilled);
@@ -147,7 +147,7 @@ export class GameRender {
   }
   private mouseHoverHandler (x: number, y: number) {
     const state = store.getState();
-    state.highlightType.value === "cell"
+    state.gameControls.value.highlightType === "cell"
       ? this.setHoveredCell(x, y)
       : this.setHoveredPoint(x, y);
   }

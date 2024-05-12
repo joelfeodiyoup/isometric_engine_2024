@@ -10,15 +10,25 @@ Ideally I'll keep separate layers for the game engine and specific game things l
 
 ## to run
 
+The code is separated into back end and front end.
+**front end**
+
+react attached to index.html, plus some javascript that manipulates a canvas element in the index.html.
+
+- cd into `/client`
 - `npm install`
-
-**client** - react attached to index.html, plus some javascript that manipulates a canvas element in the index.html.
-
 - `npm run dev`
-- spin up a web server to run `index.html` in the browser. e.g. in vscode you could use the extension `LiveServer`
+- run a server from this directory.
 
-**server** - a graphql server (Apollo Server)
-- `npm run start-server` - graphql server is now running on localhost:4000
+**back end**
+
+Basic graphql server from Apollo Server, running on express (I think).
+
+- cd into `/server`
+- `npm install`
+- `npm start`
+- the graphql server is now running on localhost:4000
+
 
 ## General "architecture" overview
 

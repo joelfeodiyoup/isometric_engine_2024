@@ -1,21 +1,20 @@
 import { useAppDispatch } from "../state/app/hooks"
-import { setClickAction } from "../state/features/clickAction/clickActionSlice";
-import { setCellHighlightType } from "../state/features/highlightType/highlightTypeSlice";
+import { setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
 
 export const Terrain = () => {
   const dispatch = useAppDispatch();
   const buttons: {text: string, action: () => void}[] = [
     {text: "raise", action: () => {
       dispatch(setClickAction("raise"));
-      dispatch(setCellHighlightType("corner"));
+      dispatch(setGridHighlightType("corner"));
     }},
     {text: "lower", action: () => {
       dispatch(setClickAction("lower"));
-      dispatch(setCellHighlightType("corner"));
+      dispatch(setGridHighlightType("corner"));
     }},
     {text: "build", action: () => {
       dispatch(setClickAction("build"));
-      dispatch(setCellHighlightType("cell"));
+      dispatch(setGridHighlightType("cell"));
     }},
   ]
   return (<>
