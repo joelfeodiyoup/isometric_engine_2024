@@ -47,6 +47,13 @@ export class Grid {
       }, [] as GridCell[])
     })
   }
+
+  public subArrayCells(start: GridCell, end: GridCell): GridCell[][] {
+    const topLeft = {x: Math.min(start.x, end.x), y: Math.min(start.y, end.y)};
+    const bottomRight = {x: Math.max(start.x, end.x) + 1, y: Math.max(start.y, end.y) + 1};
+    const subArray = this.gridCells.slice(topLeft.y, bottomRight.y).map(row => row.slice(topLeft.x, bottomRight.x));
+    return subArray;
+  }
   
   closestCell(x: number, y: number) {
     // the tricky thing in finding the closest point is that the edges of the cell
@@ -65,7 +72,7 @@ export class Grid {
     const isEntirelyWithinCell = withinBoundingCell.find(cell => {
       return cell.isPointInsideCell({x, y});
     });
-    return isEntirelyWithinCell;
+    return isEntirelyWithinCell ?? null;
   }
 
   closestPoint(x: number, y: number) {

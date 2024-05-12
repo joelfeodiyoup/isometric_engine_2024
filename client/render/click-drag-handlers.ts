@@ -1,8 +1,12 @@
+import { GridCell } from "./grid-cell";
+import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 
 type ClickHandlerArguments = {
   screenX: number,
   screenY: number,
+  offsetX: number,
+  offsetY: number,
   clickType: "right" | "left"
 }
 /**
@@ -26,10 +30,16 @@ abstract class ClickAndDragHandler {
   }
   abstract onStartClick(args: ClickHandlerArguments): void;
   abstract onEndClick(args: ClickHandlerArguments): void;
-  abstract onMidClick?(args: ClickHandlerArguments): void;
+  abstract onMidClick(args: ClickHandlerArguments): void;
 
   private handleClick(f: ClickHandlerFunction, event: MouseEvent) {
-    f({screenX: event.clientX, screenY: event.clientY, clickType: this.clickType(event)});
+    f({
+      screenX: event.screenX,
+      offsetX: event.offsetX,
+      screenY: event.screenY,
+      offsetY: event.offsetY,
+      clickType: this.clickType(event)});
+    // f({screenX: event.clientX, screenY: event.clientY, clickType: this.clickType(event)});
   }
 
   private clickType(event: MouseEvent) {
@@ -51,16 +61,22 @@ export class MoveScreenHandler extends ClickAndDragHandler {
     super(element);
   }
   onStartClick(args: ClickHandlerArguments): void {
+    if (args.clickType !== "right") {
+      return;
+    }
     this.originClickPosition = {x: args.screenX, y: args.screenY};
   }
   onEndClick(args: ClickHandlerArguments): void {
+    if (args.clickType !== "right") {
+      return;
+    }
     const totalMoveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     this.originElementPosition.x = this.originElementPosition.x - totalMoveAmount.x;
     this.originElementPosition.y = this.originElementPosition.y - totalMoveAmount.y;
     this.originClickPosition = null;
     this.setPosition(this.originElementPosition);
   }
-  onMidClick?(args: ClickHandlerArguments): void {
+  onMidClick(args: ClickHandlerArguments): void {
     if (!this.originClickPosition) { return; }
     const moveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     const newPosition = {x: this.originElementPosition.x - moveAmount.x, y: this.originElementPosition.y - moveAmount.y};
@@ -83,4 +99,52 @@ export class MoveScreenHandler extends ClickAndDragHandler {
       return {x, y}
     }
   }
+}
+
+export class SelectMultipleCells extends ClickAndDragHandler {
+  private start: Coords | null = null;
+  private end: Coords | null = null;
+
+  constructor(
+    element: HTMLElement,
+    private convertScreenCoordsToCell: (coords: Coords) => (GridCell | null),
+    private convertScreenCoordsToPoint: (coords: Coords) => (GridPoint | null),
+    private handleMultipleCellsSelected: (start: GridCell, end: GridCell) => void,
+    private handleMultiplePointsSelected: (start: GridPoint, end: GridPoint) => void,
+    private shouldSelectCell: () => boolean,
+  ) {
+    super(element);
+  }
+  onStartClick(args: ClickHandlerArguments): void {
+    console.log(args.screenX);
+    if (args.clickType === "left") {
+      this.start = {x: args.offsetX, y: args.offsetY};
+    } else {
+      this.start = null;
+    }
+  }
+  onEndClick(args: ClickHandlerArguments): void {
+    if (args.clickType !== "left") {
+      return;
+    }
+    this.end = {x: args.offsetX, y: args.offsetY};
+
+    if (!this.start || !this.end) {
+      return;
+    }
+
+    if (this.shouldSelectCell()) {
+      const startCell = this.convertScreenCoordsToCell(this.start);
+      const endCell = this.convertScreenCoordsToCell(this.end);
+      startCell && endCell && this.handleMultipleCellsSelected(startCell, endCell);
+    } else {
+      const startPoint = this.convertScreenCoordsToPoint(this.start);
+      const endPoint = this.convertScreenCoordsToPoint(this.end);
+      startPoint && endPoint && this.handleMultiplePointsSelected(startPoint, endPoint);
+    }
+  }
+  onMidClick(args: ClickHandlerArguments): void {
+    // do nothing
+  }
+
 }

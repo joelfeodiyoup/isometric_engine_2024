@@ -3,7 +3,8 @@ import { Canvas, CanvasWithMouseLiseners } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
-import { MoveScreenHandler } from "./screen-position";
+import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
+import { Coords } from "./isometric";
 
 type GameOptions = {
   dimensions: {width: number, height: number},
@@ -34,6 +35,7 @@ export class GameRender  {
   private hoveredCell = null as null | GridCell;
   private hoveredPoint = null as null | GridPoint;
   private moveScreenHandler: MoveScreenHandler;
+  private selectMultiplCellsHandler: SelectMultipleCells;
 
   private canvases: {
     canvasHover: Canvas,
@@ -61,11 +63,16 @@ export class GameRender  {
     this.container = document.getElementById('canvas-container')!;
 
     this.canvases = {
-      canvasHover: new CanvasWithMouseLiseners(
+      canvasHover: new Canvas(
         "canvas-hover",
-        this.clickHandler.bind(this),
-        this.mouseHoverHandler.bind(this)
+        // this.clickHandler.bind(this),
+        // this.mouseHoverHandler.bind(this)
       ),
+      // canvasHover: new CanvasWithMouseLiseners(
+      //   "canvas-hover",
+      //   this.clickHandler.bind(this),
+      //   this.mouseHoverHandler.bind(this)
+      // ),
       canvasGrid: new Canvas("canvas"),
       canvasBuild: new Canvas("canvas-build"),
     };
@@ -74,6 +81,21 @@ export class GameRender  {
       this.canvasStage,
       {x: 0, y: 0},
       this.setCameraPosition.bind(this)
+    )
+    this.selectMultiplCellsHandler = new SelectMultipleCells(
+      this.canvases.canvasHover.canvas,
+      (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
+      (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
+      (start: GridCell, end: GridCell) => {
+        this.grid.subArrayCells(start, end).flat().forEach(cell => this.handleCellClicked(cell));
+        this.drawGrid();
+      },
+      (start: GridPoint, end: GridPoint) => {
+        console.log(start);
+      },
+      () => {
+        return store.getState().gameControls.value.highlightType === "cell"
+      }
     )
 
     this.setup();
@@ -137,6 +159,18 @@ export class GameRender  {
       closest.drawFill(closest);
       console.log(closest);
     }
+  }
+
+  private handleCellClicked(cell: GridCell) {
+    const userColor = store.getState().user.value.color;
+    // if (cell.color === userColor) {
+    //   cell.color = null;
+    //   cell.isFilled = false;
+    // } else {
+      cell.isFilled = true;
+      cell.color = userColor;
+    // }
+    cell.drawFill(cell);
   }
   
   private pointHandler (x: number, y: number) {

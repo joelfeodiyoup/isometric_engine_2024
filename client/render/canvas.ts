@@ -3,7 +3,7 @@ import { Coords } from "./isometric";
 
 export class Canvas {
   protected ctx: CanvasRenderingContext2D;
-  protected canvas: HTMLCanvasElement;
+  public canvas: HTMLCanvasElement;
   public draw: Draw;
   
   constructor(
