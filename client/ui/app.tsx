@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import {store} from '../state/app/store';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { TopNav } from './TopNav';
 import React, { ReactElement, useState } from 'react';
 import { Modal } from './layout-utilities/Modal';
@@ -10,6 +10,7 @@ import { GameRender } from '../render/game-render';
 import { Container } from './layout-utilities/Container';
 import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { closeModal, selectUiState } from '../state/features/ui/uiSlice';
 
 const middleware = new ApolloLink((operation, forward) => {
   const state = store.getState();
@@ -52,14 +53,17 @@ const canvasStage = gameRender.element();
 const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasStage}></Container>
 
 const App = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const uiState = useSelector(selectUiState);
+  const dispatch = useDispatch();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  
   return (<>
     <Layout>
       {{
         top: <TopNav />,
         side: <SideNav />,
         gameRender: <CanvasContainer />,
-        modal: <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}><p>I am something in the modal</p></Modal>
+        modal: <Modal isOpen={uiState.isModalOpen} onClose={() => dispatch(closeModal())}><p>I am something in the modal</p></Modal>
       }}
     </Layout>
   </>)

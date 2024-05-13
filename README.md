@@ -93,16 +93,22 @@ some tasks I could could do...
 - ~~make consistent the screen position + where the mouse is~~
 - ~~figure out how to properly calculate the cell the mouse is over~~
 - ~~add ability to move canvas with right click~~
-- make other canvas objects which sit above/below each other for different renderings, and to be able to make some of them transparent if I feel like it.
-- build a little more robust interface to interact with the game thing
-- some abstraction for being able to control which images are rendered in cells
+- ~~build a little more robust interface to interact with the game thing~~
+- ~~some abstraction for being able to control which images are rendered in cells~~
+- ~~fix the thing with passing around Grid~~
+- ~~probably make the Draw class a property contained in the abstract Canvas class? Then we never need to worry about passing a canvas to Draw methods.~~
+- ~~add a back end to do something~~
+- ~~add a graphql server~~
+- ~~add authentication / authorization~~
+
 - find a way to highlight corners / edges when mouse is over them
 - build and animate a vehicle in blender to go into the game
-- fix the thing with passing around Grid
-- ~~probably make the Draw class a property contained in the abstract Canvas class? Then we never need to worry about passing a canvas to Draw methods.~~
-
-- add a back end to do something
-- ~~add a graphql server~~
-- add authentication / authorization
+- make other canvas objects which sit above/below each other for different renderings, and to be able to make some of them transparent if I feel like it.
 - add rate limiting / traffic filtering for back end
 - SSL / HTTPS for encryption
+
+- add 'save game state' to server
+- find a way to trigger opening a modal from anywhere
+- fix up the styling
+- find a way to render an image into a cell
+- add a sql database?

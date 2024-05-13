@@ -3,9 +3,13 @@ import { DropdownMenu } from "./DropdownMenu";
 import { AccountStatus } from "./AccountStatus";
 import { Cluster } from "./layout-utilities/Cluster";
 import { MenuButton } from "./elements/MenuButton";
+import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
+import { openModal } from "../state/features/ui/uiSlice";
+import { useDispatch } from "react-redux";
 
 export const TopNav = () => {
   const menuOptions = useTopMenuOptions();
+  const dispatch = useDispatch();
   return (<>
   <section>
 
@@ -18,7 +22,7 @@ export const TopNav = () => {
             top={<pre>{item.heading}</pre>}
             subMenu={<ul>
               {item.children.map(child => <li>
-                <MenuButton>
+                <MenuButton onClick={() => child.action && dispatch(child.action())}>
                 {child.label}
                 </MenuButton>
                 </li>)}
@@ -33,13 +37,13 @@ export const TopNav = () => {
 
 type MenuOption = {
   heading: string,
-  children: {label: string}[]
+  children: {label: string, action?: ActionCreatorWithoutPayload}[]
 }
 
 const useTopMenuOptions = () => {
   const [menuOptions, setMenuOptions] = useState<MenuOption[]>([
     {heading: "File", children: [
-      {label: "New Game"},
+      {label: "New Game", action: openModal},
       {label: "Save"},
       {label: "Exit"}, 
     ]},

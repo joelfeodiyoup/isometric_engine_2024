@@ -25,7 +25,6 @@ export const SideNav = () => {
     <Stack>
       {icons.map((icon, i) => {
         return <span>
-        {/* {icon.label} */}
         <button>
           <img src={icon.image} onClick={() => {
             const newIcons = icons.map((icon, j) => ({...icon, active: j === i}));
@@ -36,7 +35,7 @@ export const SideNav = () => {
       })
     }
     </Stack>
-      <section style={{background: "blue"}}>
+      <section>
         {icons.find(icon => icon.active)?.display}
       </section>
     </Cluster>

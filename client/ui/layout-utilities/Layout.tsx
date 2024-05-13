@@ -24,12 +24,18 @@ export const Layout = ({children}: {children: {
         <div style={{
           flexGrow: 1,
           height: '100%',
+          position: "relative"
         }}>
           {children.gameRender}
+          {children.modal && <div style={{
+            position: 'absolute',
+            top: 0,right: 0, left: 0, bottom: 0,
+            pointerEvents: "none",
+            padding: "5rem"
+            }}>
+            {children.modal}
+          </div> }
         </div>
-        {/* {children.modal && <div style={{position: 'absolute', top: 0, right: 0, left: 0, bottom: 0}}>
-          {children.modal}
-        </div> } */}
         <aside style={{marginLeft: 'auto', background: 'white'}}>
           {children.side}
         </aside>

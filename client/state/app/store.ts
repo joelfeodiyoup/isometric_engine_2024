@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from '../features/user/userSlice';
 import { gameControls } from '../features/gameControls/gameControlsSlice';
+import { uiReducer } from '../features/ui/uiSlice';
 
 export const store = configureStore({
   reducer: {
     gameControls,
-    user: userReducer
+    user: userReducer,
+    ui: uiReducer
   }
 })
 
