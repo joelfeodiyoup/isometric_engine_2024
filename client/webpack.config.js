@@ -19,7 +19,26 @@ export default {
         use: [
           'file-loader'
         ]
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
+      // {
+      //   test: /\.css$/i,
+      //   // use: ["style-loader", "css-loader"]
+      //   use: [
+      //     "style-loader",
+      //     {
+      //       loader: "css-loader",
+      //       options: {
+      //         modules: {
+      //           auto: true,
+      //         }
+      //       }
+      //     }
+      //   ]
+      // }
     ],
   },
   resolve: {

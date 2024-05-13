@@ -1,6 +1,6 @@
 import { Terrain } from "./Terrain"
 import { Zoom } from "./Zoom"
-import { Stack } from "./layout-utilities/Cluster"
+import { Cluster, Stack } from "./layout-utilities/Cluster"
 
 import admin from "../images/icons/admin.png";
 import agriculture from "../images/icons/agriculture.png";
@@ -9,30 +9,36 @@ import entertainment from "../images/icons/entertainment.png";
 import house from "../images/icons/house.png";
 import industry from "../images/icons/industry.png";
 import storage from "../images/icons/storage.png";
+import { useState } from "react";
 
 export const SideNav = () => {
-  const icons = useSidePanelCategories();
-  return (
+  const [icons, setIcons] = useState([
+    {label: "S", image: admin, display: <Terrain/>, active: false},
+    {label: "S", image: agriculture, display: <p>agriculture</p>, active: true},
+    {label: "S", image: civic, display: <p>civic</p>, active: false},
+    {label: "S", image: entertainment, display: <p>entertainment</p>, active: false},
+    {label: "S", image: house, display: <p>house</p>, active: false},
+    {label: "S", image: industry, display: <p>industry</p>, active: false},
+    {label: "S", image: storage, display: <p>storage</p>, active: false},
+  ]);
+  return (<Cluster>
     <Stack>
-      {icons.map(icon => {
+      {icons.map((icon, i) => {
         return <span>
         {/* {icon.label} */}
-        <img src={icon.image} style={{width: '3rem'}}></img>
+        <button>
+          <img src={icon.image} onClick={() => {
+            const newIcons = icons.map((icon, j) => ({...icon, active: j === i}));
+            setIcons(newIcons);
+          }} style={{width: '3rem'}}></img>
+          </button>
       </span>
       })
     }
     </Stack>
+      <section style={{background: "blue"}}>
+        {icons.find(icon => icon.active)?.display}
+      </section>
+    </Cluster>
   )
-}
-
-const useSidePanelCategories = () => {
-  return [
-    {label: "S", image: admin},
-    {label: "S", image: agriculture},
-    {label: "S", image: civic},
-    {label: "S", image: entertainment},
-    {label: "S", image: house},
-    {label: "S", image: industry},
-    {label: "S", image: storage},
-  ]
 }

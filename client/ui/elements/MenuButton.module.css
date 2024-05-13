@@ -1,7 +1,7 @@
-.menu-button {
+.menu {
   padding-inline: 1rem;
   padding-block: 0.5rem;
 }
-.menu-button:hover {
+.menu:hover {
   color: red;
 }
