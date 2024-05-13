@@ -6,16 +6,36 @@ import { colors } from "../useColours";
 export const BaseButton = styled.button`
 &.isActive {
   background: ${colors.darkBlue};
+  color: white;
+}
+&.inverted {
+  background: ${colors.lightBlue};
+  &.isActive {
+    background: ${colors.mediumBlue};
+  }
+  &:hover {
+    color: white;
+  }
 }
 `;
 export const MenuButton = styled(BaseButton)`
-  padding: 1rem;
+  padding-inline: 1rem;
+  padding-block: 0.4rem;
+  border-radius: 0.5rem;
+  &:hover {
+    color: white;
+  }
+  `;
+  
+  const IconImage = styled.img`
+  width: 3rem;
+  `;
+  const IconButton = styled(BaseButton)`
+  border-radius: 0.5rem 0 0 0.5rem;
 `;
 
-const IconImage = styled.img`
-  width: 3rem;
-`;
-const IconButton = styled(BaseButton)`
+export const TopMenuButton = styled(MenuButton)`
+  padding-block: 0;
 `;
 
 // export const SideMenuCategoryButtons = ({props, imageSrc, isActive}: {props: BaseProps,imageSrc: any, isActive: boolean}) => {

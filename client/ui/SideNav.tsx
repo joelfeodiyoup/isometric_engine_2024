@@ -25,10 +25,10 @@ export const SideNav = () => {
     {label: "S", image: storage, display: <p>storage</p>, active: false},
   ]);
   return (<StyledSidePanel>
-    <Stack>
+    <IconStack>
       {icons.map((icon, i) => {
         return <SideMenuCategoryButtons
-          className={icon.active ? 'isActive' : ''}
+          className={`${icon.active ? 'isActive' : ''}`}
           key={`side-menu-button-${i}`}
           imagesrc={icon.image}
           onClick={() => {
@@ -37,16 +37,27 @@ export const SideNav = () => {
           }}
           ></SideMenuCategoryButtons>
       })}
-    </Stack>
-      <section>
+    </IconStack>
+      <StyledSidePanelBox>
         {icons.find(icon => icon.active)?.display}
-      </section>
+      </StyledSidePanelBox>
     </StyledSidePanel>
   )
 }
 
+const StyledSidePanelBox = styled.section`
+  flex-grow: 1;
+  background: ${colors.darkBlue};
+  padding: 0.5rem;
+`;
+
 const StyledSidePanel = styled(Cluster)`
   width: 14rem;
   flex-wrap: nowrap;
-  background: ${colors.lightBlue};
+  background-image: ${colors.texturedBackground};
+  column-gap: 0;
+`;
+
+const IconStack = styled(Stack)`
+  flex-shrink: 0;
 `

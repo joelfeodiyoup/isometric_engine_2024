@@ -4,7 +4,8 @@ import { AccountStatus } from "./AccountStatus";
 import { Cluster } from "./layout-utilities/Cluster";
 import { openModal, setModal } from "../state/features/ui/uiSlice";
 import { useDispatch } from "react-redux";
-import { MenuButton } from "./elements/Buttons";
+import { MenuButton, TopMenuButton } from "./elements/Buttons";
+import styled from "styled-components";
 
 export const TopNav = () => {
   const menuOptions = useTopMenuOptions();
@@ -14,7 +15,7 @@ export const TopNav = () => {
         {menuOptions.map((item, i) => {
           return <DropdownMenu
             key={`dropdown-menu-${i}`}
-            top={<pre>{item.heading}</pre>}
+            top={<TopMenuButton>{item.heading}</TopMenuButton>}
             subMenu={<ul>
               {item.children.map((child, j) => <li key={`topnav-submenuitem-${j}`}>
                 <MenuButton onClick={() => child.onClick?.()}>{child.label}</MenuButton>
@@ -22,7 +23,7 @@ export const TopNav = () => {
             </ul>}
           />
         })}
-        <AccountStatus />
+        <AccountStatus style={{marginLeft: 'auto'}} />
       </Cluster>
     </nav>
   </>)

@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../state/app/hooks"
 import { ClickActionTypes, setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
 import { MenuButton } from "./elements/Buttons";
-import { Cluster } from "./layout-utilities/Cluster";
+import { ButtonGroupCluster } from "./layout-utilities/Cluster";
 import { selectGameControlsState } from "../state/app/store";
 
 export const Terrain = () => {
@@ -23,10 +23,10 @@ export const Terrain = () => {
     }},
   ]
   return (<>
-    <Cluster>
+    <ButtonGroupCluster>
       {buttons.map((button, i) => (
-        <MenuButton className={button.text === currentAction ? 'isActive' : ''} key={`terrain-option-${i}`} onClick={button.action}>{button.text}</MenuButton>
+        <MenuButton className={`inverted ${button.text === currentAction ? 'isActive' : ''}`} key={`terrain-option-${i}`} onClick={button.action}>{button.text}</MenuButton>
       ))}
-    </Cluster>
+    </ButtonGroupCluster>
   </>)
 }

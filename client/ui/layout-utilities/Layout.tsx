@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { Panel } from "./Cluster";
+import { colors } from "../useColours";
 
 export const Layout = ({children}: {children: {
   top: ReactElement,
@@ -14,9 +15,9 @@ export const Layout = ({children}: {children: {
       flexDirection: 'column',
       height: '100vh'
     }}>
-      <Panel as={"header"} style={{zIndex: 10}}>
+      <TopPanel as={"header"} style={{zIndex: 10}}>
         {children.top}
-      </Panel>
+      </TopPanel>
       <section style={{
         display: 'flex',
         flexDirection: 'row',
@@ -47,6 +48,14 @@ export const Layout = ({children}: {children: {
   </>)
 }
 
+const TopPanel = styled(Panel)`
+  border-bottom: ${colors.borderWidth} solid ${colors.border};
+  padding-inline: 1rem;
+`;
+
 const SidePanel = styled(Panel)`
   margin-left: auto;
+  padding-inline: 0.5rem;
+  padding-top: 0.5rem;
+  border-left: ${colors.borderWidth} solid ${colors.border};
 `;
