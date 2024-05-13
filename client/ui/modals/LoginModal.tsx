@@ -6,7 +6,7 @@ import {
   setUser,
 } from "../../state/features/user/userSlice";
 import { GET_USER } from "../graphql/User";
-import { LOGIN } from "../graphql/Login";
+import { LOGIN } from "../graphql/Authentication";
 import { closeModal } from "../../state/features/ui/uiSlice";
 
 export const LoginModal = () => {

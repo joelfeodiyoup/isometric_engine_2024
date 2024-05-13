@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, selectUser, setUser } from "../state/features/user/userSlice"
 import { useEffect, useState } from "react";
-import { LOGIN, LOGOUT } from "./graphql/Login";
+import { LOGIN, LOGOUT } from "./graphql/Authentication";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_USER } from "./graphql/User";
 import { openModal, setModal } from "../state/features/ui/uiSlice";
