@@ -2,30 +2,18 @@ import { createRoot } from 'react-dom/client';
 import {store} from '../state/app/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { TopNav } from './TopNav';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Modal } from './layout-utilities/Modal';
 import { SideNav } from './SideNav';
 import { Layout } from './layout-utilities/Layout';
 import { GameRender } from '../render/game-render';
 import { Container } from './layout-utilities/Container';
-import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { closeModal, selectUiState } from '../state/features/ui/uiSlice';
+import { jsx } from 'react/jsx-runtime';
+import { getModal } from './modals/useModalSelector';
 
-const middleware = new ApolloLink((operation, forward) => {
-  const state = store.getState();
-  const authorizationToken = state.user.value.token ?? '';
-	const headers = {
-		authorization: authorizationToken,
-	};
-
-	// add the authorization to the headers
-	operation.setContext({
-		headers,
-	});
-
-	return forward(operation);
-});
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000',
 });
@@ -55,7 +43,11 @@ const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasS
 const App = () => {
   const uiState = useSelector(selectUiState);
   const dispatch = useDispatch();
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ModalComponent, setModalComponent] = useState<() => (JSX.Element | null)>(getModal(uiState.modal))
+  useEffect(() => {
+    setModalComponent(getModal(uiState.modal));
+  }, [uiState.modal])
+  // const SelectedModal = useModalSelector(uiState.modal);
   
   return (<>
     <Layout>
@@ -63,7 +55,10 @@ const App = () => {
         top: <TopNav />,
         side: <SideNav />,
         gameRender: <CanvasContainer />,
-        modal: <Modal isOpen={uiState.isModalOpen} onClose={() => dispatch(closeModal())}><p>I am something in the modal</p></Modal>
+        modal: <Modal
+          isOpen={uiState.isModalOpen}
+          onClose={() => dispatch(closeModal())}
+        ><ModalComponent /></Modal>
       }}
     </Layout>
   </>)

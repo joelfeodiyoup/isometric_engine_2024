@@ -5,7 +5,7 @@ export const Modal = ({
   isOpen,
   onClose
 }: {
-  children?: ReactElement,
+  children: ReactElement | null,
   isOpen: boolean,
   onClose: () => void
 }) => {

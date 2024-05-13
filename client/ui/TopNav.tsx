@@ -1,50 +1,52 @@
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
 import { AccountStatus } from "./AccountStatus";
 import { Cluster } from "./layout-utilities/Cluster";
 import { MenuButton } from "./elements/MenuButton";
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
-import { openModal } from "../state/features/ui/uiSlice";
+import { openModal, setModal } from "../state/features/ui/uiSlice";
 import { useDispatch } from "react-redux";
 
 export const TopNav = () => {
   const menuOptions = useTopMenuOptions();
-  const dispatch = useDispatch();
   return (<>
-  <section>
-
-    {/* <AccountStatus /> */}
     <nav>
       <Cluster>
         {menuOptions.map((item, i) => {
           return <DropdownMenu
-            id={`dropdown-menu-${i}`}
+            key={`dropdown-menu-${i}`}
             top={<pre>{item.heading}</pre>}
             subMenu={<ul>
-              {item.children.map(child => <li>
-                <MenuButton onClick={() => child.action && dispatch(child.action())}>
+              {item.children.map((child, j) => <li key={`topnav-submenuitem-${j}`}>
+                <MenuButton onClick={() => child.onClick && child.onClick()}>
                 {child.label}
                 </MenuButton>
                 </li>)}
             </ul>}
           />
         })}
+        <AccountStatus />
       </Cluster>
     </nav>
-      </section>
   </>)
 }
 
 type MenuOption = {
   heading: string,
-  children: {label: string, action?: ActionCreatorWithoutPayload}[]
+  children: {label: string, onClick?: () => void}[]
 }
 
 const useTopMenuOptions = () => {
+  const dispatch = useDispatch();
   const [menuOptions, setMenuOptions] = useState<MenuOption[]>([
     {heading: "File", children: [
-      {label: "New Game", action: openModal},
-      {label: "Save"},
+      {label: "New Game", onClick: () => {
+        dispatch(setModal("saveModal"));
+        dispatch(openModal());
+      }},
+      {label: "Save", onClick: () => {
+        dispatch(setModal("saveModal"));
+        dispatch(openModal());
+      }},
       {label: "Exit"}, 
     ]},
     {heading: "Options", children: [

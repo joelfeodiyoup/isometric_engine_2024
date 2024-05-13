@@ -24,14 +24,12 @@ export const SideNav = () => {
   return (<Cluster>
     <Stack>
       {icons.map((icon, i) => {
-        return <span>
-        <button>
+        return <button key={`side-nav-button-${i}`}>
           <img src={icon.image} onClick={() => {
             const newIcons = icons.map((icon, j) => ({...icon, active: j === i}));
             setIcons(newIcons);
           }} style={{width: '3rem'}}></img>
           </button>
-      </span>
       })
     }
     </Stack>

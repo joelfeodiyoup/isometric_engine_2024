@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactElement, ReactNode, useState } from "react"
-import { BaseProps } from "./app";
+import { BaseProps } from "./App";
 
 export const DropdownMenu = (props: BaseProps & {
   top: JSX.Element,

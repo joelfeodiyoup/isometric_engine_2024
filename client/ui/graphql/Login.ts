@@ -7,3 +7,8 @@ mutation Mutation($name: String!, $password: String!) {
   }
 }
 `;
+
+export const LOGOUT = gql`
+mutation Mutation($token: String!) {
+  logout(token: $token)
+}`

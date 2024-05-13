@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react"
-import { BaseProps } from "../app"
+import { BaseProps } from "../App"
 
 /**
  * transforms an html element into a react element.

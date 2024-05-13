@@ -18,8 +18,16 @@ export type UserInterface = {
 export type AuthenticationKey = {
   name: string, password: string
 }
+type AuthenticationToken = string;
 
-export class Authentication {
+interface IAuthentication {
+  getUser(token: string): Promise<UserInterface | null>;
+  createAccount(user: UserInterface, key: AuthenticationKey): void;
+  authenticate(key: AuthenticationKey): {authenticated: boolean, token?: AuthenticationToken};
+  logOut(token: AuthenticationToken): boolean;
+}
+
+export class Authentication implements IAuthentication {
   private users: UserInterface[] = [
     {name: "joel", id: '1', roles: []},
     {name: "brian", id: '2', roles: []},
@@ -54,13 +62,17 @@ public authenticate(key: AuthenticationKey) {
     return existingUser.name === key.name && existingUser.password === key.password;
   });
   if (!user) {
-    return null;
+    return {authenticated: false};
   }
   const userInterface = this.users.find(x => x.id === user.id)!;
   
   const token = this.getUniqueToken((token: string) => !this.authenticatedUsers.has(token));
   this.authenticatedUsers.set(token, userInterface);
-  return token;
+  return {authenticated: true, token};
+}
+
+public logOut(token: string) {
+  return this.authenticatedUsers.delete(token);
 }
 
 /**
@@ -72,6 +84,7 @@ public authenticate(key: AuthenticationKey) {
  * For this demo purpose I'll just have a plain text array of passwords / users
  */
 private authentication: (AuthenticationKey & {id: string})[] = [
+  // some random names.
   {name: "joel", password: "password-joel", id: '1'},
   {name: "brian", password: "password-brian", id: '2'},
   {name: "jasmine", password: "password-jasmine", id: '3'},

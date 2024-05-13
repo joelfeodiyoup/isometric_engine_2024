@@ -5,12 +5,6 @@ import { Authentication, AuthenticationKey, UserInterface } from "./authenticati
 const authentication = new Authentication();
 
 const typeDefs = `#graphql
-  #comments
-  type Book {
-    title: String
-    author: String
-  }
-
   type User {
     name: String
   }
@@ -25,23 +19,12 @@ const typeDefs = `#graphql
   }
   type Mutation {
     login(name: String!, password: String!): AuthenticationToken
+    logout(token: String!): Boolean!
   }
 `;
 
-const books: {title: string, author: string}[] = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  }
-]
-
 const resolvers = {
   Query: {
-    books: (parent) => books,
     user: (parent, args, contextValue) => {
       return contextValue.user;
     }
@@ -50,6 +33,10 @@ const resolvers = {
     login: async (_, key: AuthenticationKey) => {
       const token = authentication.authenticate(key);
       return {token};
+    },
+    logout: (_, payload: {token: string}) => {
+      const response = authentication.logOut(payload.token);
+      return response;
     }
   }
 }
@@ -57,7 +44,7 @@ const resolvers = {
 
 
 interface MyContext {
-  user: UserInterface
+  user: UserInterface | null
 }
 
 const server = new ApolloServer<MyContext>({

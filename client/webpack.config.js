@@ -6,7 +6,7 @@ const __dirname = path.dirname(__filename);
 
 export default {
   mode: 'development',
-  entry: [/*'/client/render/game-render.ts', */'/ui/app.tsx'],
+  entry: [/*'/client/render/game-render.ts', */'/ui/App.tsx'],
   module: {
     rules: [
       {

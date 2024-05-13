@@ -1,5 +1,5 @@
 import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
-import { BaseProps } from "../app";
+import { BaseProps } from "../App";
 import * as styles from "./MenuButton.module.css";
 
 export const MenuButton = (props: BaseProps & {onClick: () => void}) => {

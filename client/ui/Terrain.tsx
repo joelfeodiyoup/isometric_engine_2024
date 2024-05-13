@@ -20,7 +20,7 @@ export const Terrain = () => {
   ]
   return (<>
     <Cluster>
-      {buttons.map(button => <button onClick={button.action}>{button.text}</button>)}
+      {buttons.map((button, i) => <button key={`terrain-option-${i}`} onClick={button.action}>{button.text}</button>)}
     </Cluster>
   </>)
 }

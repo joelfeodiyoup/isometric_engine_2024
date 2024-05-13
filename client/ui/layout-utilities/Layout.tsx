@@ -4,7 +4,7 @@ export const Layout = ({children}: {children: {
   top: ReactElement,
   side: ReactElement,
   gameRender: ReactElement,
-  modal: ReactElement
+  modal: ReactElement | null
 }}) => {
   return (<>
     <section style={{
@@ -29,6 +29,7 @@ export const Layout = ({children}: {children: {
           {children.gameRender}
           {children.modal && <div style={{
             position: 'absolute',
+            display: "flex",
             top: 0,right: 0, left: 0, bottom: 0,
             pointerEvents: "none",
             padding: "5rem"

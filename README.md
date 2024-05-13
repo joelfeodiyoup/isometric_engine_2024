@@ -100,15 +100,19 @@ some tasks I could could do...
 - ~~add a back end to do something~~
 - ~~add a graphql server~~
 - ~~add authentication / authorization~~
-
-- find a way to highlight corners / edges when mouse is over them
+- ~~find a way to trigger opening a modal from anywhere~~
+- ~~make other canvas objects which sit above/below each other for different renderings~~
+- ~~find a way to highlight corners~~ / edges when mouse is over them
 - build and animate a vehicle in blender to go into the game
-- make other canvas objects which sit above/below each other for different renderings, and to be able to make some of them transparent if I feel like it.
+- provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
 - SSL / HTTPS for encryption
-
 - add 'save game state' to server
-- find a way to trigger opening a modal from anywhere
 - fix up the styling
 - find a way to render an image into a cell
 - add a sql database?
+- get push notifications from the server
+- make all the modal styling consistent with heading etc.
+- add some unit tests
+- add proper typing to back end
+- import graphql types into front end by schema introspection

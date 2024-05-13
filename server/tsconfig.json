@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "types": ["node"],
     "sourceMap": true,
+    "strictNullChecks": true,
     "paths": {
       "@src/*": [
         "./src/*"
