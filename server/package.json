@@ -5,24 +5,26 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "compile-server": "tsc --build",
-    "compile-server-watch-OLD": "tsc --build server -w",
     "compile-server-watch": "tsc --build -w",
-    "start-server": "npm run compile-server-watch & nodemon ./dist/index.js",
-    "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js"
+    "watch-server": "nodemon ./dist/index.js",
+    "start": "npm run compile-server-watch & npm run watch-server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/preset-env": "^7.24.5",
+    "@babel/preset-typescript": "^7.24.1",
     "@types/node": "^20.12.11",
+    "jest": "^29.7.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
     "graphql": "^16.8.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "sqlite3": "^5.1.7"
   }
 }

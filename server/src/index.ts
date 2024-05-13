@@ -1,72 +1,11 @@
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import { Authentication, AuthenticationKey, UserInterface } from "./authentication.js";
+import { Authentication } from "./authentication.js";
+import { DB } from "./db/database.js";
+import { setupGraphQLServer } from "./db/graphql.js";
 
+/**
+ * Going to remove this for now. I think there's a file system issue when running this
+ * in Node inside WSL. Better option is probably to run it inside Docker with an existing image.
+ */
+// const db = new DB();
 const authentication = new Authentication();
-
-const typeDefs = `#graphql
-  type User {
-    name: String
-  }
-
-  type AuthenticationToken {
-    token: String
-  }
-
-  type Query {
-    books: [Book]
-    user: User
-  }
-  type Mutation {
-    login(name: String!, password: String!): AuthenticationToken
-    logout(token: String!): Boolean!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    user: (parent, args, contextValue) => {
-      return contextValue.user;
-    }
-  },
-  Mutation: {
-    login: async (_, key: AuthenticationKey) => {
-      const token = authentication.authenticate(key);
-      return {token};
-    },
-    logout: (_, payload: {token: string}) => {
-      const response = authentication.logOut(payload.token);
-      return response;
-    }
-  }
-}
-// https://www.apollographql.com/docs/apollo-server/security/authentication/
-
-
-interface MyContext {
-  user: UserInterface | null
-}
-
-const server = new ApolloServer<MyContext>({
-  typeDefs,
-  resolvers,
-})
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async({ req, res }) => {
-    const token = req.headers.authorization || '';
-    const user = await authentication.getUser(token);
-    // if (!user) {
-    //   throw new GraphQLError('User is not authenticated', {
-    //     extensions: {
-    //       code: 'UNAUTHENTICATED',
-    //       http: { status: 401 },
-    //     },
-    //   });
-    // }
-    return { user }
-  }
-})
-
-console.log(`🚀 Server ready at: ${url}`);
+setupGraphQLServer(authentication);
