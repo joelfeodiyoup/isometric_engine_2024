@@ -1,6 +1,5 @@
-import { describe } from "node:test";
-import { Authentication, AuthenticationKey, UserInterfaceCreationObject } from "./authentication.ts";
-import { test, expect, beforeEach } from '@jest/globals';
+import { Authentication, AuthenticationKey, UserInterfaceCreationObject } from "./authentication";
+import { describe, test, expect, beforeEach } from '@jest/globals';
 
 
 describe('authentication', () => {

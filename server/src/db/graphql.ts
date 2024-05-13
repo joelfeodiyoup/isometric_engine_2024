@@ -14,7 +14,8 @@ export const setupGraphQLServer = async (authenticationService: IAuthentication)
   }
 
   type AuthenticationToken {
-    token: String
+    token: String,
+    authenticated: Boolean
   }
 
   type Query {
@@ -34,8 +35,8 @@ const resolvers = {
   },
   Mutation: {
     login: async (_, key: AuthenticationKey) => {
-      const token = authenticationService.authenticate(key);
-      return {token};
+      const authorizationResult = authenticationService.authenticate(key);
+      return authorizationResult;
     },
     logout: (_, payload: {token: string}) => {
       const response = authenticationService.logOut(payload.token);

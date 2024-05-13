@@ -102,6 +102,7 @@ some tasks I could could do...
 - ~~add authentication / authorization~~
 - ~~find a way to trigger opening a modal from anywhere~~
 - ~~make other canvas objects which sit above/below each other for different renderings~~
+- ~~add some unit tests~~
 - ~~find a way to highlight corners~~ / edges when mouse is over them
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
@@ -113,6 +114,6 @@ some tasks I could could do...
 - add a sql database?
 - get push notifications from the server
 - make all the modal styling consistent with heading etc.
-- add some unit tests
-- add proper typing to back end
+- add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
 - import graphql types into front end by schema introspection
+- handle login error messages

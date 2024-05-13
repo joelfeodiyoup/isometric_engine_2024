@@ -10,6 +10,9 @@ import house from "../images/icons/house.png";
 import industry from "../images/icons/industry.png";
 import storage from "../images/icons/storage.png";
 import { useState } from "react";
+import { SideMenuCategoryButtons } from "./elements/Buttons";
+import styled from "styled-components";
+import { colors } from "./useColours";
 
 export const SideNav = () => {
   const [icons, setIcons] = useState([
@@ -21,21 +24,29 @@ export const SideNav = () => {
     {label: "S", image: industry, display: <p>industry</p>, active: false},
     {label: "S", image: storage, display: <p>storage</p>, active: false},
   ]);
-  return (<Cluster>
+  return (<StyledSidePanel>
     <Stack>
       {icons.map((icon, i) => {
-        return <button key={`side-nav-button-${i}`}>
-          <img src={icon.image} onClick={() => {
-            const newIcons = icons.map((icon, j) => ({...icon, active: j === i}));
+        return <SideMenuCategoryButtons
+          className={icon.active ? 'isActive' : ''}
+          key={`side-menu-button-${i}`}
+          imagesrc={icon.image}
+          onClick={() => {
+            const newIcons = icons.map((icon, j) => ({...icon, active: j === i}))
             setIcons(newIcons);
-          }} style={{width: '3rem'}}></img>
-          </button>
-      })
-    }
+          }}
+          ></SideMenuCategoryButtons>
+      })}
     </Stack>
       <section>
         {icons.find(icon => icon.active)?.display}
       </section>
-    </Cluster>
+    </StyledSidePanel>
   )
 }
+
+const StyledSidePanel = styled(Cluster)`
+  width: 14rem;
+  flex-wrap: nowrap;
+  background: ${colors.lightBlue};
+`

@@ -1,4 +1,6 @@
 import { ReactElement } from "react";
+import styled from "styled-components";
+import { Panel } from "./Cluster";
 
 export const Layout = ({children}: {children: {
   top: ReactElement,
@@ -12,9 +14,9 @@ export const Layout = ({children}: {children: {
       flexDirection: 'column',
       height: '100vh'
     }}>
-      <header style={{zIndex: 10, background: 'white'}}>
+      <Panel as={"header"} style={{zIndex: 10}}>
         {children.top}
-      </header>
+      </Panel>
       <section style={{
         display: 'flex',
         flexDirection: 'row',
@@ -37,10 +39,14 @@ export const Layout = ({children}: {children: {
             {children.modal}
           </div> }
         </div>
-        <aside style={{marginLeft: 'auto', background: 'white'}}>
+        <SidePanel>
           {children.side}
-        </aside>
+        </SidePanel>
       </section>
     </section>
   </>)
 }
+
+const SidePanel = styled(Panel)`
+  margin-left: auto;
+`;

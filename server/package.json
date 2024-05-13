@@ -8,7 +8,7 @@
     "test": "jest",
     "compile-server": "tsc --build",
     "compile-server-watch": "tsc --build -w",
-    "watch-server": "nodemon ./dist/index.js",
+    "watch-server": "nodemon ./dist/src/index.js",
     "start": "npm run compile-server-watch & npm run watch-server"
   },
   "keywords": [],

@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
+    // "rootDirs": ["src"],
+    "rootDir": "./",
     "outDir": "dist",
     "lib": ["es2020"],
     "target": "es2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "types": ["node"],
     "sourceMap": true,
     "strictNullChecks": true,
-    "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true,
-    "composite": true,
+    // "allowImportingTsExtensions": true,
+    // "emitDeclarationOnly": false,
+    // "composite": true,
     "paths": {
       "@src/*": [
         "./src/*"
       ]
     }
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

@@ -1,10 +1,14 @@
+import { useSelector } from "react-redux";
 import { useAppDispatch } from "../state/app/hooks"
-import { setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
+import { ClickActionTypes, setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
+import { MenuButton } from "./elements/Buttons";
 import { Cluster } from "./layout-utilities/Cluster";
+import { selectGameControlsState } from "../state/app/store";
 
 export const Terrain = () => {
   const dispatch = useAppDispatch();
-  const buttons: {text: string, action: () => void}[] = [
+  const currentAction = useSelector(selectGameControlsState).clickAction;
+  const buttons: {text: ClickActionTypes, action: () => void}[] = [
     {text: "raise", action: () => {
       dispatch(setClickAction("raise"));
       dispatch(setGridHighlightType("corner"));
@@ -20,7 +24,9 @@ export const Terrain = () => {
   ]
   return (<>
     <Cluster>
-      {buttons.map((button, i) => <button key={`terrain-option-${i}`} onClick={button.action}>{button.text}</button>)}
+      {buttons.map((button, i) => (
+        <MenuButton className={button.text === currentAction ? 'isActive' : ''} key={`terrain-option-${i}`} onClick={button.action}>{button.text}</MenuButton>
+      ))}
     </Cluster>
   </>)
 }

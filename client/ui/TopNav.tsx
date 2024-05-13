@@ -2,9 +2,9 @@ import { useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
 import { AccountStatus } from "./AccountStatus";
 import { Cluster } from "./layout-utilities/Cluster";
-import { MenuButton } from "./elements/MenuButton";
 import { openModal, setModal } from "../state/features/ui/uiSlice";
 import { useDispatch } from "react-redux";
+import { MenuButton } from "./elements/Buttons";
 
 export const TopNav = () => {
   const menuOptions = useTopMenuOptions();
@@ -17,9 +17,7 @@ export const TopNav = () => {
             top={<pre>{item.heading}</pre>}
             subMenu={<ul>
               {item.children.map((child, j) => <li key={`topnav-submenuitem-${j}`}>
-                <MenuButton onClick={() => child.onClick && child.onClick()}>
-                {child.label}
-                </MenuButton>
+                <MenuButton onClick={() => child.onClick?.()}>{child.label}</MenuButton>
                 </li>)}
             </ul>}
           />
