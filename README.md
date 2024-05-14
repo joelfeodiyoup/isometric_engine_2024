@@ -1,3 +1,7 @@
+# Isometric game implemented in the browser
+
+![alt text](documentation/screenshot_2024_05_13.png)
+
 This is a casual attempt to make an isometric game / game engine.
 
 I'm deliberately trying to discover these things myself. I.e. I want to enjoy making the thing not just try to make it as quickly as possible by copying someone else's code.
@@ -32,21 +36,55 @@ Basic graphql server from Apollo Server, running on express (I think).
 
 ## General "architecture" overview
 
-- /render handles rendering of the game world, in this case an isometric grid, with things drawn onto it. It also handles clicking inside of it. render will output which cells were clicked
-- some kind of representation of the world
-- /ui an interface (in react, in this instance)
-- /store (or some other directory) holds data about the state of the ui. E.g. 
+- `/client/render` handles rendering of the game world, in this case an isometric grid, with things drawn onto it. It also handles clicking inside of it. render will output which cells were clicked
+- `/client/ui` an interface (in react, in this instance)
+- `/client/state`
+- `/server` a graphql server
 
-## technologies
+Some notes on the various parts of this:
 
-- **redux** used to record state that the UI has selected. I just want to use it.
-- **typescript**
-- **React** for the UI
-- **Canvas** for rendering stuff. Why not.
-- **Tailwindcss** ? For styling. I've never really used it, so I want to see what it's all about. The philosophy seems compelling.
-- **testing** ? I could.
-- **lit-html** for html templating outside react context (https://www.npmjs.com/package/lit-html) possibly. (originally I created a canvas element wrapped in some divs, to handle different things. It might be better or easier to use lit-html to define it in javascript. I just ran into this when exploring lit-elements, which is a framework to help make web-components)
-- **authorization/authentication** - I'll follow some guides on apollo graphql for this https://www.apollographql.com/docs/apollo-server/security/authentication/ 
+## UI - /client/ui
+
+- react
+- styled components (I started to use tailwind in places. I didn't really vibe with it yet)
+- overall layout component
+- layout utilities (stack, cluster, etc)
+- state / useState / useEffect etc
+- calling server with Apollo Graphql Client useQuery, useMutation, etc
+- ApolloClient puts an authorization token into its header, when it's there in state
+- ...some hand drawn icons by me
+- typescript
+- attempt to ues elements / sections / etc
+- puts the "render" element inside itself, though that element has nothing to do with React, on its own.
+- webpack (I've used things like vite as well before)
+- some helper methods for consistency. e.g. `<ModalInstance>`, `<SidePanelSection>`
+- modal method displays component dynamically set by redux state
+- dispatch actions to the state
+- read values from the state
+
+## Render - /client/render
+
+- typescript
+- canvas elements. multiple, to make updating easier
+- classes / etc, which abstract canvas element.
+- some maths. linear algebra for isometric calculation
+- click handlers
+- abstraction of click/hold handler
+- drag (just changes x/y position of a div wrapping up all the canvas elements)
+- **calculation to find closest cell** (I was a bit proud of this)
+
+
+## State - /client/state
+
+- react redux
+
+## Server - /server
+
+- Authorization class
+- basic testing of the Authorization class
+- typescript
+- graphql - queries / mutations / etc.
+- no db as of yet
 
 ## Inspiration
 
@@ -86,7 +124,7 @@ A token attached to the header 'authorization'. Used to look up a user at the se
 
 - apollo graphql playground (i.e. the thing running on localhost:4000) constantly polls the server to check the schema. This can be a little annoying if I want to set breakpoints in there. I could turn off that automatic polling: https://stackoverflow.com/questions/58038945/apollo-graphql-keeps-receiving-requests-with-no-queries-or-mutations-being-made 
 
-## tasks
+## TODO tasks
 
 some tasks I could could do...
 
@@ -109,11 +147,11 @@ some tasks I could could do...
 - add rate limiting / traffic filtering for back end
 - SSL / HTTPS for encryption
 - add 'save game state' to server
-- fix up the styling
+- ~~fix up the styling~~ sort of
 - find a way to render an image into a cell
 - add a sql database?
 - get push notifications from the server
-- make all the modal styling consistent with heading etc.
+- ~~make all the modal styling consistent with heading etc.~~
 - add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
 - import graphql types into front end by schema introspection
 - handle login error messages
