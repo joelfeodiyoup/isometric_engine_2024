@@ -4,29 +4,28 @@ import { ClickActionTypes, setClickAction, setGridHighlightType } from "../../st
 import { MenuButton } from "../elements/Buttons";
 import { ButtonGroupCluster } from "../layout-utilities/layout-partials";
 import { selectGameControlsState } from "../../state/app/store";
+import { SidePanelSection, SidePanelSectionButtonAction } from "./SidePanelSection";
 
 export const Terrain = () => {
   const dispatch = useAppDispatch();
-  const currentAction = useSelector(selectGameControlsState).clickAction;
-  const buttons: {text: ClickActionTypes, action: () => void}[] = [
-    {text: "raise", action: () => {
+  const buttons: SidePanelSectionButtonAction[] = [
+    {label: "raise", action: () => {
       dispatch(setClickAction("raise"));
       dispatch(setGridHighlightType("corner"));
     }},
-    {text: "lower", action: () => {
+    {label: "lower", action: () => {
       dispatch(setClickAction("lower"));
       dispatch(setGridHighlightType("corner"));
     }},
-    {text: "build", action: () => {
+    {label: "build", action: () => {
       dispatch(setClickAction("build"));
       dispatch(setGridHighlightType("cell"));
     }},
   ]
   return (<>
-    <ButtonGroupCluster>
-      {buttons.map((button, i) => (
-        <MenuButton className={`inverted ${button.text === currentAction ? 'isActive' : ''}`} key={`terrain-option-${i}`} onClick={button.action}>{button.text}</MenuButton>
-      ))}
-    </ButtonGroupCluster>
+    <SidePanelSection
+      actions={buttons}
+      heading="terrain"
+    ></SidePanelSection>
   </>)
 }

@@ -12,6 +12,8 @@ import { useState } from "react";
 import { SideMenuCategoryButtons } from "./elements/Buttons";
 import styled from "styled-components";
 import { colors } from "./useColours";
+import { AgriculturePanel } from "./panel-groups/AgriculturePanel";
+import { HousingPanel } from "./panel-groups/HousingPanel";
 
 /**
  * The side panel section in the layout.
@@ -20,12 +22,12 @@ import { colors } from "./useColours";
 export const SideNav = () => {
   const [icons, setIcons] = useState([
     {label: "S", image: admin, display: <Terrain/>, active: false},
-    {label: "S", image: agriculture, display: <p>agriculture</p>, active: true},
-    {label: "S", image: civic, display: <p>civic</p>, active: false},
-    {label: "S", image: entertainment, display: <p>entertainment</p>, active: false},
-    {label: "S", image: house, display: <p>house</p>, active: false},
-    {label: "S", image: industry, display: <p>industry</p>, active: false},
-    {label: "S", image: storage, display: <p>storage</p>, active: false},
+    {label: "S", image: agriculture, display: <AgriculturePanel/>, active: true},
+    {label: "S", image: civic, display: <Terrain/>, active: false},
+    {label: "S", image: entertainment, display: <AgriculturePanel/>, active: false},
+    {label: "S", image: house, display: <HousingPanel />, active: false},
+    {label: "S", image: industry, display: <Terrain />, active: false},
+    {label: "S", image: storage, display: <AgriculturePanel />, active: false},
   ]);
   return (<StyledSidePanel>
     <IconStack>

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { colors } from "../useColours";
 import { MenuButton } from "../elements/Buttons";
 import { Stack } from "./layout-partials";
+import { ModalHeading } from "../elements/Headings";
 
 /**
  * This handles displaying a modal
@@ -51,13 +52,6 @@ export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {headi
   </Stack>
 }
 
-const ModalHeading = styled.h2`
-  text-align: center;
-  color: white;
-  background: ${colors.darkBlue};
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-`;
 const ModalContentStack = styled(Stack)`
   min-width: 20rem;
   > *:nth-child(1) {
