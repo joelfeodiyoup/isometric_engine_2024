@@ -8,8 +8,16 @@ export const BaseButton = styled.button`
   background: ${colors.darkBlue};
   color: white;
 }
+&.primary {
+  background: ${colors.darkBlue};
+  color: white;
+  &:hover {
+    background: ${colors.mediumBlue};
+  }
+}
 &.inverted {
   background: ${colors.lightBlue};
+  border: 1px solid ${colors.darkBlue};
   &.isActive {
     background: ${colors.mediumBlue};
   }
