@@ -10,20 +10,27 @@ export const DropdownMenu = (props: BaseProps & {
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (<>
-      <span className="relative" onClick={() => setIsOpen(!isOpen)}>
+      <StyledDropDownTriggerElement className="relative" onClick={() => setIsOpen(!isOpen)}>
         {props.top}
-        {isOpen && 
         <StyledDropDownPanel as={"ul"}>
             {props.subMenu}
         </StyledDropDownPanel>
-        }
-      </span>
+      </StyledDropDownTriggerElement>
   </>)
 }
 
+
 const StyledDropDownPanel = styled(Panel)`
-  position: absolute;
-  width: max-content;
-  border: ${colors.borderWidth} solid ${colors.border};
-  border-top: none;
-`
+position: absolute;
+width: max-content;
+border: ${colors.borderWidth} solid ${colors.border};
+border-top: none;
+  display: none;
+`;
+const StyledDropDownTriggerElement = styled.span`
+  &:hover {
+    ${StyledDropDownPanel} {
+      display: block;
+    }
+  }
+`;
