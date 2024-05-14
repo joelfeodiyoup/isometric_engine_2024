@@ -39,7 +39,7 @@ export const Modal = ({
  */
 export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {heading: string, actions: {label: string, onClick: () => void}[]}) => {
   return <Stack>
-    <h1>{props.heading}</h1>
+    <ModalHeading>{props.heading}</ModalHeading>
     {props.children}
     {props.actions.map((action, i) => {
       return <MenuButton
@@ -51,6 +51,13 @@ export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {headi
   </Stack>
 }
 
+const ModalHeading = styled.h2`
+  text-align: center;
+  color: white;
+  background: ${colors.darkBlue};
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+`;
 const ModalContentStack = styled(Stack)`
   min-width: 20rem;
   > *:nth-child(1) {

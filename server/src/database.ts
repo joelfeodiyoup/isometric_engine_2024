@@ -1,4 +1,11 @@
 import sqlite3 from 'sqlite3';
+
+/**
+ * This is abandoned currently, as I'm pretty certain there are file system access issues when running this with node inside WSL.
+ * I'll need to dig into this more.
+ * The better solution is probably to run this inside docker.
+ * But then I have to decide whether then the whole "back end" code runs inside docker, or if that instance of the db inside docker just exposes some endpoints.
+ */
 export class DB {
   private db: sqlite3.Database;
   constructor() {

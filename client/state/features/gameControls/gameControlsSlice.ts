@@ -23,7 +23,7 @@ interface GameControlState {
 const initialState: GameControlState = {
   value: {
     clickAction: "raise",
-    highlightType: "cell",
+    highlightType: "corner",
     zoomLevel: 0
   }
 }

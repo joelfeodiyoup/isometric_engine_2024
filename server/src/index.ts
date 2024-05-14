@@ -1,6 +1,6 @@
 import { Authentication } from "./authentication.js";
-import { DB } from "./db/database.js";
-import { setupGraphQLServer } from "./db/graphql.js";
+import { DB } from "./database.js";
+import { setupGraphQLServer } from "./graphql.js";
 
 /**
  * Going to remove this for now. I think there's a file system issue when running this
