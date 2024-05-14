@@ -43,6 +43,21 @@ Basic graphql server from Apollo Server, running on express (I think).
 
 Some notes on the various parts of this:
 
+## Render - /client/render
+
+- I built this thing first
+- typescript
+- canvas elements. multiple, to make updating easier
+- index.html
+- classes / etc, which abstract canvas element.
+- classes for Grid, GridCell, GridPoint
+- GameRender class contains most of the wiring
+- some maths. linear algebra for isometric calculation
+- click handlers
+- abstraction of click/hold handler
+- drag (just changes x/y position of a div wrapping up all the canvas elements)
+- **calculation to find closest cell** (I was a bit proud of this)
+
 ## UI - /client/ui
 
 - react
@@ -62,24 +77,15 @@ Some notes on the various parts of this:
 - dispatch actions to the state
 - read values from the state
 
-## Render - /client/render
-
-- typescript
-- canvas elements. multiple, to make updating easier
-- classes / etc, which abstract canvas element.
-- some maths. linear algebra for isometric calculation
-- click handlers
-- abstraction of click/hold handler
-- drag (just changes x/y position of a div wrapping up all the canvas elements)
-- **calculation to find closest cell** (I was a bit proud of this)
-
-
 ## State - /client/state
 
 - react redux
+- redux dev tools in the browser
 
 ## Server - /server
 
+- node
+- node debug
 - Authorization class
 - basic testing of the Authorization class
 - typescript
