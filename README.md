@@ -46,16 +46,16 @@ Some notes on the various parts of this:
 ## Render - /client/render
 
 - I built this thing first
-- typescript
+- some maths. linear algebra for isometric calculation
 - canvas elements. multiple, to make updating easier
 - index.html
-- classes / etc, which abstract canvas element.
 - classes for Grid, GridCell, GridPoint
+- classes / etc, which abstract canvas element.
 - GameRender class contains most of the wiring
-- some maths. linear algebra for isometric calculation
 - click handlers
 - abstraction of click/hold handler
 - drag (just changes x/y position of a div wrapping up all the canvas elements)
+- typescript
 - **calculation to find closest cell** (I was a bit proud of this)
 
 ## UI - /client/ui
