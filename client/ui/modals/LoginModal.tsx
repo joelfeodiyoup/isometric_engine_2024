@@ -6,8 +6,7 @@ import { GET_USER } from "../graphql/User";
 import { LOGIN } from "../graphql/Authentication";
 import { closeModal } from "../../state/features/ui/uiSlice";
 import styled from "styled-components";
-import { MenuButton } from "../elements/Buttons";
-import { Stack } from "../layout-utilities/Cluster";
+import { ModalInstance } from "../layout-utilities/Modal";
 
 export const LoginModal = () => {
   const token = useSelector(selectUser).token;
@@ -40,10 +39,21 @@ export const GetToken = () => {
     return <p>some network error occurred: {JSON.stringify(error)}</p>;
   }
 
+  const modalActions = [
+    {
+      label: "submit",
+      onClick: () =>
+        login({
+          variables: {
+            name: newUser.name,
+            password: newUser.password,
+          },
+        }),
+    },
+  ];
   return (
     <>
-      <Stack>
-        <h2>log in</h2>
+      <ModalInstance heading="log in" actions={modalActions}>
         <StyledForm>
           <StyledFormRow>
             <StyledFormLabel htmlFor="name">name:</StyledFormLabel>
@@ -68,20 +78,7 @@ export const GetToken = () => {
             />
           </StyledFormRow>
         </StyledForm>
-        <MenuButton
-          className="primary"
-          onClick={() =>
-            login({
-              variables: {
-                name: newUser.name,
-                password: newUser.password,
-              },
-            })
-          }
-        >
-          submit
-        </MenuButton>
-      </Stack>
+      </ModalInstance>
     </>
   );
 };

@@ -1,5 +1,4 @@
-import { PropsWithChildren } from "react"
-import { BaseProps } from "../App"
+import React from "react"
 
 /**
  * transforms an html element into a react element.
@@ -9,6 +8,6 @@ import { BaseProps } from "../App"
  * @param param0 
  * @returns 
  */
-export const Container = (props: BaseProps & PropsWithChildren<{child: HTMLElement}>) => {
+export const Container = (props: React.ComponentPropsWithoutRef<"div"> & {child: HTMLElement}) => {
   return <div {...props} ref={ ref => ref?.appendChild(props.child)}></div>
 }

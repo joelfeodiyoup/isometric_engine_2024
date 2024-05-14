@@ -1,5 +1,10 @@
 import texture from "./../images/repeating.jpg";
 
+/**
+ * Have some central place to reference colours used for styling.
+ * I could alternatively use css variables, to be able to change these at run time.
+ * This is alright for now.
+ */
 export const colors = {
     lightBlue: '#39B0E1',
     mediumBlue: '#1e7499',

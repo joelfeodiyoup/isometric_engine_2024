@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { BaseProps } from "../App";
-import React, { ButtonHTMLAttributes, PropsWithRef, PropsWithoutRef } from "react";
+import React from "react";
 import { colors } from "../useColours";
 
 export const BaseButton = styled.button`
@@ -46,7 +45,6 @@ export const TopMenuButton = styled(MenuButton)`
   padding-block: 0;
 `;
 
-// export const SideMenuCategoryButtons = ({props, imageSrc, isActive}: {props: BaseProps,imageSrc: any, isActive: boolean}) => {
 export const SideMenuCategoryButtons = (props: React.ComponentPropsWithoutRef<"button"> & {imagesrc: any}) => {
   props.onClick
   return (

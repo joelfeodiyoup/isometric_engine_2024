@@ -1,6 +1,5 @@
-import { Terrain } from "./Terrain"
-import { Zoom } from "./Zoom"
-import { Cluster, Stack } from "./layout-utilities/Cluster"
+import { Terrain } from "./panel-groups/Terrain"
+import { Cluster, Stack } from "./layout-utilities/layout-partials"
 
 import admin from "../images/icons/admin.png";
 import agriculture from "../images/icons/agriculture.png";
@@ -14,6 +13,10 @@ import { SideMenuCategoryButtons } from "./elements/Buttons";
 import styled from "styled-components";
 import { colors } from "./useColours";
 
+/**
+ * The side panel section in the layout.
+ * @returns 
+ */
 export const SideNav = () => {
   const [icons, setIcons] = useState([
     {label: "S", image: admin, display: <Terrain/>, active: false},

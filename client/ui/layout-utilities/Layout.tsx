@@ -1,8 +1,15 @@
 import { ReactElement } from "react";
 import styled from "styled-components";
-import { Panel } from "./Cluster";
+import { Panel } from "./layout-partials";
 import { colors } from "../useColours";
 
+/**
+ * This abstracts layout.
+ * The component takes in react components for top, side, game render, and modal
+ * and hides the implementation of how those things are placed in the right position on the screen.
+ * @param param0 
+ * @returns 
+ */
 export const Layout = ({children}: {children: {
   top: ReactElement,
   side: ReactElement,

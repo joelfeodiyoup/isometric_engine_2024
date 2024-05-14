@@ -1,10 +1,9 @@
-import React, { PropsWithChildren, ReactElement, ReactNode, useState } from "react"
-import { BaseProps } from "./App";
+import React, { useState } from "react"
 import styled from "styled-components";
-import { Panel } from "./layout-utilities/Cluster";
-import { colors } from "./useColours";
+import { Panel } from "./layout-partials";
+import { colors } from "../useColours";
 
-export const DropdownMenu = (props: BaseProps & {
+export const DropdownMenu = (props: React.ComponentPropsWithoutRef<"span"> & {
   top: JSX.Element,
   subMenu: JSX.Element
 }) => {

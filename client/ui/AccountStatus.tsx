@@ -1,13 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import { logOut, selectUser, setUser } from "../state/features/user/userSlice"
-import React, { useEffect, useState } from "react";
-import { LOGIN, LOGOUT } from "./graphql/Authentication";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_USER } from "./graphql/User";
+import { logOut, selectUser } from "../state/features/user/userSlice"
+import React from "react";
+import { LOGOUT } from "./graphql/Authentication";
+import { useMutation } from "@apollo/client";
 import { openModal, setModal } from "../state/features/ui/uiSlice";
 import { TopMenuButton } from "./elements/Buttons";
-import { Cluster } from "./layout-utilities/Cluster";
+import { Cluster } from "./layout-utilities/layout-partials";
 
+/**
+ * This component handles display of the account status.
+ * When not signed it, it would allow a user to sign in (through opening a modal)
+ * When signed in, it would show that, and allow someone to sign out if they want.
+ * @param props 
+ * @returns 
+ */
 export const AccountStatus = (props: React.ComponentPropsWithoutRef<"span">) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);

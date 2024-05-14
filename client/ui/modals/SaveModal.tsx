@@ -1,11 +1,15 @@
 import { useDispatch } from "react-redux"
 import { closeModal } from "../../state/features/ui/uiSlice"
 import { MenuButton } from "../elements/Buttons";
+import { ModalInstance } from "../layout-utilities/Modal";
 
 export const SaveModal = () => {
   const dispatch = useDispatch();
   return (<>
-    <MenuButton className='primary' onClick={() => console.log('saved (to be implemented)')}>Save</MenuButton>
-    <MenuButton className='primary' onClick={() => dispatch(closeModal())}>Cancel</MenuButton>
+    <ModalInstance heading="save" actions={[
+      {label: "save", onClick: () => console.log('saved (to be implemented')},
+      {label: "cancel", onClick: () => dispatch(closeModal())}
+    ]}>
+    </ModalInstance>
   </>)
 }

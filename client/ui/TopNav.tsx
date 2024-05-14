@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { DropdownMenu } from "./DropdownMenu";
+import { DropdownMenu } from "./layout-utilities/DropdownMenu";
 import { AccountStatus } from "./AccountStatus";
-import { Cluster } from "./layout-utilities/Cluster";
+import { Cluster } from "./layout-utilities/layout-partials";
 import { openModal, setModal } from "../state/features/ui/uiSlice";
 import { useDispatch } from "react-redux";
 import { MenuButton, TopMenuButton } from "./elements/Buttons";
-import styled from "styled-components";
 
+/**
+ * The top panel in the game ui
+ * @returns 
+ */
 export const TopNav = () => {
   const menuOptions = useTopMenuOptions();
   return (<>
@@ -39,7 +42,7 @@ const useTopMenuOptions = () => {
   const [menuOptions, setMenuOptions] = useState<MenuOption[]>([
     {heading: "File", children: [
       {label: "New Game", onClick: () => {
-        dispatch(setModal("saveModal"));
+        dispatch(setModal("newGame"));
         dispatch(openModal());
       }},
       {label: "Save", onClick: () => {

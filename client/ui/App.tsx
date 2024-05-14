@@ -2,16 +2,15 @@ import { createRoot } from 'react-dom/client';
 import {store} from '../state/app/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { TopNav } from './TopNav';
-import React, { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from './layout-utilities/Modal';
 import { SideNav } from './SideNav';
 import { Layout } from './layout-utilities/Layout';
 import { GameRender } from '../render/game-render';
 import { Container } from './layout-utilities/Container';
-import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { closeModal, selectUiState } from '../state/features/ui/uiSlice';
-import { jsx } from 'react/jsx-runtime';
 import { getModal } from './modals/useModalSelector';
 
 const httpLink = createHttpLink({
@@ -31,11 +30,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-/**
- * I wish I didn't have to do this. Surely not?
- */
-export type BaseProps = React.HTMLAttributes<HTMLElement>;
-
 const gameRender = new GameRender({dimensions: {width: 10, height: 10}});
 const canvasStage = gameRender.element();
 const CanvasContainer = () => <Container style={{height: '100%'}} child={canvasStage}></Container>
@@ -47,7 +41,6 @@ const App = () => {
   useEffect(() => {
     setModalComponent(getModal(uiState.modal));
   }, [uiState.modal])
-  // const SelectedModal = useModalSelector(uiState.modal);
   
   return (<>
     <Layout>

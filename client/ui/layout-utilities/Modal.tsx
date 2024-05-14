@@ -1,9 +1,14 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import styled from "styled-components";
 import { colors } from "../useColours";
 import { MenuButton } from "../elements/Buttons";
-import { Stack } from "./Cluster";
+import { Stack } from "./layout-partials";
 
+/**
+ * This handles displaying a modal
+ * @param param0 
+ * @returns 
+ */
 export const Modal = ({
   children,
   isOpen,
@@ -26,6 +31,25 @@ export const Modal = ({
     </>
   );
 };
+
+/**
+ * This component helps to make all the modals look consistent
+ * @param props 
+ * @returns 
+ */
+export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {heading: string, actions: {label: string, onClick: () => void}[]}) => {
+  return <Stack>
+    <h1>{props.heading}</h1>
+    {props.children}
+    {props.actions.map((action, i) => {
+      return <MenuButton
+        key={`modal-action-${i}`}
+        className='primary'
+        onClick={action.onClick}
+      >{action.label}</MenuButton>
+    })}
+  </Stack>
+}
 
 const ModalContentStack = styled(Stack)`
   min-width: 20rem;

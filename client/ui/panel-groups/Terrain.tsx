@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../state/app/hooks"
-import { ClickActionTypes, setClickAction, setGridHighlightType } from "../state/features/gameControls/gameControlsSlice";
-import { MenuButton } from "./elements/Buttons";
-import { ButtonGroupCluster } from "./layout-utilities/Cluster";
-import { selectGameControlsState } from "../state/app/store";
+import { useAppDispatch } from "../../state/app/hooks"
+import { ClickActionTypes, setClickAction, setGridHighlightType } from "../../state/features/gameControls/gameControlsSlice";
+import { MenuButton } from "../elements/Buttons";
+import { ButtonGroupCluster } from "../layout-utilities/layout-partials";
+import { selectGameControlsState } from "../../state/app/store";
 
 export const Terrain = () => {
   const dispatch = useAppDispatch();
