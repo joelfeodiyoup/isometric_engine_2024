@@ -7,6 +7,7 @@ import { LOGIN } from "../graphql/Authentication";
 import { closeModal } from "../../state/features/ui/uiSlice";
 import styled from "styled-components";
 import { ModalInstance } from "../layout-utilities/Modal";
+import { StyledForm, StyledFormRow, StyledFormLabel, StyledFormInput } from "../elements/Form";
 
 export const LoginModal = () => {
   const token = useSelector(selectUser).token;
@@ -82,22 +83,6 @@ export const GetToken = () => {
     </>
   );
 };
-
-const StyledForm = styled.form`
-  display: table;
-`;
-const StyledFormRow = styled.p`
-  display: table-row;
-`;
-const StyledFormLabel = styled.label`
-  display: table-cell;
-  padding-top: 1rem;
-  text-align: end;
-  padding-right: 1rem;
-`;
-const StyledFormInput = styled.input`
-  display: table-cell;
-`;
 
 /**
  * get the user data, when we get a token

@@ -10,6 +10,7 @@ import { getModal } from "./modals/useModalSelector";
 import { GraphqlClient } from "./graphql/graphql-client";
 import { GameRenderComponent } from "./layout-sections/GameRender";
 import { ApolloProvider } from "@apollo/client";
+import { selectGameDimensions } from "../state/features/gameState/gameStateSlice";
 
 const App = () => {
   const uiState = useSelector(selectUiState);

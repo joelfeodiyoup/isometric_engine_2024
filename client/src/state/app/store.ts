@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from '../features/user/userSlice';
 import { gameControls } from '../features/gameControls/gameControlsSlice';
 import { uiReducer } from '../features/ui/uiSlice';
+import { gameState } from '../features/gameState/gameStateSlice';
 
 export const store = configureStore({
   reducer: {
     gameControls,
+    gameState,
     user: userReducer,
     ui: uiReducer
   }

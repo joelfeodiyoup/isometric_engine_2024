@@ -148,17 +148,17 @@ some tasks I could could do...
 - ~~make other canvas objects which sit above/below each other for different renderings~~
 - ~~add some unit tests~~
 - ~~find a way to highlight corners~~ / edges when mouse is over them
+- ~~change build to use vite~~
+- ~~fix up the styling~~ sort of
+- ~~make all the modal styling consistent with heading etc.~~
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
 - SSL / HTTPS for encryption
 - add 'save game state' to server
-- ~~fix up the styling~~ sort of
 - find a way to render an image into a cell
 - add a sql database?
 - get push notifications from the server
-- ~~make all the modal styling consistent with heading etc.~~
 - add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
 - import graphql types into front end by schema introspection
 - handle login error messages
-- change build to use vite
