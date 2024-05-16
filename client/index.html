@@ -7,7 +7,6 @@
   <style>
     #canvas-stage, #canvas-container {
       position: relative;
-      /* border: 1px solid black; */
       height: 400px;
       width: 400px;
     }
@@ -31,30 +30,6 @@
 </head>
 <body>
   <div id="ui-root"></div>
-  <div id="canvas-stage" style="isolation: isolate">
-    <div id="canvas-container" oncontextmenu="return false;">
-      <canvas
-      id="canvas-build"
-      height="4000"
-      width="4000"
-      ></canvas>
-      <canvas
-      id="canvas-base"
-      height="4000"
-      width="4000"
-      ></canvas>
-      <canvas
-      id="canvas-grid"
-      height="4000"
-      width="4000"
-      ></canvas>
-      <canvas
-      id="canvas-hover"
-      height="4000"
-      width="4000"
-      style="z-index: 10"></canvas></canvas>
-    </div>
-  </div>
   <script type="module" src="/src/main.tsx"></script>
   <!-- <script src="dist/bundle.js"></script> -->
 </body>

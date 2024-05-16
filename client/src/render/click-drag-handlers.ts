@@ -21,6 +21,7 @@ abstract class ClickAndDragHandler {
     element.addEventListener("mousedown", event => {
       this.handleClick(this.onStartClick.bind(this), event);
     });
+    element.onmousedown
     element.addEventListener("mousemove", event => {
       this.onMidClick && this.handleClick(this.onMidClick.bind(this), event);
     })

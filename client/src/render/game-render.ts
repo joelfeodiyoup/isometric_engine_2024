@@ -1,10 +1,11 @@
 import { store } from "../state/app/store";
-import { Canvas, CanvasWithMouseLiseners } from "./canvas";
+import { Canvas } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords } from "./isometric";
+import { BuildHtmlElement } from "./build-html-element";
 
 type GameOptions = {
   dimensions: { width: number; height: number };
@@ -49,7 +50,35 @@ export class GameRender {
     this.setup();
   }
 
+  private setupElements() {
+    const elements = BuildHtmlElement.getRenderElement();
+
+    // only set the stage element the first time.
+    // This stage element could then moved by whatever holds the game.
+    // so... who knows where it ends up.
+    if (!this.canvasStage) {
+      this.canvasStage = elements.canvasStage;
+      document.body.appendChild(elements.canvasStage);
+    }
+
+    // we can swap out the container from the stage.
+    this.canvasStage.replaceChildren(elements.canvasContainer);
+    this.container = elements.canvasContainer;
+
+    this.canvases = Object.entries(elements.canvases).reduce((obj, [key, val]) => {
+      obj[key as keyof typeof elements.canvases] = new Canvas(val);
+      return obj;
+    }, {} as Record<keyof typeof elements.canvases, Canvas>);
+
+    this.canvases.canvasHover.setListeners(
+      this.clickHandler.bind(this),
+      this.mouseHoverHandler.bind(this)
+    )
+  }
+
   private initialise(options: GameOptions) {
+    this.setupElements();
+
     this.grid = new Grid(
       // width and height are actually the number of points.
       // So I'll just add one, so that it'll be the number of cells.
@@ -59,26 +88,6 @@ export class GameRender {
       this.drawCellImage.bind(this),
       this.drawBaseCellFill.bind(this)
     );
-
-    /** I'm doing an assertion that these exist. I don't like that. */
-    this.canvasStage = document.getElementById("canvas-stage")!;
-    this.container = document.getElementById("canvas-container")!;
-
-    this.canvases = {
-      // canvasHover: new Canvas(
-      //   "canvas-hover",
-      //   // this.clickHandler.bind(this),
-      //   // this.mouseHoverHandler.bind(this)
-      // ),
-      canvasHover: new CanvasWithMouseLiseners(
-        "canvas-hover",
-        this.clickHandler.bind(this),
-        this.mouseHoverHandler.bind(this)
-      ),
-      canvasBase: new Canvas("canvas-base"),
-      canvasGrid: new Canvas("canvas-grid"),
-      canvasBuild: new Canvas("canvas-build"),
-    };
 
     this.moveScreenHandler = new MoveScreenHandler(
       this.canvasStage,

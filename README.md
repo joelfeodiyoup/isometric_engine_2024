@@ -149,8 +149,9 @@ some tasks I could could do...
 - ~~add some unit tests~~
 - ~~find a way to highlight corners~~ / edges when mouse is over them
 - ~~change build to use vite~~
-- ~~fix up the styling~~ sort of
 - ~~make all the modal styling consistent with heading etc.~~
+- ~~make constructor of the canvas elements programmatic from the class (probably is causing a bug currently, with multiple event listeners present, when re-initialising the whole thing)~~
+- ~~fix up the styling~~ sort of
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
@@ -162,3 +163,5 @@ some tasks I could could do...
 - add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
 - import graphql types into front end by schema introspection
 - handle login error messages
+- fix the logic of centring the camera when creating a 'new game'. The width of some containing elements is not calculated correctly either (just a.... big number).
+- clean up the initialisation of game-render and the 'reset' logic.

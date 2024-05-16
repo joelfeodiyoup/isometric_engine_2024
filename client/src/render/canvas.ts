@@ -7,9 +7,8 @@ export class Canvas {
   public draw: Draw;
   
   constructor(
-    canvasElementId: string
+    canvas: HTMLCanvasElement,
   ) {
-    const canvas = <HTMLCanvasElement>document.getElementById(canvasElementId);
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
@@ -20,7 +19,7 @@ export class Canvas {
     this.draw = new Draw(this);
   }
 
-  protected setListeners(
+  public setListeners(
     onClick: (x: number, y: number) => void,
     onMouseMove: (x: number, y: number) => void
   ) {
@@ -86,20 +85,6 @@ export class Canvas {
   private translateY(y: number) {
     // return y + this.position.y;
     return y;
-  }
-}
-
-/**
- * Only some of the canvases need to have a click handler on them.
- */
-export class CanvasWithMouseLiseners extends Canvas {
-  constructor(
-    domElementId: string,
-    onClick: (x: number, y: number) => void,
-    onMouseMove: (x: number, y: number) => void,
-  ) {
-    super(domElementId);
-    super.setListeners(onClick, onMouseMove);
   }
 }
 
