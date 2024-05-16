@@ -1,6 +1,9 @@
 import { Colors, Draw } from "./draw";
 import { Coords } from "./isometric";
 
+import road from "./../images/road.png";
+import tree_01 from "./../images/trees/tree_01.png";
+
 export class Canvas {
   protected ctx: CanvasRenderingContext2D;
   public canvas: HTMLCanvasElement;
@@ -9,6 +12,13 @@ export class Canvas {
   constructor(
     canvas: HTMLCanvasElement,
   ) {
+    // This is a bit of a timing issue that'll arrive sometime.
+    // When this class gets initialised, I load the assets to begin with.
+    // this is because the assets function doesn't really handle multiple things all trying to load the same image at the same time.
+    // If that happens, the others get stuck.
+    // So instead, load everythin initially.
+    // Not really ideal. I need to look into this.
+    this.initAssetsLoad();
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
@@ -17,6 +27,10 @@ export class Canvas {
     this.canvas = canvas;
     this.ctx = ctx;
     this.draw = new Draw(this);
+  }
+
+  private initAssetsLoad() {
+    assets.load([tree_01]);
   }
 
   public setListeners(
@@ -68,14 +82,22 @@ export class Canvas {
     this.ctx.fill();
   }
 
-  drawImage(topLeft: Coords, bottomRight: Coords, index: number) {
-    assets.load(["./../images/road.png"]).then((img) => {
-      const width = bottomRight.x - topLeft.x;
-      const height = bottomRight.y - topLeft.y;
-      console.log(`width: ${width} height: ${height}`)
-      this.ctx.drawImage(img!, topLeft.x, topLeft.y, width, height);
-      console.log(index);
-    })
+  drawImage(center: Coords) {
+    // assets.load([`${tree_01}`]).then((img) => {
+      const img = assets.loadedAsset.images[tree_01];
+      const width = 70; // todo: this should be the cell width, probably
+      const height = 70; // todo: this should be the actual image width, but scaled according to cell width, etc.
+      
+      // The actual bottom midpoint of the image will be somewhere slightly above the bottom of the image.
+      // just due to how the tree (or whatever) would be drawn.
+      // I should ideally record this in some meta file for each image.
+      // I'll work on that...
+      const offsetOfImageAboveCenter = 7;
+
+      // canvas takes the top left coordinate to draw from.
+      // So the height of the image needs to be subtracted from the y coordinate to find this y point.
+      this.ctx.drawImage(img!, center.x - (width / 2), center.y - height + offsetOfImageAboveCenter, width, height);
+    // })
   }
 
   private translateX(x: number) {

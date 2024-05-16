@@ -146,7 +146,9 @@ export class GameRender {
    * This function tells how that should happen.
    * @param cell
    */
-  private drawCellImage(cell: GridCell) {}
+  private drawCellImage(cell: GridCell) {
+    this.canvases.canvasBuild.draw.drawImage(cell);
+  }
 
   private drawBaseCellFill(cell: GridCell) {
     this.canvases.canvasBase.draw.drawFilledRectangle([cell], "green");
@@ -178,14 +180,22 @@ export class GameRender {
 
   private handleCellClicked(cell: GridCell) {
     const userColor = store.getState().user.value.color;
-    // if (cell.color === userColor) {
-    //   cell.color = null;
-    //   cell.isFilled = false;
-    // } else {
     cell.isFilled = true;
     cell.color = userColor;
-    // }
-    cell.drawFill(cell);
+    cell.hasImage = true;
+
+    // after drawing an image onto a cell, the build canvas has to be redrawn
+    // so that the correct draw order can be done (otherwise images could overlap in the wrong order)
+    this.redrawBuildLayer();
+    // cell.drawImage(cell);
+  }
+
+  private redrawBuildLayer() {
+    this.grid.gridCellDrawOrder.forEach(cell => {
+      if (cell.hasImage) {
+        cell.drawImage(cell);
+      }
+    })
   }
 
   private pointHandler(x: number, y: number) {

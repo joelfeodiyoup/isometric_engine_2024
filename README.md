@@ -151,6 +151,7 @@ some tasks I could could do...
 - ~~change build to use vite~~
 - ~~make all the modal styling consistent with heading etc.~~
 - ~~make constructor of the canvas elements programmatic from the class (probably is causing a bug currently, with multiple event listeners present, when re-initialising the whole thing)~~
+- ~~find a way to render an image into a cell~~
 - ~~fix up the styling~~ sort of
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
@@ -159,7 +160,6 @@ some tasks I could could do...
 - add a function that will produce a 'string' version of the game grid (that could later be saved).
 - add an ability to read in a string version of the grid, to initialise it.
 - add 'save game state' to server
-- find a way to render an image into a cell
 - add a sql database?
 - get push notifications from the server
 - add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
@@ -170,3 +170,5 @@ some tasks I could could do...
 - add offScreenCanvas for calculations outside main execution thread
 - look at moving some calculation logic to a web worker thread.
 - calculate a minimap somehow
+- generate more smooth hilly terrain
+- there is almost certainly an inefficiency when "clicking and drag" to build many images. Pretty sure it redraws the canvas n*n times. It sort of isn't noticeable on small maps. But definitely is when the grid is larger. (kind of amazing it works at all on the smaller ones)

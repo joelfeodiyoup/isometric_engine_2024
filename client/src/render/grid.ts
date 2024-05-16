@@ -5,6 +5,22 @@ import { Coords, Isometric } from "./isometric";
 export class Grid {
   public readonly gridPoints: GridPoint[][];
   public readonly gridCells: GridCell[][];
+
+  /**
+   * This should return the cells in the order in which they should be drawn
+   * E.g. this should draw from the top of the screen first.
+   * But that order may change, according to rotation of the map.
+   */
+  public get gridCellDrawOrder(): GridCell[] {
+    
+    // this is the correct draw order for the initial rotation.
+    // row 0. col N -> col 0
+    // ...
+    // row M. col N -> col 0
+    // However, when/if the rotation changes, then the draw order needs to change.
+    const order = this.gridCells.map(row => [...row].reverse()).flat();
+    return order;
+  }
   private isometric: Isometric;
   constructor(
     width: number, height: number,

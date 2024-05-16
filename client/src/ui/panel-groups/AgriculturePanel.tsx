@@ -11,5 +11,5 @@ export const AgriculturePanel = () => {
 
   return <SidePanelSection
     actions={buttons}
-    heading="agriculture changed"></SidePanelSection>
+    heading="agriculture"></SidePanelSection>
 }

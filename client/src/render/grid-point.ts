@@ -7,7 +7,9 @@ import { Coords, Isometric } from "./isometric";
  * Four points would make a cell, which will be represented by another object
  */
 export class GridPoint {
+  /** The screen coordinates for this point, without taking into account the vertical height */
   public readonly baseCoords: Coords;
+  /** The screen coordinates for this point, with the height added */
   public readonly coords: Coords;
   public height: number = 0;
   public isHighlighted = false;
@@ -28,7 +30,7 @@ export class GridPoint {
   constructor(public x: number, public y: number,
     private isometric: Isometric) {
     this.baseCoords = this.isometric.coords(x, y);
-    this.height = Math.floor(Math.random() * 2 - 2);
+    this.height = Math.round(Math.random() * 2 - 1);
     if (x === 0 && y === 0) {
       this.height = 0;
     }

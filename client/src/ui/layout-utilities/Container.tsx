@@ -9,5 +9,5 @@ import React from "react"
  * @returns 
  */
 export const Container = (props: React.ComponentPropsWithoutRef<"div"> & {child: HTMLElement}) => {
-  return <div {...props} ref={ ref => ref?.appendChild(props.child)}></div>
+  return <div {...props} ref={ ref => ref?.replaceChildren(props.child)}></div>
 }

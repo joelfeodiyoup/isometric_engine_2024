@@ -3,6 +3,7 @@ import { Canvas } from "./canvas";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
+import { rectangleMidPoint } from "./utils/maths";
 // import { Color as Colors } from 'color';
 
 // https://www.w3.org/TR/css-color-4/
@@ -80,7 +81,8 @@ export class Draw {
     this.canvas.drawPoint(point.coords);
   }
 
-  drawImage()  {
-    // canvas.drawImage();
+  drawImage(cell: GridCell)  {
+    const center = rectangleMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
+    this.canvas.drawImage(center);
   }
 }

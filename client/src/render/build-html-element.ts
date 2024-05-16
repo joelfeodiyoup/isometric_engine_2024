@@ -10,9 +10,9 @@ export class BuildHtmlElement {
       canvasStage: BuildHtmlElement.canvasStage(),
       canvasContainer: BuildHtmlElement.canvasContainer(),
       canvases: {
-        canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
         canvasBase: BuildHtmlElement.canvasElement("canvas-base"),
         canvasGrid: BuildHtmlElement.canvasElement("canvas-grid"),
+        canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
         canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
       }
     };

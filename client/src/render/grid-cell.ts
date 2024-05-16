@@ -1,6 +1,7 @@
 import { store } from "../state/app/store";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
+import { lineParameters } from "./utils/maths";
 
 /**
  * Represents a rectangular area of the grid, defined by the points topLeft, topRight, etc.
@@ -15,7 +16,8 @@ export class GridCell {
    * Possibly it'll reference some other file which contains keys for images.
    * Not sure yet.
    */
-  public image: any;
+  // public image: any;
+  public hasImage = false;
 
   constructor(
     public readonly topLeft: GridPoint,
@@ -31,10 +33,10 @@ export class GridCell {
   }
 
   public isPointInsideCell(point: Coords): boolean {
-    const topLine = this.getLineParameters(this.topLeft, this.topRight);
-    const bottomLine = this.getLineParameters(this.bottomLeft, this.bottomRight);
-    const leftLine = this.getLineParameters(this.topLeft, this.bottomLeft);
-    const rightLine = this.getLineParameters(this.topRight, this.bottomRight);
+    const topLine = lineParameters(this.topLeft.coords, this.topRight.coords);
+    const bottomLine = lineParameters(this.bottomLeft.coords, this.bottomRight.coords);
+    const leftLine = lineParameters(this.topLeft.coords, this.bottomLeft.coords);
+    const rightLine = lineParameters(this.topRight.coords, this.bottomRight.coords);
 
     return !this.pointIsAboveLine(point, topLine) &&
       this.pointIsAboveLine(point, bottomLine) &&
@@ -57,19 +59,4 @@ export class GridCell {
       const isAboveLine = x.y <= yOnLine;
       return isAboveLine;
     }
-
-    /**
-   * given two points, I need to know the parameters that define the line between those points.
-   * e.g. x1 = (x, y), x2 = (x', y') then there's a line between those two points
-   * the line is y = ax + b
-   * This function returns a and b.
-   */
-  private getLineParameters(x1: GridPoint, x2: GridPoint): {a: number, b: number} {
-    if (x1.coords.x === x2.coords.x) {
-      throw new Error("vertical line. I need to handle this with a special case.");
-    }
-    const a = (x1.coords.y - x2.coords.y) / (x1.coords.x - x2.coords.x);
-    const b = x1.coords.y - x1.coords.x * a;
-    return {a, b};
-  }
 }
