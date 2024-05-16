@@ -161,3 +161,4 @@ some tasks I could could do...
 - add proper typing to back end (some weird stuff with apollo typing. I think it's a slight nightmare.)
 - import graphql types into front end by schema introspection
 - handle login error messages
+- change build to use vite

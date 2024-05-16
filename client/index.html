@@ -16,7 +16,7 @@
       overflow: hidden;
       height: 100%;
       width: 100%;
-      background-image: url('./images/space_02.jpg');
+      background-image: url('./src/images/space_02.jpg');
       background-size: cover;
     }
 
@@ -26,7 +26,8 @@
       cursor: pointer;
     }
   </style>
-  <link href="./dist/output.css" rel="stylesheet">
+  <link href="./input.css" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
 </head>
 <body>
   <div id="ui-root"></div>
@@ -54,6 +55,7 @@
       style="z-index: 10"></canvas></canvas>
     </div>
   </div>
-  <script src="dist/bundle.js"></script>
+  <script type="module" src="/src/main.tsx"></script>
+  <!-- <script src="dist/bundle.js"></script> -->
 </body>
 </html>
