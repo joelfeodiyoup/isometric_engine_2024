@@ -1,3 +1,4 @@
+import React from "react";
 import { SidePanelSection, SidePanelSectionButtonAction } from "./SidePanelSection"
 
 export const AgriculturePanel = () => {
@@ -10,5 +11,5 @@ export const AgriculturePanel = () => {
 
   return <SidePanelSection
     actions={buttons}
-    heading="agriculture"></SidePanelSection>
+    heading="agriculture changed"></SidePanelSection>
 }

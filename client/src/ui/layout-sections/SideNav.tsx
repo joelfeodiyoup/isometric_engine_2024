@@ -1,19 +1,19 @@
-import { Terrain } from "./panel-groups/Terrain"
-import { Cluster, Stack } from "./layout-utilities/layout-partials"
+import { Terrain } from "../panel-groups/Terrain"
+import { Cluster, Stack } from "../layout-utilities/layout-partials"
 
-import admin from "../images/icons/admin.png";
-import agriculture from "../images/icons/agriculture.png";
-import civic from "../images/icons/civic.png";
-import entertainment from "../images/icons/entertainment.png";
-import house from "../images/icons/house.png";
-import industry from "../images/icons/industry.png";
-import storage from "../images/icons/storage.png";
+import admin from "../../images/icons/admin.png";
+import agriculture from "../../images/icons/agriculture.png";
+import civic from "../../images/icons/civic.png";
+import entertainment from "../../images/icons/entertainment.png";
+import house from "../../images/icons/house.png";
+import industry from "../../images/icons/industry.png";
+import storage from "../../images/icons/storage.png";
 import { useState } from "react";
-import { SideMenuCategoryButtons } from "./elements/Buttons";
+import { SideMenuCategoryButtons } from "../elements/Buttons";
 import styled from "styled-components";
-import { colors } from "./useColours";
-import { AgriculturePanel } from "./panel-groups/AgriculturePanel";
-import { HousingPanel } from "./panel-groups/HousingPanel";
+import { colors } from "../useColours";
+import { AgriculturePanel } from "../panel-groups/AgriculturePanel";
+import { HousingPanel } from "../panel-groups/HousingPanel";
 
 /**
  * The side panel section in the layout.

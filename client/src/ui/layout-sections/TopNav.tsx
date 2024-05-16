@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { DropdownMenu } from "./layout-utilities/DropdownMenu";
-import { AccountStatus } from "./AccountStatus";
-import { Cluster } from "./layout-utilities/layout-partials";
-import { openModal, setModal } from "../state/features/ui/uiSlice";
+import { DropdownMenu } from "../layout-utilities/DropdownMenu";
+import { AccountStatus } from "../AccountStatus";
+import { Cluster } from "../layout-utilities/layout-partials";
+import { openModal, setModal } from "../../state/features/ui/uiSlice";
 import { useDispatch } from "react-redux";
-import { MenuButton, TopMenuButton } from "./elements/Buttons";
+import { MenuButton, TopMenuButton } from "../elements/Buttons";
 
 /**
  * The top panel in the game ui
