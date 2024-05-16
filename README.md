@@ -156,6 +156,8 @@ some tasks I could could do...
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
 - SSL / HTTPS for encryption
+- add a function that will produce a 'string' version of the game grid (that could later be saved).
+- add an ability to read in a string version of the grid, to initialise it.
 - add 'save game state' to server
 - find a way to render an image into a cell
 - add a sql database?
@@ -165,3 +167,6 @@ some tasks I could could do...
 - handle login error messages
 - fix the logic of centring the camera when creating a 'new game'. The width of some containing elements is not calculated correctly either (just a.... big number).
 - clean up the initialisation of game-render and the 'reset' logic.
+- add offScreenCanvas for calculations outside main execution thread
+- look at moving some calculation logic to a web worker thread.
+- calculate a minimap somehow
