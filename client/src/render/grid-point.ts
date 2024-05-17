@@ -30,7 +30,8 @@ export class GridPoint {
   constructor(public x: number, public y: number,
     private isometric: Isometric) {
     this.baseCoords = this.isometric.coords(x, y);
-    this.height = Math.round(Math.random() * 2 - 1);
+    this.height = Math.round(Math.random() * 1 - 0);
+    // this.height = Math.round(Math.random() * 2 - 1);
     if (x === 0 && y === 0) {
       this.height = 0;
     }

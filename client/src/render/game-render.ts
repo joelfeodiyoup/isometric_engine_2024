@@ -99,10 +99,12 @@ export class GameRender {
       (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
       (start: GridCell, end: GridCell) => {
-        this.grid
-          .subArray(start, end, this.grid.gridCells)
-          .flat()
-          .forEach((cell) => this.handleCellClicked(cell));
+        const selectedCells = this.grid
+        .subArray(start, end, this.grid.gridCells)
+        .flat();
+        
+        selectedCells.forEach((cell) => this.changedStateofClickedCell(cell));
+        this.renderCellsClicked(selectedCells);
       },
       (start: GridPoint, end: GridPoint) => {
         const points = this.grid.subArray(start, end, this.grid.gridPoints);
@@ -178,16 +180,29 @@ export class GameRender {
     }
   }
 
-  private handleCellClicked(cell: GridCell) {
+  /**
+   * I'm not sure this approach is best:
+   * When the user clicks a cell, he could click one or many.
+   * This function is called to just change the state of one cell that was clicked.
+   * Later, something else triggers the actual re-render (handleAllCellsClickedBuild),
+   * This is so that the render can all be done as one process.
+   * @param cell 
+   */
+  private changedStateofClickedCell(cell: GridCell) {
     const userColor = store.getState().user.value.color;
     cell.isFilled = true;
     cell.color = userColor;
     cell.hasImage = true;
-
+  }
+  
+  /**
+   * This handles the actual render of 
+   * @param cells 
+   */
+  private renderCellsClicked(cells: GridCell[]) {
     // after drawing an image onto a cell, the build canvas has to be redrawn
     // so that the correct draw order can be done (otherwise images could overlap in the wrong order)
     this.redrawBuildLayer();
-    // cell.drawImage(cell);
   }
 
   private redrawBuildLayer() {
