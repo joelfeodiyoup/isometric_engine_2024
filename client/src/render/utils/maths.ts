@@ -20,6 +20,10 @@ export const rectangleMidPoint = (topLeft: Coords, topRight: Coords, bottomLeft:
   return {x, y};
 }
 
+export const rectangleVerticalMidPoint = (topLeft: Coords, topRight: Coords, bottomLeft: Coords, bottomRight: Coords): Coords => {
+  return {x: topRight.x, y: bottomLeft.y + (topRight.y - bottomLeft.y) / 2};
+}
+
 /**
    * given two points, I need to know the parameters that define the line between those points.
    * e.g. p1 = (x, y), p2 = (x', y') then there's a line between those two points

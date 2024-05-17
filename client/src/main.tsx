@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { AppWrapper } from "./ui/App";
+import { generateGrid } from "./render/utils/perlin-noise";
 
 const attachAppToDom = () => {
   const domNode = document.getElementById("ui-root");

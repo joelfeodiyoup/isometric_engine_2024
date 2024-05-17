@@ -3,7 +3,7 @@ import { Canvas } from "./canvas";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
-import { rectangleMidPoint } from "./utils/maths";
+import { rectangleMidPoint, rectangleVerticalMidPoint } from "./utils/maths";
 // import { Color as Colors } from 'color';
 
 // https://www.w3.org/TR/css-color-4/
@@ -36,7 +36,7 @@ export class Draw {
     })
 
     // I'd like to render something so that underneath the land there is an underground area.
-    const showSubterrain = true;
+    const showSubterrain = false;
     if (showSubterrain) {
       const depth = 100;
       const underneath = ({x, y}: Coords) => ({x, y: y + depth});
@@ -82,7 +82,11 @@ export class Draw {
   }
 
   drawImage(cell: GridCell)  {
-    const center = rectangleMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
+    // const center = rectangleMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
+
+    // for an isometric grid, the "top right" and "bottom left" corner are always vertically above/below each other.
+    // so the center can just be the mid point, vertically.
+    const center = rectangleVerticalMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
     this.canvas.drawImage(center);
   }
 }

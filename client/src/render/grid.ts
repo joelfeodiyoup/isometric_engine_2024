@@ -1,6 +1,7 @@
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords, Isometric } from "./isometric";
+import { generateGrid } from "./utils/perlin-noise";
 
 export class Grid {
   public readonly gridPoints: GridPoint[][];
@@ -30,12 +31,28 @@ export class Grid {
   ) {
     this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height} )
 
+    // this gets returned as a one dimensional array, of length width * height
+    // i.e. it's a flattened 2 dimensional array.
+    const grid = generateGrid(width, height);
+
     this.gridPoints = Array.from(Array(height), (_, row) => {
       return Array.from(Array(width), (_, col) => {
-        const cell = new GridPoint(col, row, this.isometric);
+        // grid is a flattened grid. So, reconstruct what the index should be for this row and col.
+        const heightGridIndex = row * width + col;
+
+        // height is between 0 and 1. So scale it a bit
+        const height = grid[heightGridIndex];
+        const scaledHeight = height * 10;
+
+        const cell = new GridPoint(col, row, this.isometric, scaledHeight);
         return cell;
       });
     });
+    // this.gridPoints = grid.map((row, index) => {
+    //   const rowIndex = Math.floor(index / width);
+    //   const colIndex = index % width;
+    //   return new GridPoint(colIndex, rowIndex, this.isometric, height))
+    // })
 
     this.gridCells = this.gridPoints.map(row => {
       return row.reduce((gridCells, gridPoint) => {

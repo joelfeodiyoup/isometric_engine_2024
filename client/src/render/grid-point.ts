@@ -16,7 +16,7 @@ export class GridPoint {
 
   private get heightMultiplier() {
     // the scaling of the height levels should be related to the isometric sizing
-    return this.isometric.xStep * 1;
+    return this.isometric.xStep * 0.1;
   }
 
   private get scaledHeight() {
@@ -28,9 +28,9 @@ export class GridPoint {
   }
 
   constructor(public x: number, public y: number,
-    private isometric: Isometric) {
+    private isometric: Isometric, height?: number) {
     this.baseCoords = this.isometric.coords(x, y);
-    this.height = Math.round(Math.random() * 1 - 0);
+    this.height = height ?? Math.round(Math.random() * 1 - 0);
     // this.height = Math.round(Math.random() * 2 - 1);
     if (x === 0 && y === 0) {
       this.height = 0;
