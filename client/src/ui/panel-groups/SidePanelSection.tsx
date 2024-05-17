@@ -4,6 +4,7 @@ import { selectGameControlsState } from "../../state/app/store";
 import { useSelector } from "react-redux";
 import { MenuButton } from "../elements/Buttons";
 import { ModalHeading } from "../elements/Headings";
+import { ViewControls } from "../fragments/ViewControls";
 
 export type SidePanelSectionButtonAction = {label: string, action: () => void};
 export const SidePanelSection = (props: React.ComponentPropsWithoutRef<"div"> & {heading: string, actions: SidePanelSectionButtonAction[]}) => {
@@ -27,5 +28,6 @@ export const SidePanelSection = (props: React.ComponentPropsWithoutRef<"div"> & 
       </MenuButton>
     })}
     </ButtonGroupCluster>
+    <ViewControls />
   </Stack>
 }

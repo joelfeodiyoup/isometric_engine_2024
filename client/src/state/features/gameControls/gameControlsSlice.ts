@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 /**
  * The different things that the render should do when the user clicks into it
@@ -16,42 +16,48 @@ export type ClickActionTypes = "raise" | "lower" | "build" | "debug";
 type HighlightTypes = "cell" | "corner";
 interface GameControlState {
   value: {
-  clickAction: ClickActionTypes,
-  highlightType: HighlightTypes,
-  zoomLevel: number,}
+    clickAction: ClickActionTypes;
+    highlightType: HighlightTypes;
+    zoomLevel: number;
+    rotation: number;
+  };
 }
 const initialState: GameControlState = {
   value: {
     clickAction: "raise",
     highlightType: "corner",
-    zoomLevel: 0
-  }
-}
+    zoomLevel: 0,
+    rotation: 0,
+  },
+};
 
 export const clickActionSlice = createSlice({
-  name: 'clickAction',
+  name: "clickAction",
   initialState,
   reducers: {
     setClickAction: (state, action: PayloadAction<ClickActionTypes>) => {
-      state.value = {...state.value, clickAction: action.payload};
+      state.value = { ...state.value, clickAction: action.payload };
     },
     setGridHighlightType: (state, action: PayloadAction<HighlightTypes>) => {
-      state.value = {...state.value, highlightType: action.payload};
+      state.value = { ...state.value, highlightType: action.payload };
     },
     toggleGridHighlightType: (state) => {
       if (state.value.highlightType === "cell") {
-        state.value = {...state.value, highlightType: "corner"};
+        state.value = { ...state.value, highlightType: "corner" };
       } else {
-        state.value = {...state.value, highlightType: "cell"};
+        state.value = { ...state.value, highlightType: "cell" };
       }
     },
     increaseZoom: (state) => {
-      state.value = {...state.value, zoomLevel: state.value.zoomLevel + 1};
+      state.value = { ...state.value, zoomLevel: state.value.zoomLevel + 1 };
     },
     decreaseZoom: (state) => {
-      state.value = {...state.value, zoomLevel: state.value.zoomLevel - 1};
+      state.value = { ...state.value, zoomLevel: state.value.zoomLevel - 1 };
+    },
+    rotate: (state, action: PayloadAction<{direction: "clockwise" | "counterclockwise"}>) => {
+      state.value = {...state.value, rotation: (state.value.rotation + (action.payload.direction ? 1 : -1)) % 4}
     }
-  }
+  },
 });
 
 export const {
@@ -59,7 +65,8 @@ export const {
   setGridHighlightType,
   toggleGridHighlightType,
   increaseZoom,
-  decreaseZoom
+  decreaseZoom,
+  rotate
 } = clickActionSlice.actions;
 
 export const gameControls = clickActionSlice.reducer;

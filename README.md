@@ -156,6 +156,7 @@ some tasks I could could do...
 - ~~generate more smooth hilly terrain~~
 - ~~there is almost certainly an inefficiency when "clicking and drag" to build many images. Pretty sure it redraws the canvas n*n times. It sort of isn't noticeable on small maps. But definitely is when the grid is larger. (kind of amazing it works at all on the smaller ones)~~
 - ~~shade the base tiles according to sunlight hitting them / their angle~~
+- ~~fix the subterrain rendering~~
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end

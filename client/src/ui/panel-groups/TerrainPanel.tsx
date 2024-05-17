@@ -6,7 +6,7 @@ import { ButtonGroupCluster } from "../layout-utilities/layout-partials";
 import { selectGameControlsState } from "../../state/app/store";
 import { SidePanelSection, SidePanelSectionButtonAction } from "./SidePanelSection";
 
-export const Terrain = () => {
+export const TerrainPanel = () => {
   const dispatch = useAppDispatch();
   const buttons: SidePanelSectionButtonAction[] = [
     {label: "raise", action: () => {

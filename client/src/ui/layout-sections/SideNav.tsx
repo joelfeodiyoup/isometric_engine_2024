@@ -1,4 +1,4 @@
-import { Terrain } from "../panel-groups/Terrain"
+import { TerrainPanel } from "../panel-groups/TerrainPanel"
 import { Cluster, Stack } from "../layout-utilities/layout-partials"
 
 import admin from "../../images/icons/admin.png";
@@ -23,11 +23,11 @@ import { DebugPanel } from "../panel-groups/DebugPanel";
 export const SideNav = () => {
   const [icons, setIcons] = useState([
     {image: admin, display: <DebugPanel/>, active: true},
-    {image: civic, display: <Terrain/>, active: false},
+    {image: civic, display: <TerrainPanel/>, active: false},
     {image: agriculture, display: <AgriculturePanel/>, active: false},
     {image: entertainment, display: <AgriculturePanel/>, active: false},
     {image: house, display: <HousingPanel />, active: false},
-    {image: industry, display: <Terrain />, active: false},
+    {image: industry, display: <TerrainPanel />, active: false},
     {image: storage, display: <AgriculturePanel />, active: false},
   ]);
   return (<StyledSidePanel>
