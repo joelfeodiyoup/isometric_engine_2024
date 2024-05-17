@@ -1,4 +1,4 @@
-import { store } from "../state/app/store";
+import { stateListenerActions, store } from "../state/app/store";
 import { Canvas } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
@@ -46,10 +46,21 @@ export class GameRender {
   };
 
   constructor(options: GameOptions) {
-    this.initialise(options);
-    this.setup();
+    stateListenerActions.onZoom = this.redraw.bind(this);
+    this.reset(options);
   }
 
+  public reset(options: GameOptions) {
+    this.initialise(options);
+    this.redraw();
+  }
+
+  /**
+   * This sets up the html elements needed for the render.
+   * On doing a "new game", (currently) it rebuilds all those html elements
+   * (this might not be necessary, ultimately. But it does it currently)
+   * Event listeners can also be added to those specific elements
+   */
   private setupElements() {
     const elements = BuildHtmlElement.getRenderElement();
 
@@ -76,6 +87,11 @@ export class GameRender {
     )
   }
 
+  /**
+   * Set up all the objects required for the render
+   * Things like the grid, grid cells, listeners, etc
+   * @param options 
+   */
   private initialise(options: GameOptions) {
     this.setupElements();
 
@@ -151,11 +167,6 @@ export class GameRender {
     return this.canvasStage;
   }
 
-  public reset(options: GameOptions) {
-    this.initialise(options);
-    this.setup();
-  }
-
   /**
    * Each cell can be filled. This function tells each cell how it should render that.
    * @param cell
@@ -182,12 +193,20 @@ export class GameRender {
     this.canvases.canvasBase.draw.drawFilledRectangle([cell], "green");
   }
 
-  private setup() {
+  /**
+   * reset everything and draw everything.
+   */
+  public redraw() {
+    this.clearAll();
     // draw all the filled squares
     this.grid.gridCells.flat().forEach((cell) => cell.drawBaseCellFill(cell));
     // this.canvases.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
     // draw the grid (the lines)
     this.redrawRender();
+  }
+
+  private clearAll() {
+    Object.values(this.canvases).forEach(canvas => canvas.clear());
   }
 
   private cellHandler(x: number, y: number) {
