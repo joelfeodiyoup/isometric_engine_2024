@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
  * The different things that the render should do when the user clicks into it
  * For example, it could be modifying terrain, or building something (a building/road/etc)
  */
-export type ClickActionTypes = "raise" | "lower" | "build";
+export type ClickActionTypes = "raise" | "lower" | "build" | "debug";
 /**
  * when highlight an area of the grid, we could be trying to highlight the entire cell, or just a corner (or, later, an edge)
  * These different types could have different actions.

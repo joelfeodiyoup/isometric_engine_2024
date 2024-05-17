@@ -37,12 +37,12 @@ export class Draw {
     })
 
     // I'd like to render something so that underneath the land there is an underground area.
-    const showSubterrain = false;
+    const showSubterrain = true;
     if (showSubterrain) {
       const depth = 100;
-      const underneath = ({x, y}: Coords) => ({x, y: y + depth});
+      const underneath = (point: GridPoint) => ({x: point.coords.x, y: point.baseCoords.y + depth});
       const aboveAndBelow = (gridPoint: GridPoint) => {
-        return [gridPoint.coords, underneath(gridPoint.coordsAtSeaLevel)] as [Coords, Coords];
+        return [gridPoint.coords, underneath(gridPoint)] as [Coords, Coords];
       }
       const [left, underneathLeft] = aboveAndBelow(grid[0]![0]!);
       const [middle, underneathMiddle] = aboveAndBelow(grid[grid.length - 1]![0]!);

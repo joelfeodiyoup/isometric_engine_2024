@@ -102,13 +102,39 @@ export class GameRender {
         const selectedCells = this.grid
         .subArray(start, end, this.grid.gridCells)
         .flat();
-        
-        selectedCells.forEach((cell) => this.changedStateofClickedCell(cell));
-        this.renderCellsClicked(selectedCells);
+
+        // I need to figure out what should be done, when clicking the cell. E.g. build something, debug something, remove something, ... something else?
+        // This might want to be abstracted. Firstly, let's see how it looks, non-abstracted...
+        const actionType = store.getState().gameControls.value.clickAction;
+        switch (actionType) {
+          case "debug":
+            // A bit crude. But sometimes you just want to quickly click a cell and see what it contains.
+            console.log(selectedCells);
+            return;
+          case "build":
+            selectedCells.forEach((cell) => this.changedStateofClickedCell(cell));
+            this.renderCellsClicked(selectedCells);
+            return;
+          default:
+            return;
+        }
+
       },
       (start: GridPoint, end: GridPoint) => {
         const points = this.grid.subArray(start, end, this.grid.gridPoints);
-        this.handlePointClicked(points.flat(), start.height);
+
+        // figure out which action to do for this point that was clicked
+        const actionType = store.getState().gameControls.value.clickAction;
+        switch (actionType) {
+          case "debug":
+            console.log(points);
+            return;
+          case "lower": // both lower and raise are currently doing the same thing. Switch statement fall through.
+          case "raise":
+            this.handlePointClicked(points.flat(), start.height);
+            return;
+          return;
+        }
       },
       () => {
         return store.getState().gameControls.value.highlightType === "cell";

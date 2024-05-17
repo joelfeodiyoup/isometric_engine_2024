@@ -35,7 +35,7 @@ export class GridPoint {
     if (x === 0 && y === 0) {
       this.height = 0;
     }
-    this.coords = {x: this.baseCoords.x, y: this.baseCoords.y + this.scaledHeight};
+    this.coords = {x: this.baseCoords.x, y: this.baseCoords.y - this.scaledHeight};
   }
 
   /**

@@ -21,13 +21,13 @@ export class GridCell {
     brightness += this.brightness(this.bottomLeft.height, this.bottomRight.height);
     brightness += this.brightness(this.bottomRight.height, this.topRight.height);
     brightness += this.brightness(this.topLeft.height, this.topRight.height);
-    return `hsl(90, ${60 + brightness * 10}%, ${50 + brightness * 5}%)`;
+    return `hsl(90, ${0.5 * (60 + brightness * 10)}%, ${50 + brightness * 5}%)`;
     // return `hsl(120, ${80 + brightness * 5}%, ${25 + brightness * 5}%)`;
   }
 
   private brightness(southernHeight: number, northernHeight: number) {
     return southernHeight === northernHeight ? 0
-      : southernHeight > northernHeight ? 1 : -1;
+      : southernHeight < northernHeight ? 1 : -1;
   }
 
   /**

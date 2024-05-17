@@ -173,3 +173,6 @@ some tasks I could could do...
 - add offScreenCanvas for calculations outside main execution thread
 - look at moving some calculation logic to a web worker thread.
 - calculate a minimap somehow
+- render cell as collection of triangles for better height indication
+- implement zoom
+- implement rotation
