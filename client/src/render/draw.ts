@@ -21,7 +21,8 @@ export class Draw {
   }
   drawGrid(grid: GridPoint[][]) {
 
-    const gridColor: Colors = "lightgrey";
+    const gridColor: Colors = "white";
+    // const gridColor: Colors = "lightgrey";
     grid.forEach(row => {
       row.forEach(col => {
         const east = col.neighbours(grid).east;

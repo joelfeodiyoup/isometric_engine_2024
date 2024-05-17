@@ -153,6 +153,9 @@ some tasks I could could do...
 - ~~make constructor of the canvas elements programmatic from the class (probably is causing a bug currently, with multiple event listeners present, when re-initialising the whole thing)~~
 - ~~find a way to render an image into a cell~~
 - ~~fix up the styling~~ sort of
+- ~~generate more smooth hilly terrain~~
+- ~~there is almost certainly an inefficiency when "clicking and drag" to build many images. Pretty sure it redraws the canvas n*n times. It sort of isn't noticeable on small maps. But definitely is when the grid is larger. (kind of amazing it works at all on the smaller ones)~~
+- ~~shade the base tiles according to sunlight hitting them / their angle~~
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
@@ -170,5 +173,3 @@ some tasks I could could do...
 - add offScreenCanvas for calculations outside main execution thread
 - look at moving some calculation logic to a web worker thread.
 - calculate a minimap somehow
-- generate more smooth hilly terrain
-- there is almost certainly an inefficiency when "clicking and drag" to build many images. Pretty sure it redraws the canvas n*n times. It sort of isn't noticeable on small maps. But definitely is when the grid is larger. (kind of amazing it works at all on the smaller ones)

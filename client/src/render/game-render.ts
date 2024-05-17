@@ -169,11 +169,11 @@ export class GameRender {
     if (closest) {
       const userColor = store.getState().user.value.color;
       if (closest.color === userColor) {
-        closest.color = null;
+        // closest.color = null;
         closest.isFilled = false;
       } else {
         closest.isFilled = true;
-        closest.color = userColor;
+        // closest.color = userColor;
       }
       closest.drawFill(closest);
       console.log(closest);
@@ -191,7 +191,7 @@ export class GameRender {
   private changedStateofClickedCell(cell: GridCell) {
     const userColor = store.getState().user.value.color;
     cell.isFilled = true;
-    cell.color = userColor;
+    // cell.color = userColor;
     cell.hasImage = true;
   }
   
