@@ -43,6 +43,7 @@ export class GameRender {
     canvasBase: Canvas;
     canvasGrid: Canvas;
     canvasBuild: Canvas;
+    canvasMouseHandler: Canvas;
   };
 
   constructor(options: GameOptions) {
@@ -80,11 +81,6 @@ export class GameRender {
       obj[key as keyof typeof elements.canvases] = new Canvas(val);
       return obj;
     }, {} as Record<keyof typeof elements.canvases, Canvas>);
-
-    this.canvases.canvasHover.setListeners(
-      this.clickHandler.bind(this),
-      this.mouseHoverHandler.bind(this)
-    )
   }
 
   /**
@@ -110,8 +106,17 @@ export class GameRender {
       { x: 0, y: 0 },
       this.setCameraPosition.bind(this)
     );
+
+    // for the mouse handler, always use the last one. i.e. the one at the top.
+    // this will/should probably be a canvas just for this.
+    // by doing this, the other canvases can be more easily rearranged, according to their use
+    // and the top/last most canvas, never has anything drawn to it, and just handles the listeners.
+    const elementForMouseHandler = Object.values(this.canvases).slice(-1)[0];
+    elementForMouseHandler.setListeners({
+      onMouseMove: this.mouseHoverHandler.bind(this)
+    });
     this.selectMultiplCellsHandler = new SelectMultipleCells(
-      this.canvases.canvasHover.canvas,
+      elementForMouseHandler.canvas,
       (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
       (start: GridCell, end: GridCell) => {
@@ -264,6 +269,8 @@ export class GameRender {
     if (actionType === "raise" || actionType === "lower") {
       closest.point?.adjustHeight(actionType);
     }
+
+    // nothing uses this return value...
     return closest.point;
   }
 

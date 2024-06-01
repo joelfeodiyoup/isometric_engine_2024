@@ -34,16 +34,22 @@ export class Canvas {
   }
 
   public setListeners(
-    onClick: (x: number, y: number) => void,
-    onMouseMove: (x: number, y: number) => void
+    {onClick, onMouseMove}: {
+      onClick?: (x: number, y: number) => void,
+      onMouseMove?: (x: number, y: number) => void
+    }
   ) {
-    // this.canvas.onclick = (event) => {
-    //   onClick(event.offsetX, event.offsetY);
-    //   // onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
-    // }
-    this.canvas.onmousemove = (event) => {
-      // onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
-      onMouseMove(event.offsetX, event.offsetY);
+    if (onClick) {
+      this.canvas.onclick = (event) => {
+        onClick(event.offsetX, event.offsetY);
+        // onClick(this.position.x + event.offsetX, this.position.y + event.offsetY);
+      }
+    }
+    if (onMouseMove) {
+      this.canvas.onmousemove = (event) => {
+        // onMouseMove(this.position.x + event.offsetX, this.position.y + event.offsetY);
+        onMouseMove(event.offsetX, event.offsetY);
+      }
     }
   }
 

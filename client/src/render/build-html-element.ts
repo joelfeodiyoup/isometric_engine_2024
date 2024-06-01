@@ -1,4 +1,4 @@
-type CanvasIds = "canvas-build" | "canvas-base" | "canvas-grid" | "canvas-hover";
+type CanvasIds = "canvas-build" | "canvas-base" | "canvas-grid" | "canvas-hover" | "canvas-mouse-handler";
 /**
  * This builds all the html needed for the render.
  * This includes things like canvas elements, containers for the canvas, etc
@@ -12,8 +12,9 @@ export class BuildHtmlElement {
       canvases: {
         canvasBase: BuildHtmlElement.canvasElement("canvas-base"),
         canvasGrid: BuildHtmlElement.canvasElement("canvas-grid"),
-        canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
         canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
+        canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
+        canvasMouseHandler: BuildHtmlElement.canvasElement("canvas-mouse-handler"),
       }
     };
 
