@@ -12,24 +12,6 @@ type GameOptions = {
   dimensions: { width: number; height: number };
 };
 
-/**
- * the client gets a function callback letting it know, when a user clicks,
- * which grid cell and which point the user has clicked near
- */
-type onClickScreen = (
-  grid: { x: number; y: number },
-  point: { x: number; y: number }
-) => void;
-
-/**
- * I'm not sure what will be the best way to implement. So this is a WIP.
- * Basically I want the "game renderer" to be fairly generic.
- * I want to be able to implement this and have the "consumer" determine how different types of cells would be handled on render
- * So possibly this renderer just says "these are the possibilities" (it could be rendered as a filled colour, or as an image, etc)
- * And then the caller of this class can pass in a function that uses the game logic to choose which of these is used, without worrying about implementation details.
- */
-type CellBuildRenderTypes = "filled" | "image";
-
 export class GameRender {
   public grid!: Grid;
   private canvasStage!: HTMLElement;
@@ -194,28 +176,6 @@ export class GameRender {
   }
 
   /**
-   * Each cell can be filled. This function tells each cell how it should render that.
-   * @param cell
-   * @param color
-   */
-  private drawCellFill(cell: GridCell) {
-    this.canvasRenderers.base.drawCell(cell);
-  }
-
-  /**
-   * Todo: each cell could have an image draw onto it.
-   * This function tells how that should happen.
-   * @param cell
-   */
-  private drawCellImage(cell: GridCell) {
-    this.canvases.canvasBuild.draw.drawImage(cell);
-  }
-
-  private drawBaseCellFill(cell: GridCell) {
-    this.canvases.canvasBase.draw.drawFilledRectangle([cell], "green");
-  }
-
-  /**
    * reset everything and draw everything.
    */
   public redraw() {
@@ -280,8 +240,7 @@ export class GameRender {
     }
   }
   private mouseHoverHandler(x: number, y: number) {
-    const state = store.getState();
-    state.gameControls.value.highlightType === "cell"
+    store.getState().gameControls.value.highlightType === "cell"
       ? this.setHoveredCell(x, y)
       : this.setHoveredPoint(x, y);
   }
