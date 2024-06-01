@@ -130,7 +130,6 @@ const assets = {
     return new Promise<HTMLImageElement>(resolve => {
       let loadHandler = (image: HTMLImageElement) => {
         this.loaded += 1;
-        console.log(this.loaded);
 
         //Check whether everything has loaded
         if (this.toLoad === this.loaded) {
@@ -139,7 +138,6 @@ const assets = {
           //to load more assets later if you need to
           this.toLoad = 0;
           this.loaded = 0;      
-          console.log("Assets finished loading");
 
           //Resolve the promise
           resolve(image);

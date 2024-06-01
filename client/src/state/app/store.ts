@@ -17,7 +17,6 @@ const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
   actionCreator: rotate,
   effect: (action, listenerApi) => {
-    console.log('rotate happened');
     stateListenerActions.onZoom();
 
     // can cancel other running instances.

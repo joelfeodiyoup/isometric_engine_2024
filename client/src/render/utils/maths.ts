@@ -20,7 +20,7 @@ export const rectangleMidPoint = (topLeft: Coords, topRight: Coords, bottomLeft:
   return {x, y};
 }
 
-export const rectangleVerticalMidPoint = (topLeft: Coords, topRight: Coords, bottomLeft: Coords, bottomRight: Coords): Coords => {
+export const rectangleVerticalMidPoint = (topRight: Coords, bottomLeft: Coords): Coords => {
   return {x: topRight.x, y: bottomLeft.y + (topRight.y - bottomLeft.y) / 2};
 }
 

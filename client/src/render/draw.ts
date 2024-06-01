@@ -59,10 +59,6 @@ export class Draw {
       const [left, underneathLeft] = aboveAndBelow(points[(4 - rotation) % 4]);
       const [middle, underneathMiddle] = aboveAndBelow(points[(1 + 4 - rotation) % 4]);
       const [right, underneathRight] = aboveAndBelow(points[(2 + 4 - rotation) % 4]);
-      // const [left, underneathLeft] = aboveAndBelow(points[(rotation + 4) % 4]);
-      // const [middle, underneathMiddle] = aboveAndBelow(points[(rotation + 1 + 4) % 4]);
-      // const [right, underneathRight] = aboveAndBelow(points[(rotation + 2 + 4) % 4]);
-      
       
       this.canvas.drawLine(left, underneathLeft, gridColor);
       this.canvas.drawLine(underneathLeft, underneathMiddle, gridColor);
@@ -108,13 +104,8 @@ export class Draw {
   }
 
   drawImage(cell: GridCell)  {
-    // const center = rectangleMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
-
-    const cells = [cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft];
-    const rotation = store.getState().gameControls.value.rotation;
     // for an isometric grid, the "top right" and "bottom left" corner are always vertically above/below each other.
-    // so the center can just be the mid point, vertically.
-    const center = rectangleVerticalMidPoint(cells[rotation].coords, cells[(rotation + 1) % 4].coords, cell.bottomLeft.coords, cell.bottomRight.coords);
+    const center = rectangleVerticalMidPoint(cell.topRight.coords, cell.bottomLeft.coords);
     this.canvas.drawImage(center);
   }
 }

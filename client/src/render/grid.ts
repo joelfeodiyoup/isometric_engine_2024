@@ -17,15 +17,8 @@ export class Grid {
     const rotation = store.getState().gameControls.value.rotation;
     const remainder = rotation % 4;
     const reverseRows = remainder === 1 || remainder === 2;
-    // const reverseRows = false;
     const reverseCols = remainder === 0 || remainder === 1;
-    // const reverseCols = true;
     
-    // this is the correct draw order for the initial rotation.
-    // row 0. col N -> col 0
-    // ...
-    // row M. col N -> col 0
-    // However, when/if the rotation changes, then the draw order needs to change.
     const order = (reverseRows
       ? [...this.gridCells].reverse()
       : this.gridCells

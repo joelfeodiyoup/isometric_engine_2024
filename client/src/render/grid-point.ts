@@ -10,10 +10,10 @@ import { Coords, Isometric } from "./isometric";
 export class GridPoint {
   public get x() {
     const rotation = store.getState().gameControls.value.rotation;
-    const dimensions = store.getState().gameState.value.dimensions;
+    
 
     // when the camera rotates, basically the x/y values for the column/row of this cell change.
-    const v = [this._x, this._y, dimensions.width - this._x, dimensions.height - this._y];
+    const v = [this._x, this._y, this.dimensions.width - this._x, this.dimensions.height - this._y];
     return v[rotation % 4];
   }
   public get y() {
@@ -30,6 +30,9 @@ export class GridPoint {
   public get baseCoords(): Coords {
     return this.isometric.coords(this.x, this.y);
 
+  }
+  private get dimensions() {
+    return store.getState().gameState.value.dimensions;
   }
   public get coords(): Coords {
     return {x: this.baseCoords.x, y: this.baseCoords.y - this.scaledHeight}

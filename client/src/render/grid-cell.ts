@@ -38,17 +38,27 @@ export class GridCell {
   // public image: any;
   public hasImage = false;
 
+  public get cells(): GridPoint[] {
+    return [...[this._topLeft, this._topRight, this._bottomRight, this._bottomLeft]];
+  }
+  public get rotation(): number {
+    return store.getState().gameControls.value.rotation;
+  }
+
   public get topLeft(): GridPoint {
-    return this._topLeft;
+    return this.cells[this.rotation % 4];
   }
   public get topRight(): GridPoint {
-    return this._topRight;
+    return this.cells[(this.rotation + 1) % 4];
+    // return this._topRight;
   }
   public get bottomLeft(): GridPoint {
-    return this._bottomLeft;
+    return this.cells[(this.rotation + 3) % 4];
+    // return this._bottomLeft;
   }
   public get bottomRight(): GridPoint {
-    return this._bottomRight;
+    return this.cells[(this.rotation + 2) % 4];
+    // return this._bottomRight;
   }
 
   constructor(
