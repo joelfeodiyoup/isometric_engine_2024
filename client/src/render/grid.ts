@@ -1,3 +1,4 @@
+import { store } from "../state/app/store";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords, Isometric } from "./isometric";
@@ -13,13 +14,26 @@ export class Grid {
    * But that order may change, according to rotation of the map.
    */
   public get gridCellDrawOrder(): GridCell[] {
+    const rotation = store.getState().gameControls.value.rotation;
+    const remainder = rotation % 4;
+    const reverseRows = remainder === 1 || remainder === 2;
+    // const reverseRows = false;
+    const reverseCols = remainder === 0 || remainder === 1;
+    // const reverseCols = true;
     
     // this is the correct draw order for the initial rotation.
     // row 0. col N -> col 0
     // ...
     // row M. col N -> col 0
     // However, when/if the rotation changes, then the draw order needs to change.
-    const order = this.gridCells.map(row => [...row].reverse()).flat();
+    const order = (reverseRows
+      ? [...this.gridCells].reverse()
+      : this.gridCells
+    ).map(row => {
+      return reverseCols
+        ? [...row].reverse()
+        : row
+    }).flat();
     return order;
   }
   private isometric: Isometric;
