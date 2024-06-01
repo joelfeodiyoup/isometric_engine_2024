@@ -105,9 +105,6 @@ export class GameRender {
       // So I'll just add one, so that it'll be the number of cells.
       options.dimensions.width + 1,
       options.dimensions.height + 1,
-      this.drawCellFill.bind(this),
-      this.drawCellImage.bind(this),
-      this.drawBaseCellFill.bind(this)
     );
 
     // handler for moving the screen. Element to watch, and function to handle the updates.

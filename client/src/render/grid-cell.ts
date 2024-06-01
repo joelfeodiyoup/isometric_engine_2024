@@ -58,9 +58,6 @@ export class GridCell {
     private _bottomRight: GridPoint,
     public readonly x: number,
     public readonly y: number,
-    public drawFill: (cell: GridCell) => void,
-    public drawImage: (cell: GridCell) => void,
-    public drawBaseCellFill: (cell: GridCell) => void,
   ) {
   }
 

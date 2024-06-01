@@ -25,9 +25,6 @@ export class Grid {
   private isometric: Isometric;
   constructor(
     width: number, height: number,
-    drawCellFill: (cell: GridCell) => void,
-    drawCellImage: (cell: GridCell) => void,
-    drawBaseCellFill: (cell: GridCell) => void,
   ) {
     this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height} )
 
@@ -72,9 +69,6 @@ export class Grid {
           bottomRight,
           gridPoint.x,
           gridPoint.y,
-          drawCellFill,
-          drawCellImage,
-          drawBaseCellFill
         ));
         return gridCells;
       }, [] as GridCell[])

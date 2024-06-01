@@ -44,7 +44,6 @@ export class RenderGridCanvas extends RenderedGrid {
 export class RenderBuildCanvas extends RenderedGrid {
   drawCell(cell: GridCell): void {
     this.canvas.draw.drawImage(cell);
-    // cell.drawImage(cell);
   }
   constructor(
     canvas: Canvas,
@@ -56,7 +55,7 @@ export class RenderBuildCanvas extends RenderedGrid {
     // after drawing an image onto a cell, the build canvas has to be redrawn
     // so that the correct draw order can be done (otherwise images could overlap in the wrong order)
     this.grid.gridCellDrawOrder.flat().forEach((cell, i) => {
-      cell.hasImage && cell.drawImage(cell);
+      cell.hasImage && this.canvas.draw.drawImage(cell);
     })
   }
 }
