@@ -1,6 +1,7 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { MenuButton } from "../elements/Buttons";
-import { rotate } from "../../state/features/gameControls/gameControlsSlice";
+import { gameControls, rotate } from "../../state/features/gameControls/gameControlsSlice";
+import { selectGameControlsState } from "../../state/app/store";
 
 /**
  * This ui component would dispatch events to control the zoom of the game render
@@ -9,9 +10,12 @@ import { rotate } from "../../state/features/gameControls/gameControlsSlice";
  * @returns 
  */
 export const ViewControls = () => {
+  const rotation = useSelector(selectGameControlsState).rotation;
+  const direction = ["north", "east", "south", "west"][rotation];
   const dispatch = useDispatch();
   return <section>
-    <MenuButton className="inverted" onClick={() => dispatch(rotate({direction: "clockwise"}))}>&lt;-</MenuButton>
-    <MenuButton className="inverted" onClick={() => dispatch(rotate({direction: "counterclockwise"}))}>-&gt;</MenuButton>
+    <pre>{direction}</pre>
+    <MenuButton className="inverted" onClick={() => dispatch(rotate({direction: "counterclockwise"}))}>&lt;-</MenuButton>
+    <MenuButton className="inverted" onClick={() => dispatch(rotate({direction: "clockwise"}))}>-&gt;</MenuButton>
   </section>
 }

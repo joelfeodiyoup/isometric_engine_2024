@@ -1,4 +1,5 @@
 
+import { store } from "../state/app/store";
 import { Canvas } from "./canvas";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
@@ -44,9 +45,23 @@ export class Draw {
       const aboveAndBelow = (gridPoint: GridPoint) => {
         return [gridPoint.coords, underneath(gridPoint)] as [Coords, Coords];
       }
-      const [left, underneathLeft] = aboveAndBelow(grid[0]![0]!);
-      const [middle, underneathMiddle] = aboveAndBelow(grid[grid.length - 1]![0]!);
-      const [right, underneathRight] = aboveAndBelow(grid[grid.length - 1]![grid[0]!.length - 1]!);
+
+      const nRows = grid.length;
+      const nCols = grid[0].length;
+
+      const points = [
+        grid[0]![0]!,
+        grid[grid.length - 1]![0]!,
+        grid[grid.length - 1]![grid[0]!.length - 1]!,
+        grid[0]![grid.length -1]!
+      ];
+      const rotation = store.getState().gameControls.value.rotation;
+      const [left, underneathLeft] = aboveAndBelow(points[(4 - rotation) % 4]);
+      const [middle, underneathMiddle] = aboveAndBelow(points[(1 + 4 - rotation) % 4]);
+      const [right, underneathRight] = aboveAndBelow(points[(2 + 4 - rotation) % 4]);
+      // const [left, underneathLeft] = aboveAndBelow(points[(rotation + 4) % 4]);
+      // const [middle, underneathMiddle] = aboveAndBelow(points[(rotation + 1 + 4) % 4]);
+      // const [right, underneathRight] = aboveAndBelow(points[(rotation + 2 + 4) % 4]);
       
       
       this.canvas.drawLine(left, underneathLeft, gridColor);
@@ -55,9 +70,19 @@ export class Draw {
       this.canvas.drawLine(underneathMiddle, underneathRight, gridColor);
       this.canvas.drawLine(underneathRight, right, gridColor);
 
-      const soil = [...grid.map(row => row[0]!), underneathMiddle, underneathLeft];
-      this.canvas.drawFilledPolygon([...grid.map(row => row[0]!.coords), underneathMiddle, underneathLeft], "tan");
-      this.canvas.drawFilledPolygon([...grid[grid.length - 1]!.map(cell => cell.coords), underneathRight, underneathMiddle], "peru");
+      const edges = [
+        (cell: GridPoint) => cell.x === 0,
+        (cell: GridPoint) => cell.y === nRows - 1,
+      ].map(f => grid.flat().filter(cell => f(cell)));
+
+      const terrainSet = (points: GridPoint[]) => {
+        const startPiece = underneath(points[0]);
+        const endPiece = underneath(points[points.length - 1]);
+        return [startPiece, ...points.map(p => p.coords), endPiece];
+      }
+
+      this.canvas.drawFilledPolygon(terrainSet(edges[0]), "tan");
+      this.canvas.drawFilledPolygon(terrainSet(edges[1]), "peru");
     }
   }
 
@@ -85,9 +110,11 @@ export class Draw {
   drawImage(cell: GridCell)  {
     // const center = rectangleMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
 
+    const cells = [cell.topLeft, cell.topRight, cell.bottomRight, cell.bottomLeft];
+    const rotation = store.getState().gameControls.value.rotation;
     // for an isometric grid, the "top right" and "bottom left" corner are always vertically above/below each other.
     // so the center can just be the mid point, vertically.
-    const center = rectangleVerticalMidPoint(cell.topLeft.coords, cell.topRight.coords, cell.bottomLeft.coords, cell.bottomRight.coords);
+    const center = rectangleVerticalMidPoint(cells[rotation].coords, cells[(rotation + 1) % 4].coords, cell.bottomLeft.coords, cell.bottomRight.coords);
     this.canvas.drawImage(center);
   }
 }

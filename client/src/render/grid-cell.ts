@@ -21,7 +21,7 @@ export class GridCell {
     brightness += this.brightness(this.bottomLeft.height, this.bottomRight.height);
     brightness += this.brightness(this.bottomRight.height, this.topRight.height, 2);
     brightness += this.brightness(this.topLeft.height, this.topRight.height);
-    return `hsl(90, ${0.5 * (60 + brightness * 10)}%, ${50 + brightness * 5}%)`;
+    return `hsl(90, ${0.5 * (80 + brightness * 5)}%, ${55 + brightness * 3}%)`;
     // return `hsl(120, ${80 + brightness * 5}%, ${25 + brightness * 5}%)`;
   }
 
@@ -39,7 +39,6 @@ export class GridCell {
   public hasImage = false;
 
   public get topLeft(): GridPoint {
-    
     return this._topLeft;
   }
   public get topRight(): GridPoint {

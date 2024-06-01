@@ -199,7 +199,7 @@ export class GameRender {
   public redraw() {
     this.clearAll();
     // draw all the filled squares
-    this.grid.gridCells.flat().forEach((cell) => cell.drawBaseCellFill(cell));
+    this.grid.gridCells.flat().forEach((cell) => cell.hasImage && cell.drawImage(cell));
     // this.canvases.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
     // draw the grid (the lines)
     this.redrawRender();

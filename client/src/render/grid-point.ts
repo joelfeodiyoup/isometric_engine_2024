@@ -1,3 +1,4 @@
+import { store } from "../state/app/store";
 import { Grid } from "./grid";
 import { Coords, Isometric } from "./isometric";
 
@@ -7,10 +8,32 @@ import { Coords, Isometric } from "./isometric";
  * Four points would make a cell, which will be represented by another object
  */
 export class GridPoint {
+  public get x() {
+    const rotation = store.getState().gameControls.value.rotation;
+    const dimensions = store.getState().gameState.value.dimensions;
+
+    // when the camera rotates, basically the x/y values for the column/row of this cell change.
+    const v = [this._x, this._y, dimensions.width - this._x, dimensions.height - this._y];
+    return v[rotation % 4];
+  }
+  public get y() {
+    const rotation = store.getState().gameControls.value.rotation;
+    const dimensions = store.getState().gameState.value.dimensions;
+
+    const v = [this._x, this._y, dimensions.width - this._x, dimensions.height - this._y];
+    return v[(rotation + 1) % 4];
+  }
   /** The screen coordinates for this point, without taking into account the vertical height */
-  public readonly baseCoords: Coords;
+  // public readonly baseCoords: Coords;
   /** The screen coordinates for this point, with the height added */
-  public readonly coords: Coords;
+  // public readonly coords: Coords;
+  public get baseCoords(): Coords {
+    return this.isometric.coords(this.x, this.y);
+
+  }
+  public get coords(): Coords {
+    return {x: this.baseCoords.x, y: this.baseCoords.y - this.scaledHeight}
+  }
   public height: number = 0;
   public isHighlighted = false;
 
@@ -27,15 +50,15 @@ export class GridPoint {
     return {x: this.coords.x, y: this.coords.y - this.scaledHeight};
   }
 
-  constructor(public x: number, public y: number,
+  constructor(private _x: number, private _y: number,
     private isometric: Isometric, height?: number) {
-    this.baseCoords = this.isometric.coords(x, y);
+    // this.baseCoords = this.isometric.coords(x, y);
     this.height = height ?? Math.round(Math.random() * 1 - 0);
     // this.height = Math.round(Math.random() * 2 - 1);
-    if (x === 0 && y === 0) {
-      this.height = 0;
-    }
-    this.coords = {x: this.baseCoords.x, y: this.baseCoords.y - this.scaledHeight};
+    // if (x === 0 && y === 0) {
+    //   this.height = 0;
+    // }
+    // this.coords = {x: this.baseCoords.x, y: this.baseCoords.y - this.scaledHeight};
   }
 
   /**
@@ -47,10 +70,10 @@ export class GridPoint {
    */
   public neighbours(grid: GridPoint[][]) {
     return {
-      north: grid[this.y - 1]?.[this.x] ?? null,
-      east: grid[this.y]?.[this.x + 1] ?? null,
-      south: grid[this.y + 1]?.[this.x] ?? null,
-      west: grid[this.y]?.[this.x - 1] ?? null,
+      north: grid[this._y - 1]?.[this._x] ?? null,
+      east: grid[this._y]?.[this._x + 1] ?? null,
+      south: grid[this._y + 1]?.[this._x] ?? null,
+      west: grid[this._y]?.[this._x - 1] ?? null,
     }
   }
 

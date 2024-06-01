@@ -55,7 +55,7 @@ export const clickActionSlice = createSlice({
       state.value = { ...state.value, zoomLevel: state.value.zoomLevel - 1 };
     },
     rotate: (state, action: PayloadAction<{direction: "clockwise" | "counterclockwise"}>) => {
-      state.value = {...state.value, rotation: (state.value.rotation + (action.payload.direction ? 1 : -1)) % 4}
+      state.value = {...state.value, rotation: (state.value.rotation + (action.payload.direction === "clockwise" ? 1 : -1) + 4) % 4}
     }
   },
 });
