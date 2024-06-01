@@ -79,7 +79,8 @@ export class GridPoint {
 
 
   public adjustHeight(direction: 'raise' | 'lower') {
-    const newHeight = this.height + (direction === "raise" ? -1 : 1);
+    // * 10 because of the perlin noise. I need to figure out what this should really be...
+    const newHeight = this.height + (direction === "raise" ? 1 : -1) * 10 ;
     this.setHeight(newHeight);
   }
   

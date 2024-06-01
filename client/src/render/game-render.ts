@@ -197,8 +197,7 @@ export class GameRender {
           // we're adjusting just one point, so just adjust it.
           points[0]?.adjustHeight(actionType);
         }
-        // The whole thing needs to be redrawn, because the base grid heights have changed, so everything is in a new position.
-        this.redrawRender();
+        this.redraw();
         return;
       default:
         return;
@@ -243,10 +242,5 @@ export class GameRender {
     store.getState().gameControls.value.highlightType === "cell"
       ? this.setHoveredCell(x, y)
       : this.setHoveredPoint(x, y);
-  }
-
-  private redrawRender() {
-    this.canvasRenderers.build.clearAndRedraw();
-    this.canvasRenderers.grid.clearAndRedraw();
   }
 }
