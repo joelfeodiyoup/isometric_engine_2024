@@ -214,22 +214,6 @@ export class GameRender {
     Object.values(this.canvases).forEach(canvas => canvas.clear());
   }
 
-  private cellHandler(x: number, y: number) {
-    const closest = this.grid.closestCell(x, y);
-    if (closest) {
-      const userColor = store.getState().user.value.color;
-      if (closest.color === userColor) {
-        // closest.color = null;
-        closest.isFilled = false;
-      } else {
-        closest.isFilled = true;
-        // closest.color = userColor;
-      }
-      closest.drawFill(closest);
-      console.log(closest);
-    }
-  }
-
   /**
    * I'm not sure this approach is best:
    * When the user clicks a cell, he could click one or many.
@@ -263,17 +247,6 @@ export class GameRender {
     })
   }
 
-  private pointHandler(x: number, y: number) {
-    const closest = this.grid.closestPoint(x, y);
-    const actionType = store.getState().gameControls.value.clickAction;
-    if (actionType === "raise" || actionType === "lower") {
-      closest.point?.adjustHeight(actionType);
-    }
-
-    // nothing uses this return value...
-    return closest.point;
-  }
-
   private handlePointClicked(points: GridPoint[], firstCellHeight: number) {
     const actionType = store.getState().gameControls.value.clickAction;
 
@@ -287,24 +260,6 @@ export class GameRender {
       points[0]?.adjustHeight(actionType);
     }
     this.redrawRender();
-  }
-
-  private clickHandler(x: number, y: number) {
-    const state = store.getState();
-    state.gameControls.value.highlightType === "cell"
-      ? this.cellHandler(x, y)
-      : this.pointHandler(x, y);
-
-    /**
-     * whenever the action was raising or lowering a part of the grid,
-     * Then the grid needs to be drawn again.
-     */
-    if (
-      state.gameControls.value.clickAction === "lower" ||
-      state.gameControls.value.clickAction === "raise"
-    ) {
-      this.redrawRender();
-    }
   }
 
   private setHoveredCell(x: number, y: number) {
