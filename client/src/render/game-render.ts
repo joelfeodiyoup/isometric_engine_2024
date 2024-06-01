@@ -6,6 +6,7 @@ import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
+import { RenderBaseCanvas, RenderBuildCanvas, RenderGridCanvas, RenderHoverCanvas, RenderedGrid } from "./rendered-grid";
 
 type GameOptions = {
   dimensions: { width: number; height: number };
@@ -37,6 +38,14 @@ export class GameRender {
   private hoveredPoint = null as null | GridPoint;
   private moveScreenHandler!: MoveScreenHandler;
   private selectMultiplCellsHandler!: SelectMultipleCells;
+
+  /** Each canvas renders things a bit differently. Details hidden inside each implementation */
+  private canvasRenderers: {
+    grid: RenderedGrid,
+    base: RenderedGrid,
+    build: RenderedGrid,
+    hover: RenderedGrid
+  }
 
   private canvases!: {
     canvasHover: Canvas;
@@ -101,10 +110,16 @@ export class GameRender {
       this.drawBaseCellFill.bind(this)
     );
 
+    // handler for moving the screen. Element to watch, and function to handle the updates.
     this.moveScreenHandler = new MoveScreenHandler(
       this.canvasStage,
       { x: 0, y: 0 },
-      this.setCameraPosition.bind(this)
+      ({ x, y }: { x: number; y: number }) => {
+        if (this.container) {
+          this.container.style.left = `${x}px`;
+          this.container.style.top = `${y}px`;
+        }
+      }
     );
 
     // for the mouse handler, always use the last one. i.e. the one at the top.
@@ -133,8 +148,11 @@ export class GameRender {
             console.log(selectedCells);
             return;
           case "build":
-            selectedCells.forEach((cell) => this.changedStateofClickedCell(cell));
-            this.renderCellsClicked(selectedCells);
+            selectedCells.forEach((cell) => {
+              cell.isFilled = true;
+              cell.hasImage = true;
+            });
+            this.canvasRenderers.build.redraw();
             return;
           default:
             return;
@@ -154,13 +172,19 @@ export class GameRender {
           case "raise":
             this.handlePointClicked(points.flat(), start.height);
             return;
-          return;
         }
       },
       () => {
         return store.getState().gameControls.value.highlightType === "cell";
       }
     );
+
+    this.canvasRenderers = {
+      grid: new RenderGridCanvas(this.canvases.canvasGrid, this.grid),
+      base: new RenderBaseCanvas(this.canvases.canvasBase, this.grid),
+      build: new RenderBuildCanvas(this.canvases.canvasBuild, this.grid),
+      hover: new RenderHoverCanvas(this.canvases.canvasHover, this.grid),
+    };
   }
 
   /**
@@ -178,11 +202,7 @@ export class GameRender {
    * @param color
    */
   private drawCellFill(cell: GridCell) {
-    if (cell.isFilled && cell.color) {
-      this.canvases.canvasBase.draw.drawFilledRectangle([cell], cell.color);
-    } else {
-      cell.drawBaseCellFill(cell);
-    }
+    this.canvasRenderers.base.drawCell(cell);
   }
 
   /**
@@ -202,85 +222,49 @@ export class GameRender {
    * reset everything and draw everything.
    */
   public redraw() {
-    this.clearAll();
-    // draw all the filled squares
-    this.grid.gridCells.flat().forEach((cell) => cell.hasImage && cell.drawImage(cell));
-    // this.canvases.canvasGrid.draw.drawFilledRectangle(this.grid.gridCells.flat());
-    // draw the grid (the lines)
-    this.redrawRender();
-  }
-
-  private clearAll() {
-    Object.values(this.canvases).forEach(canvas => canvas.clear());
-  }
-
-  /**
-   * I'm not sure this approach is best:
-   * When the user clicks a cell, he could click one or many.
-   * This function is called to just change the state of one cell that was clicked.
-   * Later, something else triggers the actual re-render (handleAllCellsClickedBuild),
-   * This is so that the render can all be done as one process.
-   * @param cell 
-   */
-  private changedStateofClickedCell(cell: GridCell) {
-    const userColor = store.getState().user.value.color;
-    cell.isFilled = true;
-    // cell.color = userColor;
-    cell.hasImage = true;
-  }
-  
-  /**
-   * This handles the actual render of 
-   * @param cells 
-   */
-  private renderCellsClicked(cells: GridCell[]) {
-    // after drawing an image onto a cell, the build canvas has to be redrawn
-    // so that the correct draw order can be done (otherwise images could overlap in the wrong order)
-    this.redrawBuildLayer();
-  }
-
-  private redrawBuildLayer() {
-    this.grid.gridCellDrawOrder.forEach(cell => {
-      if (cell.hasImage) {
-        cell.drawImage(cell);
-      }
-    })
+    Object.values(this.canvasRenderers).forEach(r => r.clearAndRedraw());
   }
 
   private handlePointClicked(points: GridPoint[], firstCellHeight: number) {
     const actionType = store.getState().gameControls.value.clickAction;
 
-    // if the user selects a lot of points, make all of those points the same height as the first on.
-    const makeAllSameHeight = points.length > 1;
-    if (makeAllSameHeight) {
-      const height = firstCellHeight ?? 0;
-      points.forEach((point) => point.setHeight(height));
-    } else if (actionType === "raise" || actionType === "lower") {
-      // we're adjusting just one point, so just adjust it.
-      points[0]?.adjustHeight(actionType);
+    switch (actionType) {
+      case "raise":
+      case "lower":
+        // if the user selects a lot of points, make all of those points the same height as the first on.
+        const makeAllSameHeight = points.length > 1;
+        if (makeAllSameHeight) {
+          const height = firstCellHeight ?? 0;
+          points.forEach((point) => point.setHeight(height));
+        } else if (actionType === "raise" || actionType === "lower") {
+          // we're adjusting just one point, so just adjust it.
+          points[0]?.adjustHeight(actionType);
+        }
+        // The whole thing needs to be redrawn, because the base grid heights have changed, so everything is in a new position.
+        this.redrawRender();
+        return;
+      default:
+        return;
     }
-    this.redrawRender();
   }
 
   private setHoveredCell(x: number, y: number) {
     const closestCell = this.grid.closestCell(x, y);
-    if (!closestCell) {
+    if (
+      !closestCell
+      || (
+        // check if this hovered cell event is the same as the last hovered cell
+        // if it is, then we don't need to do anything new.
+        this.hoveredCell?.x === closestCell.x &&
+        this.hoveredCell.y === closestCell.y
+      )
+    ) {
       return;
     }
-    if (
-      this.hoveredCell?.x === closestCell.x &&
-      this.hoveredCell.y === closestCell.y
-    ) {
-    } else {
-      this.hoveredCell = closestCell;
-      this.canvases.canvasHover.clear();
-      // draw a transparent rectangle over the cell.
-      closestCell &&
-        this.canvases.canvasHover.draw.drawFilledRectangle(
-          [closestCell],
-          "rgba(255,255,255,0.5"
-        );
-    }
+
+    // keep track of the currently hovered cell. This is to avoid avoid unnecessary re-renders
+    this.hoveredCell = closestCell;
+    this.canvasRenderers.hover.drawCell(closestCell);
   }
   private setHoveredPoint(x: number, y: number) {
     const closestPoint = this.grid.closestPoint(x, y).point;
@@ -306,26 +290,7 @@ export class GameRender {
   }
 
   private redrawRender() {
-    this.canvases.canvasGrid.draw.clear();
-    this.canvases.canvasBase.draw.clear();
-    this.drawCells();
-    this.drawGrid();
-  }
-
-  private drawGrid() {
-    this.canvases.canvasGrid.draw.drawGrid(this.grid.gridPoints);
-  }
-
-  private drawCells() {
-    this.grid.gridCells.flat().forEach((cell, i) => {
-      cell.drawFill(cell);
-    });
-  }
-
-  private setCameraPosition({ x, y }: { x: number; y: number }) {
-    if (this.container) {
-      this.container.style.left = `${x}px`;
-      this.container.style.top = `${y}px`;
-    }
+    this.canvasRenderers.build.clearAndRedraw();
+    this.canvasRenderers.grid.clearAndRedraw();
   }
 }
