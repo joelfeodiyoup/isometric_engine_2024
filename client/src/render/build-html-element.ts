@@ -14,6 +14,7 @@ export class BuildHtmlElement {
         canvasGrid: BuildHtmlElement.canvasElement("canvas-grid"),
         canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
         canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
+        canvasBuildTemp: BuildHtmlElement.canvasElement("canvas-build-temp"),
         canvasMouseHandler: BuildHtmlElement.canvasElement("canvas-mouse-handler"),
       }
     };

@@ -26,6 +26,7 @@ export class GameRender {
     grid: RenderedGrid,
     base: RenderedGrid,
     build: RenderedGrid,
+    buildTemp: RenderedGrid,
     hover: RenderedGrid
   }
 
@@ -34,6 +35,7 @@ export class GameRender {
     canvasBase: Canvas;
     canvasGrid: Canvas;
     canvasBuild: Canvas;
+    canvasBuildTemp: Canvas;
     canvasMouseHandler: Canvas;
   };
 
@@ -113,9 +115,9 @@ export class GameRender {
       elementForMouseHandler.canvas,
       (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
-      (start: GridCell, end: GridCell) => {
-        const selectedCells = this.grid
-        .subArray(start, end, this.grid.gridCells)
+      (start: GridCell, end: GridCell, isIntermediate: boolean) => {
+        const selectedCells = this.grid.rotateGrid(this.grid
+        .subArray(start, end, this.grid.gridCells))
         .flat();
 
         // I need to figure out what should be done, when clicking the cell. E.g. build something, debug something, remove something, ... something else?
@@ -127,18 +129,24 @@ export class GameRender {
             console.log(selectedCells);
             return;
           case "build":
-            selectedCells.forEach((cell) => {
-              cell.isFilled = true;
-              cell.hasImage = true;
-            });
-            this.canvasRenderers.build.redraw();
+            if (isIntermediate) {
+              this.canvasRenderers.buildTemp.clear();
+              this.canvasRenderers.buildTemp.drawCells(selectedCells);
+            } else {
+              this.canvasRenderers.buildTemp.clear();
+              selectedCells.forEach((cell) => {
+                cell.isFilled = true;
+                cell.hasImage = true;
+              });
+              this.canvasRenderers.build.clearAndRedraw()
+            }
             return;
           default:
             return;
         }
 
       },
-      (start: GridPoint, end: GridPoint) => {
+      (start: GridPoint, end: GridPoint, isIntermediate: boolean) => {
         const points = this.grid.subArray(start, end, this.grid.gridPoints);
 
         // figure out which action to do for this point that was clicked
@@ -162,6 +170,7 @@ export class GameRender {
       grid: new RenderGridCanvas(this.canvases.canvasGrid, this.grid),
       base: new RenderBaseCanvas(this.canvases.canvasBase, this.grid),
       build: new RenderBuildCanvas(this.canvases.canvasBuild, this.grid),
+      buildTemp: new RenderBuildCanvas(this.canvases.canvasBuildTemp, this.grid),
       hover: new RenderHoverCanvas(this.canvases.canvasHover, this.grid),
     };
   }
@@ -179,6 +188,7 @@ export class GameRender {
    * reset everything and draw everything.
    */
   public redraw() {
+    console.log('called redraw');
     Object.values(this.canvasRenderers).forEach(r => r.clearAndRedraw());
   }
 
@@ -220,7 +230,7 @@ export class GameRender {
 
     // keep track of the currently hovered cell. This is to avoid avoid unnecessary re-renders
     this.hoveredCell = closestCell;
-    this.canvasRenderers.hover.drawCell(closestCell);
+    this.canvasRenderers.hover.drawCells([closestCell]);
   }
   private setHoveredPoint(x: number, y: number) {
     const closestPoint = this.grid.closestPoint(x, y).point;

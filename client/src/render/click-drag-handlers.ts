@@ -15,17 +15,22 @@ type ClickHandlerArguments = {
 type ClickHandlerFunction = (args: ClickHandlerArguments) => void;
 
 abstract class ClickAndDragHandler {
+  private isDragging = false;
   constructor(
     element: HTMLElement
   ) {
     element.addEventListener("mousedown", event => {
+      this.isDragging = true;
       this.handleClick(this.onStartClick.bind(this), event);
     });
-    element.onmousedown
+    // element.onmousedown
     element.addEventListener("mousemove", event => {
-      this.onMidClick && this.handleClick(this.onMidClick.bind(this), event);
+      if (this.isDragging) {
+        this.onMidClick && this.handleClick(this.onMidClick.bind(this), event);
+      }
     })
     element.addEventListener("mouseup", event => {
+      this.isDragging = false;
       this.handleClick(this.onEndClick.bind(this), event);
     })
   }
@@ -110,8 +115,8 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     element: HTMLElement,
     private convertScreenCoordsToCell: (coords: Coords) => (GridCell | null),
     private convertScreenCoordsToPoint: (coords: Coords) => (GridPoint | null),
-    private handleMultipleCellsSelected: (start: GridCell, end: GridCell) => void,
-    private handleMultiplePointsSelected: (start: GridPoint, end: GridPoint) => void,
+    private handleMultipleCellsSelected: (start: GridCell, end: GridCell, isIntermediate: boolean) => void,
+    private handleMultiplePointsSelected: (start: GridPoint, end: GridPoint, isIntermediate: boolean) => void,
     private shouldSelectCell: () => boolean,
   ) {
     super(element);
@@ -127,7 +132,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     this.calculateStartEndRange(args);
   }
   onMidClick(args: ClickHandlerArguments): void {
-    // this.calculateStartEndRange(args);
+    this.calculateStartEndRange(args, true);
   }
 
   /**
@@ -136,7 +141,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
    * @param args 
    * @returns 
    */
-  calculateStartEndRange(args: ClickHandlerArguments) {
+  calculateStartEndRange(args: ClickHandlerArguments, isIntermediate = false) {
     if (args.clickType !== "left") {
       return {start: null, end: null};
     }
@@ -150,12 +155,12 @@ export class SelectMultipleCells extends ClickAndDragHandler {
       const start = this.convertScreenCoordsToCell(this.start);
       const end = this.convertScreenCoordsToCell(this.end);
       // return {start: start, end : end};
-      start && end && this.handleMultipleCellsSelected(start, end);
+      start && end && this.handleMultipleCellsSelected(start, end, isIntermediate);
     } else {
       const start = this.convertScreenCoordsToPoint(this.start);
       const end = this.convertScreenCoordsToPoint(this.end);
       // return {start: start, end: end};
-      start && end && this.handleMultiplePointsSelected(start, end);
+      start && end && this.handleMultiplePointsSelected(start, end, isIntermediate);
     }
   }
 

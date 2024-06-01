@@ -13,21 +13,34 @@ export class Grid {
    * E.g. this should draw from the top of the screen first.
    * But that order may change, according to rotation of the map.
    */
-  public get gridCellDrawOrder(): GridCell[] {
+  public get gridRotated(): GridCell[][] {
+    return this.rotateGrid();
+  }
+
+  /**
+   * Rotate a grid
+   * ... not sure how performant this is.
+   * @param grid 
+   */
+  public rotateGrid(grid: GridCell[][] = this.gridCells) {
     const rotation = store.getState().gameControls.value.rotation;
     const remainder = rotation % 4;
     const reverseRows = remainder === 1 || remainder === 2;
     const reverseCols = remainder === 0 || remainder === 1;
     
     const order = (reverseRows
-      ? [...this.gridCells].reverse()
-      : this.gridCells
+      ? [...grid].reverse()
+      : grid
     ).map(row => {
       return reverseCols
         ? [...row].reverse()
         : row
-    }).flat();
+    });
     return order;
+  }
+  
+  public get gridCellDrawOrder(): GridCell[] {
+    return this.gridRotated.flat();
   }
   private isometric: Isometric;
   constructor(

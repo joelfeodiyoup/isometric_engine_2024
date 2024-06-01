@@ -13,7 +13,7 @@ export abstract class RenderedGrid {
   ) {}
   abstract redraw(): void;
 
-  abstract drawCell(cell: GridCell): void;
+  abstract drawCells(cells: GridCell[]): void;
   clear() {
     this.canvas.draw.clear();
   }
@@ -24,7 +24,7 @@ export abstract class RenderedGrid {
 }
 
 export class RenderGridCanvas extends RenderedGrid {
-  drawCell(cell: GridCell): void {
+  drawCells(cells: GridCell[]): void {
     throw new Error("Method not implemented.");
   }
   constructor(
@@ -42,8 +42,10 @@ export class RenderGridCanvas extends RenderedGrid {
  * renders images onto cells. e.g. trees/buildings/whatever
  */
 export class RenderBuildCanvas extends RenderedGrid {
-  drawCell(cell: GridCell): void {
-    this.canvas.draw.drawImage(cell);
+  drawCells(cells: GridCell[]): void {
+    cells.forEach(cell => {
+      this.canvas.draw.drawImage(cell);
+    })
   }
   constructor(
     canvas: Canvas,
@@ -77,8 +79,8 @@ export class RenderBaseCanvas extends RenderedGrid {
       this.canvas.draw.drawFilledRectangle([cell], color);
     })
   }
-  drawCell() {
-    this.canvas.draw
+  drawCells(cells: GridCell[]) {
+    // this.canvas.draw
   }
 }
 
@@ -86,10 +88,10 @@ export class RenderHoverCanvas extends RenderedGrid {
   redraw(): void {
     
   }
-  drawCell(cell: GridCell): void {
+  drawCells(cells: GridCell[]): void {
     this.clear();
     this.canvas.draw.drawFilledRectangle(
-      [cell],
+      cells,
       "rgba(255,255,255,0.5)"
     )
   }
