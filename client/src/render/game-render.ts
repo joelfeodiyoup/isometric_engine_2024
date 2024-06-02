@@ -53,6 +53,7 @@ export class GameRender {
     const zoom = store.getState().gameControls.value.zoomLevel;
     this.grid.isometric.setZoom(zoom);
     this.setCanvasDimensions(this.grid.isometric.minDimensions());
+    this.centreScreen();
     this.redraw();
   }
 
@@ -208,6 +209,13 @@ export class GameRender {
       hover: new RenderHoverCanvas(this.canvases.canvasHover, this.grid),
       debug: new RenderDebugCanvas(this.canvases.debug, this.grid, {width: this.canvasStage.clientWidth, height: this.canvasStage.clientHeight})
     };
+  }
+
+  private centreScreen() {
+    const canvasDimensions = this.grid.isometric.minDimensions();
+    const centredOffsetLeft = (this.canvasStage.clientWidth / 2) - (canvasDimensions.width / 2);
+    const centredOffsetTop = (this.canvasStage.clientHeight / 2) - (canvasDimensions.height / 2);
+    this.moveScreenHandler.setScreenPosition({x: centredOffsetLeft, y: centredOffsetTop});
   }
 
   /**

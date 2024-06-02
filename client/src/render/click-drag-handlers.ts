@@ -67,6 +67,9 @@ export class MoveScreenHandler extends ClickAndDragHandler {
     super(element);
     setPosition(originElementPosition);
   }
+  public setScreenPosition(position: {x: number, y: number}) {
+    this.setPosition(position);
+  }
   onStartClick(args: ClickHandlerArguments): void {
     if (args.clickType !== "right") {
       return;
