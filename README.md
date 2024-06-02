@@ -21,7 +21,8 @@ react attached to index.html, plus some javascript that manipulates a canvas ele
 
 - cd into `/client`
 - `npm install`
-- `npm run dev`
+- ~~`npm run dev`~~
+- `npm run dev-vite` - this will serve up using vite, for faster transpilation
 - run a server from this directory.
 
 **back end**
@@ -157,6 +158,8 @@ some tasks I could could do...
 - ~~there is almost certainly an inefficiency when "clicking and drag" to build many images. Pretty sure it redraws the canvas n*n times. It sort of isn't noticeable on small maps. But definitely is when the grid is larger. (kind of amazing it works at all on the smaller ones)~~
 - ~~shade the base tiles according to sunlight hitting them / their angle~~
 - ~~fix the subterrain rendering~~
+- ~~clean up the initialisation of game-render and the 'reset' logic.~~
+- ~~implement rotation~~
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
@@ -170,10 +173,10 @@ some tasks I could could do...
 - import graphql types into front end by schema introspection
 - handle login error messages
 - fix the logic of centring the camera when creating a 'new game'. The width of some containing elements is not calculated correctly either (just a.... big number).
-- clean up the initialisation of game-render and the 'reset' logic.
 - add offScreenCanvas for calculations outside main execution thread
 - look at moving some calculation logic to a web worker thread.
 - calculate a minimap somehow
 - render cell as collection of triangles for better height indication
 - implement zoom
-- implement rotation
+- fix: rotation has a bug in the calculation of points when rotated away from the initial rotation
+- there's some duplications in `SelectMultipleCells` that would be nice to fix up. `client/src/render/click-drag-handlers.ts`

@@ -8,6 +8,7 @@ import { Coords, Isometric } from "./isometric";
  * Four points would make a cell, which will be represented by another object
  */
 export class GridPoint {
+  /** the col number for this point */
   public get x() {
     const rotation = store.getState().gameControls.value.rotation;
     
@@ -16,6 +17,7 @@ export class GridPoint {
     const v = [this._x, this._y, this.dimensions.width - this._x, this.dimensions.height - this._y];
     return v[rotation % 4];
   }
+  /** The row number for this point */
   public get y() {
     const rotation = store.getState().gameControls.value.rotation;
     const dimensions = store.getState().gameState.value.dimensions;

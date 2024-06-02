@@ -132,11 +132,16 @@ export class GameRender {
             if (isIntermediate) {
               this.canvasRenderers.buildTemp.clear();
               this.canvasRenderers.buildTemp.drawCells(selectedCells);
+
+
+              // TODO: this is not good for performance. It redraws it on every move, even if the cells didn't change.
+              this.canvasRenderers.hover.clear();
+              this.canvasRenderers.hover.drawCells(selectedCells);
             } else {
+              this.canvasRenderers.hover.clear();
               this.canvasRenderers.buildTemp.clear();
               selectedCells.forEach((cell) => {
                 cell.hasImage = true;
-                // cell.setImage(Canvas.randomTree);
               });
               this.canvasRenderers.build.clearAndRedraw()
             }

@@ -12,9 +12,9 @@ export class BuildHtmlElement {
       canvases: {
         canvasBase: BuildHtmlElement.canvasElement("canvas-base"),
         canvasGrid: BuildHtmlElement.canvasElement("canvas-grid"),
-        canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
         canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
         canvasBuildTemp: BuildHtmlElement.canvasElement("canvas-build-temp"),
+        canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
         canvasMouseHandler: BuildHtmlElement.canvasElement("canvas-mouse-handler"),
       }
     };

@@ -132,7 +132,8 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     this.calculateStartEndRange(args);
   }
   onMidClick(args: ClickHandlerArguments): void {
-    this.calculateStartEndRange(args, true);
+    const {start, end} = this.calculateStartEndRange(args, true);
+    // start && end && this.handleMultipleCellsSelected(start, end, isIntermediate);
   }
 
   /**
@@ -141,7 +142,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
    * @param args 
    * @returns 
    */
-  calculateStartEndRange(args: ClickHandlerArguments, isIntermediate = false) {
+  calculateStartEndRange(args: ClickHandlerArguments, isIntermediate = false): {start: GridCell | GridPoint | null, end: GridCell | GridPoint | null} {
     if (args.clickType !== "left") {
       return {start: null, end: null};
     }
@@ -154,14 +155,32 @@ export class SelectMultipleCells extends ClickAndDragHandler {
     if (this.shouldSelectCell()) {
       const start = this.convertScreenCoordsToCell(this.start);
       const end = this.convertScreenCoordsToCell(this.end);
-      // return {start: start, end : end};
-      start && end && this.handleMultipleCellsSelected(start, end, isIntermediate);
+      if (!this.lastEndingPoint) { this.lastEndingPoint = end?.topLeft ?? null; }
+      if (
+        start && end && 
+        (this.isNewEndingPoint(end.topLeft) || !isIntermediate)
+      ) {
+        this.lastEndingPoint = end.topLeft;
+        this.handleMultipleCellsSelected(start, end, isIntermediate);
+      } 
+      return {start, end};
     } else {
       const start = this.convertScreenCoordsToPoint(this.start);
       const end = this.convertScreenCoordsToPoint(this.end);
-      // return {start: start, end: end};
-      start && end && this.handleMultiplePointsSelected(start, end, isIntermediate);
+      if (!this.lastEndingPoint) { this.lastEndingPoint = end; }
+      if (
+        start && end && 
+        (this.isNewEndingPoint(end) || isIntermediate)
+      ) {
+        this.lastEndingPoint = end;
+        this.handleMultiplePointsSelected(start, end, isIntermediate);
+      }
+      return {start, end};
     }
+  }
+  private lastEndingPoint: GridPoint | null = null;
+  private isNewEndingPoint(end: GridPoint) {
+    return !(this.lastEndingPoint?.x === end.x && this.lastEndingPoint.y === end.y);
   }
 
 }

@@ -72,7 +72,9 @@ export class GridCell {
     private _topRight: GridPoint,
     private _bottomLeft: GridPoint,
     private _bottomRight: GridPoint,
+    /** the col number for this cell */
     public readonly x: number,
+    /** the row number for this cell */
     public readonly y: number,
   ) {
   }
