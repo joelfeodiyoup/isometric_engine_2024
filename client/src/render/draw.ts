@@ -106,6 +106,6 @@ export class Draw {
   drawImage(cell: GridCell)  {
     // for an isometric grid, the "top right" and "bottom left" corner are always vertically above/below each other.
     const center = rectangleVerticalMidPoint(cell.topRight.coords, cell.bottomLeft.coords);
-    this.canvas.drawImage(center);
+    this.canvas.drawImage(center, cell.imageSource);
   }
 }

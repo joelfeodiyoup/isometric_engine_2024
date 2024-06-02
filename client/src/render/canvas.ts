@@ -3,7 +3,16 @@ import { Coords } from "./isometric";
 
 import road from "./../images/road.png";
 import tree_01 from "./../images/trees/tree_01.png";
+import tree_02 from "./../images/trees/tree_02.png";
+import tree_03 from "./../images/trees/tree_03.png";
+import tree_04 from "./../images/trees/tree_04.png";
 
+export type ImageSource = {path: string, width: number, height: number};
+export type LoadedImage = {
+  element: HTMLImageElement,
+  width: number,
+  height: number,
+}
 export class Canvas {
   protected ctx: CanvasRenderingContext2D;
   public canvas: HTMLCanvasElement;
@@ -30,7 +39,12 @@ export class Canvas {
   }
 
   private initAssetsLoad() {
-    assets.load([tree_01]);
+    assets.load([
+      {path: tree_01, width: 70, height: 100},
+      {path: tree_02, width: 90, height: 140},
+      {path: tree_03, width: 90, height: 140},
+      {path: tree_04, width: 90, height: 140},
+    ]);
   }
 
   public setListeners(
@@ -88,11 +102,19 @@ export class Canvas {
     this.ctx.fill();
   }
 
-  drawImage(center: Coords) {
+  static get randomTree(): LoadedImage {
+    const len = Object.values(assets.loadedAsset.images).length;
+    return Object.values(assets.loadedAsset.images)[Math.floor(Math.random() * len)];
+  }
+
+  drawImage(center: Coords, src: LoadedImage) {
     // assets.load([`${tree_01}`]).then((img) => {
-      const img = assets.loadedAsset.images[tree_01];
-      const width = 70; // todo: this should be the cell width, probably
-      const height = 70; // todo: this should be the actual image width, but scaled according to cell width, etc.
+      // const img = assets.loadedAsset.images[tree_01];
+      const img = src;
+      // const width = 70; // todo: this should be the cell width, probably
+      // const height = 100; // todo: this should be the actual image width, but scaled according to cell width, etc.
+      const width = img.width; // todo: this should be the cell width, probably
+      const height = img.height; // todo: this should be the actual image width, but scaled according to cell width, etc.
       
       // The actual bottom midpoint of the image will be somewhere slightly above the bottom of the image.
       // just due to how the tree (or whatever) would be drawn.
@@ -102,7 +124,7 @@ export class Canvas {
 
       // canvas takes the top left coordinate to draw from.
       // So the height of the image needs to be subtracted from the y coordinate to find this y point.
-      this.ctx.drawImage(img!, center.x - (width / 2), center.y - height + offsetOfImageAboveCenter, width, height);
+      this.ctx.drawImage(img.element!, center.x - (width / 2), center.y - height + offsetOfImageAboveCenter, width, height);
     // })
   }
 
@@ -123,10 +145,10 @@ const assets = {
   toLoad: 0,
   loaded: 0,
   loadedAsset: {
-    images: {} as {[key in string]: HTMLImageElement}
+    images: {} as {[key in string]: LoadedImage}
   },
   imageExtensions: ["png", "jpg", "gif"],
-  load(sources: string[]) {
+  load(sources: ImageSource[]) {
     return new Promise<HTMLImageElement>(resolve => {
       let loadHandler = (image: HTMLImageElement) => {
         this.loaded += 1;
@@ -145,20 +167,24 @@ const assets = {
       }
       this.toLoad = sources.length;
       sources.forEach(source => {
-        let extension = source.split(".").pop() ?? "";
+        let extension = source.path.split(".").pop() ?? "";
         if (this.imageExtensions.indexOf(extension) !== -1) {
           this.loadImage(source, loadHandler);
         }
       })
     })
   },
-  loadImage(source: string, loadHandler: (image: HTMLImageElement) => void) {
+  loadImage(source: ImageSource, loadHandler: (image: HTMLImageElement) => void) {
     // if (!this.loadedAsset.images[source]) { 
       let image = new Image();
       image.addEventListener("load", () => loadHandler(image), false);
       // image.addEventListener("load", loadHandler(image), false);
-      this.loadedAsset.images[source] = image;
-      image.src = source;
+      this.loadedAsset.images[source.path] = {
+        element: image,
+        width: source.width,
+        height: source.height,
+      };
+      image.src = source.path;
     // } else {
     //   loadHandler();
     // }

@@ -1,4 +1,5 @@
 import { store } from "../state/app/store";
+import { Canvas, ImageSource, LoadedImage } from "./canvas";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 import { lineParameters } from "./utils/maths";
@@ -36,7 +37,12 @@ export class GridCell {
    * Not sure yet.
    */
   // public image: any;
-  public hasImage = false;
+  public hasImage: boolean = false;
+  public imageSource = Canvas.randomTree;
+
+  public setImage(src: LoadedImage) {
+    this.imageSource = src;
+  }
 
   public get cells(): GridPoint[] {
     return [...[this._topLeft, this._topRight, this._bottomRight, this._bottomLeft]];

@@ -135,8 +135,8 @@ export class GameRender {
             } else {
               this.canvasRenderers.buildTemp.clear();
               selectedCells.forEach((cell) => {
-                cell.isFilled = true;
                 cell.hasImage = true;
+                // cell.setImage(Canvas.randomTree);
               });
               this.canvasRenderers.build.clearAndRedraw()
             }
@@ -147,7 +147,7 @@ export class GameRender {
 
       },
       (start: GridPoint, end: GridPoint, isIntermediate: boolean) => {
-        const points = this.grid.subArray(start, end, this.grid.gridPoints);
+        const points = this.grid.rotateGrid(this.grid.subArray(start, end, this.grid.gridPoints));
 
         // figure out which action to do for this point that was clicked
         const actionType = store.getState().gameControls.value.clickAction;

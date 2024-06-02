@@ -50,6 +50,7 @@ export class RenderBuildCanvas extends RenderedGrid {
   constructor(
     canvas: Canvas,
     grid: Grid,
+    private isTemp = false
   ) {
     super(canvas, grid);
   }
@@ -57,7 +58,7 @@ export class RenderBuildCanvas extends RenderedGrid {
     // after drawing an image onto a cell, the build canvas has to be redrawn
     // so that the correct draw order can be done (otherwise images could overlap in the wrong order)
     this.grid.gridCellDrawOrder.flat().forEach((cell, i) => {
-      cell.hasImage && this.canvas.draw.drawImage(cell);
+      (this.isTemp || cell.hasImage) && this.canvas.draw.drawImage(cell);
     })
   }
 }

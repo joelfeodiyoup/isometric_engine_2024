@@ -14,7 +14,7 @@ export class Grid {
    * But that order may change, according to rotation of the map.
    */
   public get gridRotated(): GridCell[][] {
-    return this.rotateGrid();
+    return this.rotateGrid(this.gridCells);
   }
 
   /**
@@ -22,7 +22,7 @@ export class Grid {
    * ... not sure how performant this is.
    * @param grid 
    */
-  public rotateGrid(grid: GridCell[][] = this.gridCells) {
+  public rotateGrid<T extends GridCell | GridPoint>(grid: T[][]) {
     const rotation = store.getState().gameControls.value.rotation;
     const remainder = rotation % 4;
     const reverseRows = remainder === 1 || remainder === 2;

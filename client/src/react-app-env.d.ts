@@ -1,10 +1,10 @@
 declare module "*.png" {
-  const value: any;
+  const value: string;
   export = value;
 }
 
 declare module "*.jpg" {
-  const value: any;
+  const value: string;
   export = value;
 }
 declare module '*.module.css' {
