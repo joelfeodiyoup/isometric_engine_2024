@@ -140,23 +140,16 @@ export class Canvas {
   }
 
   public drawPixels<T extends {x: number, y: number}>(cells: T[], color: (cell: T) => {red: number, green: number, blue: number}) {
-    console.log(`width: ${this.canvas.width}, height: ${this.canvas.height}`);
     const ctx = this.canvas.getContext('2d')!;
     const imageData = ctx.createImageData(this.canvas.width, this.canvas.height);
     const data = imageData.data;
     for(let i = 0; i < (this.canvas.width * this.canvas.height * 4); i+=4) {
       const c = color(cells[i / 4]);
-      // const c = {red: Math.random() * 255, green: 0, blue: 0};
       data[i + 0 ] = c.red;
       data[i + 1 ] = c.green;
       data[i + 2 ] = c.blue;
       data[i + 3 ] = 255;
     }
-    // cells.forEach((cell, i) => {
-    //   const index = i * 4;
-    //   // console.log(index);
-    // });
-    // console.log(imageData);
     ctx.putImageData(imageData, 0, 0);
   }
 }

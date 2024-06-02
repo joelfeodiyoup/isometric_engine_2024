@@ -33,7 +33,7 @@ border: 2px solid #39B0E1;
   box-sizing:content-box;
 }
 #minimap-canvas {
-  /* transform: scale(10); */
   transform-origin: 0 0;
   border: none !important;
+  image-rendering: pixelated;;
 }

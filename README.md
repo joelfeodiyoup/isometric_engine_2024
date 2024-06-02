@@ -164,6 +164,8 @@ some tasks I could could do...
 - ~~fix the subterrain rendering~~
 - ~~clean up the initialisation of game-render and the 'reset' logic.~~
 - ~~implement rotation~~
+- ~~calculate a minimap somehow~~
+- ~~implement zoom~~
 - build and animate a vehicle in blender to go into the game
 - provide option for different canvas elements to become transparent.
 - add rate limiting / traffic filtering for back end
@@ -179,8 +181,6 @@ some tasks I could could do...
 - fix the logic of centring the camera when creating a 'new game'. The width of some containing elements is not calculated correctly either (just a.... big number).
 - add offScreenCanvas for calculations outside main execution thread
 - look at moving some calculation logic to a web worker thread.
-- calculate a minimap somehow
 - render cell as collection of triangles for better height indication
-- implement zoom
 - fix: rotation has a bug in the calculation of points when rotated away from the initial rotation
 - there's some duplications in `SelectMultipleCells` that would be nice to fix up. `client/src/render/click-drag-handlers.ts`
