@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { MenuButton } from "../elements/Buttons";
 import { ModalHeading } from "../elements/Headings";
 import { ViewControls } from "../fragments/ViewControls";
+import { MinimmapRenderComponent } from "../layout-sections/GameRender";
 
 export type SidePanelSectionButtonAction = {label: string, action: () => void};
 export const SidePanelSection = (props: React.ComponentPropsWithoutRef<"div"> & {heading: string, actions: SidePanelSectionButtonAction[]}) => {
@@ -13,6 +14,10 @@ export const SidePanelSection = (props: React.ComponentPropsWithoutRef<"div"> & 
   const [activeButton, setActiveButton] = useState('');
 
   return <Stack>
+    <div>
+
+    <MinimmapRenderComponent></MinimmapRenderComponent>
+    </div>
     <ModalHeading>{props.heading}</ModalHeading>
     <ButtonGroupCluster>
     {props.actions.map((action, i) => {

@@ -6,7 +6,7 @@ import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords, Isometric } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
-import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderGridCanvas, RenderHoverCanvas, RenderedGrid } from "./rendered-grid";
+import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderGridCanvas, RenderHoverCanvas, RenderMinimapCanvas, RenderedGrid } from "./rendered-grid";
 
 type GameOptions = {
   dimensions: { width: number; height: number };
@@ -15,6 +15,7 @@ type GameOptions = {
 export class GameRender {
   public grid!: Grid;
   private canvasStage!: HTMLElement;
+  private minimapElement!: HTMLCanvasElement;
   private container!: HTMLElement;
   private hoveredCell = null as null | GridCell;
   private hoveredPoint = null as null | GridPoint;
@@ -29,6 +30,7 @@ export class GameRender {
     build: RenderedGrid,
     buildTemp: RenderedGrid,
     hover: RenderedGrid,
+    minimap: RenderedGrid,
   }
 
   // TODO: I think I should be able to remove this and replace with the thing above, soon.
@@ -40,6 +42,7 @@ export class GameRender {
     canvasBuild: Canvas;
     canvasBuildTemp: Canvas;
     canvasMouseHandler: Canvas;
+    minimap: Canvas;
   };
 
   constructor(options: GameOptions) {
@@ -69,7 +72,8 @@ export class GameRender {
    * Event listeners can also be added to those specific elements
    */
   private setupElements() {
-    const elements = BuildHtmlElement.getRenderElement();
+    const dimensions = store.getState().gameState.value.dimensions;
+    const elements = BuildHtmlElement.getRenderElement(dimensions);
 
     // only set the stage element the first time.
     // This stage element could then moved by whatever holds the game.
@@ -77,24 +81,38 @@ export class GameRender {
     if (!this.canvasStage) {
       this.canvasStage = elements.canvasStage;
       document.body.appendChild(elements.canvasStage);
+      this.minimapElement = elements.minimapCanvas;
+      document.body.appendChild(elements.minimapCanvas);
+    } else {
+      this.minimapElement.width = dimensions.width;
+      this.minimapElement.height = dimensions.height;
     }
+    const desiredWidth = 100;
+    const scaleAmount = desiredWidth / this.minimapElement.width;
+    this.minimapElement.style.transform = `scale(${scaleAmount})`;
+
 
     // we can swap out the container from the stage.
     this.canvasStage.replaceChildren(elements.canvasContainer, elements.debugCanvas);
     this.container = elements.canvasContainer;
 
     this.canvases = {
-      debug: new Canvas(elements.debugCanvas),
       ...Object.entries(elements.canvases).reduce((obj, [key, val]) => {
         obj[key as keyof typeof elements.canvases] = new Canvas(val);
         return obj;
       }, {} as Record<keyof typeof elements.canvases, Canvas>),
+      debug: new Canvas(elements.debugCanvas),
+      minimap: new Canvas(this.minimapElement),
     }
+  }
+
+  private setupMinimap() {
+    
   }
 
   private setCanvasDimensions(dimensions: {width: number, height: number}) {
     Object.entries(this.canvases).forEach(([key, canvas]) => {
-      if (key !== "debug") {
+      if (key !== "debug" && key !== "minimap") {
         canvas.canvas.width = dimensions.width;
         canvas.canvas.height = dimensions.height;
       }
@@ -173,7 +191,8 @@ export class GameRender {
               selectedCells.forEach((cell) => {
                 cell.hasImage = true;
               });
-              this.canvasRenderers.build.clearAndRedraw()
+              this.canvasRenderers.build.clearAndRedraw();
+              this.canvasRenderers.minimap.clearAndRedraw();
             }
             return;
           default:
@@ -207,7 +226,8 @@ export class GameRender {
       build: new RenderBuildCanvas(this.canvases.canvasBuild, this.grid),
       buildTemp: new RenderBuildCanvas(this.canvases.canvasBuildTemp, this.grid),
       hover: new RenderHoverCanvas(this.canvases.canvasHover, this.grid),
-      debug: new RenderDebugCanvas(this.canvases.debug, this.grid, {width: this.canvasStage.clientWidth, height: this.canvasStage.clientHeight})
+      debug: new RenderDebugCanvas(this.canvases.debug, this.grid, {width: this.canvasStage.clientWidth, height: this.canvasStage.clientHeight}),
+      minimap: new RenderMinimapCanvas(this.canvases.minimap, this.grid),
     };
   }
 
@@ -225,6 +245,10 @@ export class GameRender {
    */
   public element() {
     return this.canvasStage;
+  }
+
+  public minimap() {
+    return this.minimapElement;
   }
 
   /**

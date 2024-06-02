@@ -134,5 +134,26 @@ export class RenderDebugCanvas extends RenderedGrid {
   drawCells(cells: GridCell[]): void {
     throw new Error("Method not implemented.");
   }
+}
 
+export class RenderMinimapCanvas extends RenderedGrid {
+  redraw(): void {
+    console.log('rendering minimap');
+    this.canvas.drawPixels(this.grid.gridCells.flat(), (cell: GridCell) => {
+      if(cell.hasImage) {
+        return {red: 55, green: 111, blue: 70};
+      } else {
+        return {red: 163, green: 207, blue: 120};
+      }
+  });
+  }
+  drawCells(cells: GridCell[]): void {
+    
+  }
+  constructor(
+    canvas: Canvas,
+    grid: Grid
+  ) {
+    super(canvas, grid);
+  }
 }

@@ -25,3 +25,13 @@ export const GameRenderComponent = () => {
   }, [dimensions]);
   return <Container style={{ height: "100%" }} child={canvasStage}></Container>
 };
+
+const minimapElement = gameRender.minimap();
+
+export const MinimmapRenderComponent = () => {
+  const dimensions = useSelector(selectGameDimensions);
+  useEffect(() => {
+    
+  }, [dimensions]);
+  return <Container className="map-container" child={minimapElement}></Container>
+}

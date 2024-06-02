@@ -1,1 +1,39 @@
 @import url('./css-reset-tailwind.css');
+
+html {
+  font-family: arial;
+}
+
+#canvas-stage, #canvas-container {
+  position: relative;
+  height: 400px;
+  width: 400px;
+}
+#canvas-stage {
+  border: 1px solid black;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background-image: url('./src/images/space_02.jpg');
+  background-size: cover;
+}
+
+#canvas-stage canvas {
+  position: absolute;
+  overflow: visible;
+  cursor: pointer;
+}
+
+.map-container {
+  margin: 2rem auto;
+  transform: rotate(-45deg);
+border: 2px solid #39B0E1;
+  height: 100px;
+  width: 100px;
+  box-sizing:content-box;
+}
+#minimap-canvas {
+  /* transform: scale(10); */
+  transform-origin: 0 0;
+  border: none !important;
+}

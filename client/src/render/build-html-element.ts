@@ -7,7 +7,7 @@ type CanvasIds = "canvas-build" | "canvas-base" | "canvas-grid" | "canvas-hover"
  * At times this needs to be recreated, e.g. for a new game, where old event listeners are removed, new ones created, etc.
  */
 export class BuildHtmlElement {
-  public static getRenderElement() {
+  public static getRenderElement(dimensions: {width: number, height: number}) {
     const elements = {
       canvasStage: BuildHtmlElement.canvasStage(),
       canvasContainer: BuildHtmlElement.canvasContainer(),
@@ -23,7 +23,8 @@ export class BuildHtmlElement {
    * a canvas where I will draw some things to help debug.
    * E.g. a centre point to make sure we can centre on specific cells.
    */
-      debugCanvas: BuildHtmlElement.debugCanvasElement()
+      debugCanvas: BuildHtmlElement.debugCanvasElement(),
+      minimapCanvas: BuildHtmlElement.canvasElement("minimap-canvas", dimensions.width, dimensions.height),
     };
 
     Object.values(elements.canvases).forEach(canvas => {
