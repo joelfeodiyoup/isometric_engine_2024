@@ -49,6 +49,7 @@ export class BuildHtmlElement {
     canvas.id = id;
     canvas.height = height;
     canvas.width = width;
+    canvas.style.border = globals.displayDebugCanvas ? "1px solid yellow" : '';
     return canvas;
   }
 

@@ -22,18 +22,43 @@ export class Isometric {
 
   private initialPosition: {x: number, y: number};
   private get c1() {
-    return {a: 2 * this.xStep, b: 2 * this.xStep, c: this.initialPosition.x};
+    /** how far to translate everything horizontally.
+     * This is important to make sure that everything fits inside the containing element
+     * i.e. start drawing at the very edge, rather than have space, or have negative space (the cells are cut off)
+     * 
+     * This basically needs to be zero, because it's calculated for the "top left" element (i.e. the one at the very left).
+     */
+    // const horizontalOffset = 0;
+    const horizontalOffset = this.xStep * 2;
+    return {a: 2 * this.xStep, b: 2 * this.xStep, c: horizontalOffset};
+    // return {a: 2 * this.xStep, b: 2 * this.xStep, c: this.initialPosition.x};
   }
   private get c2() {
-    return {a: -1 * this.yStep, b: this.yStep, c: this.initialPosition.y};
+    /** How much to offset vertically, so that everything is drawn inside the containing element
+     * 
+     * This basically needs to be half the height, because it's calculated for the "top left" element, whcih is the one at the left (...)
+    */
+    const verticalOffset = 
+      Math.ceil(this.gridSize.rows / 2) * (this.yStep * 2)
+      + (this.yStep * 4);
+    return {a: -1 * this.yStep, b: this.yStep, c: verticalOffset};
+  }
+
+  public minDimensions() {
+    const len = Math.max(this.gridSize.cols, this.gridSize.rows);
+    const width = this.xStep * len * 4;
+    // The height also needs a bit extra for the underground rendered terrain.
+    // ... just estimate this for now...
+    const underGroundRenderedTerrainHeight = this.yStep * 10;
+    const height = this.yStep * 2 * len + underGroundRenderedTerrainHeight;
+    return {width, height};
   }
 
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
-  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, gridSize = {rows: 500, cols: 500}, private windowDimensions: {x: number, y: number}) {
+  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, private gridSize = {rows: 500, cols: 500}, private windowDimensions: {x: number, y: number}) {
     this.setScale(xStep, yStep);
     this.initialPosition = {x: 0, y: 0};
-    // this.initialPosition = {x: gridSize.cols, y: (gridSize.rows + 2) * yStep};
   }
 
   private setScale(xStep: number, yStep: number) {

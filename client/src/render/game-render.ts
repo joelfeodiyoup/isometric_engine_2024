@@ -4,7 +4,7 @@ import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
-import { Coords } from "./isometric";
+import { Coords, Isometric } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
 import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderGridCanvas, RenderHoverCanvas, RenderedGrid } from "./rendered-grid";
 
@@ -82,6 +82,13 @@ export class GameRender {
     }
   }
 
+  private setCanvasDimensions(dimensions: {width: number, height: number}) {
+    Object.values(this.canvases).forEach(canvas => {
+      canvas.canvas.width = dimensions.width;
+      canvas.canvas.height = dimensions.height;
+    })
+  }
+
   /**
    * Set up all the objects required for the render
    * Things like the grid, grid cells, listeners, etc
@@ -97,11 +104,19 @@ export class GameRender {
       options.dimensions.height + 1,
       {x: this.canvasStage.clientWidth, y: this.canvasStage.clientHeight}
     );
+    const canvasDimensions = this.grid.isometric.minDimensions();
+
+    this.setCanvasDimensions(canvasDimensions);
+    const initLeftOffset = (this.canvasStage.clientWidth / 2) - (canvasDimensions.width / 2);
+    const initTopOffset = (this.canvasStage.clientHeight / 2) - (canvasDimensions.height / 2);
 
     // handler for moving the screen. Element to watch, and function to handle the updates.
     this.moveScreenHandler = new MoveScreenHandler(
       this.canvasStage,
-      { x: 0, y: 0 },
+      { 
+        x: initLeftOffset,
+        y: initTopOffset 
+      },
       ({ x, y }: { x: number; y: number }) => {
         if (this.container) {
           this.container.style.left = `${x}px`;

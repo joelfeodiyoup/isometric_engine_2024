@@ -42,7 +42,7 @@ export class Grid {
   public get gridCellDrawOrder(): GridCell[] {
     return this.gridRotated.flat();
   }
-  private isometric: Isometric;
+  public isometric: Isometric;
   constructor(
     width: number, height: number,
     windowDimensions: {x: number, y: number}
