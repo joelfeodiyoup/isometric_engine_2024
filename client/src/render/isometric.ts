@@ -30,15 +30,23 @@ export class Isometric {
 
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
-  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, gridSize = {rows: 500, cols: 500}) {
+  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, gridSize = {rows: 500, cols: 500}, private windowDimensions: {x: number, y: number}) {
     this.setScale(xStep, yStep);
-    this.initialPosition = {x: gridSize.cols, y: (gridSize.rows + 2) * yStep};
-    const app = store.subscribe
+    this.initialPosition = {x: 0, y: 0};
+    // this.initialPosition = {x: gridSize.cols, y: (gridSize.rows + 2) * yStep};
   }
 
   private setScale(xStep: number, yStep: number) {
     this._xStep = xStep;
     this._yStep = yStep;
+  }
+
+  /**
+   * set the camera position so that it's centred on a specified cell.
+   * @param currentElementPosition - the current screen position of an element.
+   */
+  public setPosition(currentElementPosition: {x: number, y: number}) {
+    this.initialPosition = {x: (this.windowDimensions.x / 2) - currentElementPosition.x, y: (this.windowDimensions.y / 2) - currentElementPosition.y};
   }
 
   zoomIn() {

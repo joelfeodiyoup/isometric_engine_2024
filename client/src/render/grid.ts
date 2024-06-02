@@ -45,8 +45,9 @@ export class Grid {
   private isometric: Isometric;
   constructor(
     width: number, height: number,
+    windowDimensions: {x: number, y: number}
   ) {
-    this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height} )
+    this.isometric = new Isometric(undefined, undefined, {rows: width, cols: height}, windowDimensions )
 
     // this gets returned as a one dimensional array, of length width * height
     // i.e. it's a flattened 2 dimensional array.
@@ -65,6 +66,9 @@ export class Grid {
         return cell;
       });
     });
+
+    const centrePoint = this.gridPoints[Math.floor(this.gridPoints.length / 2)][Math.floor(this.gridPoints[0].length / 2)];
+    this.isometric.setPosition(centrePoint.coords);
     // this.gridPoints = grid.map((row, index) => {
     //   const rowIndex = Math.floor(index / width);
     //   const colIndex = index % width;

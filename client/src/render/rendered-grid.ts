@@ -1,3 +1,4 @@
+import { throwServerError } from "@apollo/client";
 import { Canvas } from "./canvas";
 import { Grid } from "./grid";
 import { GridCell } from "./grid-cell";
@@ -102,4 +103,36 @@ export class RenderHoverCanvas extends RenderedGrid {
   ) {
     super(canvas, grid);
   }
+}
+
+/**
+ * Used for displaying debug visuals to the screen.
+ * e.g. some lines to line up the centre of screen
+ */
+export class RenderDebugCanvas extends RenderedGrid {
+  constructor(
+    canvas: Canvas,
+    grid: Grid,
+    private dimensions: {width: number, height: number}
+  ) {
+    super(canvas, grid);
+    console.log(dimensions);
+  }
+  redraw(): void {
+    console.log('drawing debug')
+    this.canvas.drawLine(
+      {x: this.dimensions.width / 2, y: 0},
+      {x: this.dimensions.width / 2, y: this.dimensions.height},
+      "red"
+    );
+    this.canvas.drawLine(
+      {x: 0, y: this.dimensions.height / 2},
+      {x: this.dimensions.width, y: this.dimensions.height / 2},
+      "red"
+    )
+  }
+  drawCells(cells: GridCell[]): void {
+    throw new Error("Method not implemented.");
+  }
+
 }

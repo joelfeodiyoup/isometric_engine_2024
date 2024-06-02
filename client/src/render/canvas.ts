@@ -70,7 +70,6 @@ export class Canvas {
   drawLine(from: Coords, to: Coords, color: Colors = "black") {
     this.ctx.beginPath();
     this.ctx.moveTo(this.translateX(from.x), this.translateY(from.y));
-    this.ctx.moveTo(this.translateX(from.x), this.translateY(from.y));
     this.ctx.lineTo(this.translateX(to.x), this.translateY(to.y));
     this.ctx.strokeStyle = color;
     this.ctx.stroke();

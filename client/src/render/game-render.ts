@@ -6,7 +6,7 @@ import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
-import { RenderBaseCanvas, RenderBuildCanvas, RenderGridCanvas, RenderHoverCanvas, RenderedGrid } from "./rendered-grid";
+import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderGridCanvas, RenderHoverCanvas, RenderedGrid } from "./rendered-grid";
 
 type GameOptions = {
   dimensions: { width: number; height: number };
@@ -23,14 +23,17 @@ export class GameRender {
 
   /** Each canvas renders things a bit differently. Details hidden inside each implementation */
   private canvasRenderers: {
+    debug: RenderedGrid,
     grid: RenderedGrid,
     base: RenderedGrid,
     build: RenderedGrid,
     buildTemp: RenderedGrid,
-    hover: RenderedGrid
+    hover: RenderedGrid,
   }
 
+  // TODO: I think I should be able to remove this and replace with the thing above, soon.
   private canvases!: {
+    debug: Canvas;
     canvasHover: Canvas;
     canvasBase: Canvas;
     canvasGrid: Canvas;
@@ -67,13 +70,16 @@ export class GameRender {
     }
 
     // we can swap out the container from the stage.
-    this.canvasStage.replaceChildren(elements.canvasContainer);
+    this.canvasStage.replaceChildren(elements.canvasContainer, elements.debugCanvas);
     this.container = elements.canvasContainer;
 
-    this.canvases = Object.entries(elements.canvases).reduce((obj, [key, val]) => {
-      obj[key as keyof typeof elements.canvases] = new Canvas(val);
-      return obj;
-    }, {} as Record<keyof typeof elements.canvases, Canvas>);
+    this.canvases = {
+      debug: new Canvas(elements.debugCanvas),
+      ...Object.entries(elements.canvases).reduce((obj, [key, val]) => {
+        obj[key as keyof typeof elements.canvases] = new Canvas(val);
+        return obj;
+      }, {} as Record<keyof typeof elements.canvases, Canvas>),
+    }
   }
 
   /**
@@ -89,6 +95,7 @@ export class GameRender {
       // So I'll just add one, so that it'll be the number of cells.
       options.dimensions.width + 1,
       options.dimensions.height + 1,
+      {x: this.canvasStage.clientWidth, y: this.canvasStage.clientHeight}
     );
 
     // handler for moving the screen. Element to watch, and function to handle the updates.
@@ -103,11 +110,7 @@ export class GameRender {
       }
     );
 
-    // for the mouse handler, always use the last one. i.e. the one at the top.
-    // this will/should probably be a canvas just for this.
-    // by doing this, the other canvases can be more easily rearranged, according to their use
-    // and the top/last most canvas, never has anything drawn to it, and just handles the listeners.
-    const elementForMouseHandler = Object.values(this.canvases).slice(-1)[0];
+    const elementForMouseHandler = this.canvases.canvasMouseHandler;
     elementForMouseHandler.setListeners({
       onMouseMove: this.mouseHoverHandler.bind(this)
     });
@@ -177,6 +180,7 @@ export class GameRender {
       build: new RenderBuildCanvas(this.canvases.canvasBuild, this.grid),
       buildTemp: new RenderBuildCanvas(this.canvases.canvasBuildTemp, this.grid),
       hover: new RenderHoverCanvas(this.canvases.canvasHover, this.grid),
+      debug: new RenderDebugCanvas(this.canvases.debug, this.grid, {width: this.canvasStage.clientWidth, height: this.canvasStage.clientHeight})
     };
   }
 
@@ -248,7 +252,9 @@ export class GameRender {
     ) {
     } else {
       this.hoveredPoint = closestPoint;
-      this.canvases.canvasHover.clear();
+      this.canvasRenderers.hover.clear();
+      // this.canvases.canvasHover.clear();
+      // this.canvasRenderers.hover.
       this.hoveredPoint &&
         this.canvases.canvasHover.draw.drawPoint(this.hoveredPoint);
     }

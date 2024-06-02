@@ -1,3 +1,5 @@
+import { globals } from "./globals";
+
 type CanvasIds = "canvas-build" | "canvas-base" | "canvas-grid" | "canvas-hover" | "canvas-mouse-handler";
 /**
  * This builds all the html needed for the render.
@@ -16,10 +18,14 @@ export class BuildHtmlElement {
         canvasBuildTemp: BuildHtmlElement.canvasElement("canvas-build-temp"),
         canvasHover: BuildHtmlElement.canvasElement("canvas-hover"),
         canvasMouseHandler: BuildHtmlElement.canvasElement("canvas-mouse-handler"),
-      }
+      },
+      /**
+   * a canvas where I will draw some things to help debug.
+   * E.g. a centre point to make sure we can centre on specific cells.
+   */
+      debugCanvas: BuildHtmlElement.debugCanvasElement()
     };
 
-    // elements.canvasStage.appendChild(elements.canvasContainer);
     Object.values(elements.canvases).forEach(canvas => {
       elements.canvasContainer.appendChild(canvas);
     });
@@ -44,5 +50,13 @@ export class BuildHtmlElement {
     canvas.height = height;
     canvas.width = width;
     return canvas;
+  }
+
+  private static debugCanvasElement() {
+    const el = BuildHtmlElement.canvasElement("canvas-debug");
+    el.style.pointerEvents = "none";
+    el.style.top = "0";
+    el.style.display = globals.displayDebugCanvas ? 'block' : 'none';
+    return el;
   }
 }

@@ -93,6 +93,10 @@ Some notes on the various parts of this:
 - graphql - queries / mutations / etc.
 - no db as of yet
 
+## notes
+
+- `client/src/render/globals.ts` contains some global values. e.g. turning on/off debugging helpers. (in the future I will try to move more stuff to here. E.g. colour configurations, etc)
+
 ## Inspiration
 
 When growing up, I loved these games, in particular:
