@@ -43,8 +43,17 @@ export class GameRender {
   };
 
   constructor(options: GameOptions) {
-    stateListenerActions.onZoom = this.redraw.bind(this);
+    stateListenerActions.onZoom = this.zoom.bind(this);
+    stateListenerActions.onRotate = this.redraw.bind(this);
     this.reset(options);
+  }
+
+  private zoom() {
+    console.log('received zoom');
+    const zoom = store.getState().gameControls.value.zoomLevel;
+    this.grid.isometric.setZoom(zoom);
+    this.setCanvasDimensions(this.grid.isometric.minDimensions());
+    this.redraw();
   }
 
   public reset(options: GameOptions) {
@@ -83,9 +92,11 @@ export class GameRender {
   }
 
   private setCanvasDimensions(dimensions: {width: number, height: number}) {
-    Object.values(this.canvases).forEach(canvas => {
-      canvas.canvas.width = dimensions.width;
-      canvas.canvas.height = dimensions.height;
+    Object.entries(this.canvases).forEach(([key, canvas]) => {
+      if (key !== "debug") {
+        canvas.canvas.width = dimensions.width;
+        canvas.canvas.height = dimensions.height;
+      }
     })
   }
 

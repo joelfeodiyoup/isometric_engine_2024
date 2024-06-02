@@ -13,11 +13,12 @@ export type Coords = {
 export class Isometric {
   private _xStep: number = Math.sqrt(3) * 10;
   private _yStep: number = 10 * 2;
+  private zoomMultiplier = 1;
   public get xStep() {
-    return this._xStep;
+    return this._xStep * this.zoomMultiplier;
   };
   public get yStep() {
-    return this._yStep;
+    return this._yStep * this.zoomMultiplier;
   };
 
   private initialPosition: {x: number, y: number};
@@ -49,7 +50,7 @@ export class Isometric {
     const width = this.xStep * len * 4;
     // The height also needs a bit extra for the underground rendered terrain.
     // ... just estimate this for now...
-    const underGroundRenderedTerrainHeight = this.yStep * 10;
+    const underGroundRenderedTerrainHeight = this.yStep * 15;
     const height = this.yStep * 2 * len + underGroundRenderedTerrainHeight;
     return {width, height};
   }
@@ -74,9 +75,8 @@ export class Isometric {
     this.initialPosition = {x: (this.windowDimensions.x / 2) - currentElementPosition.x, y: (this.windowDimensions.y / 2) - currentElementPosition.y};
   }
 
-  zoomIn() {
-    this._xStep = this._xStep * 2;
-    this._yStep = this._yStep * 2;
+  setZoom(n: number) {
+    this.zoomMultiplier = n / 4;
   }
 
   /**

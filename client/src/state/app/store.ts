@@ -1,6 +1,6 @@
 import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 import { userReducer } from '../features/user/userSlice';
-import { gameControls, rotate } from '../features/gameControls/gameControlsSlice';
+import { decreaseZoom, gameControls, increaseZoom, rotate } from '../features/gameControls/gameControlsSlice';
 import { uiReducer } from '../features/ui/uiSlice';
 import { gameState } from '../features/gameState/gameStateSlice';
 
@@ -9,24 +9,24 @@ import { gameState } from '../features/gameState/gameStateSlice';
 // But, I want to be able to programmatically set this function,
 // because I'm not sure which order the code will be run.
 export const stateListenerActions = {
-  onZoom: () => {}
+  onZoom: () => {},
+  onRotate: () => {},
 }
 
 // not sure yet where is best to put this (side effects)
 const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
+  actionCreator: increaseZoom,
+  effect: () => stateListenerActions.onZoom()
+});
+listenerMiddleware.startListening({
+  actionCreator: decreaseZoom,
+  effect: () => stateListenerActions.onZoom()
+});
+listenerMiddleware.startListening({
   actionCreator: rotate,
-  effect: (action, listenerApi) => {
-    stateListenerActions.onZoom();
-
-    // can cancel other running instances.
-    // ... is this what I want to do?
-    // listenerApi.cancelActiveListeners();
-
-    // run async logic...
-
-  }
-})
+  effect: () => stateListenerActions.onRotate()
+});
 
 export const store = configureStore({
   reducer: {

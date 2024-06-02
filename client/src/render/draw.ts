@@ -40,7 +40,8 @@ export class Draw {
     // I'd like to render something so that underneath the land there is an underground area.
     const showSubterrain = true;
     if (showSubterrain) {
-      const depth = 100;
+      // this should be calculated from the height of cells, because it changes according to zoom.
+      const depth = Math.abs(grid[0][0].coords.y - grid[1][0].coords.y) * 4;
       const underneath = (point: GridPoint) => ({x: point.coords.x, y: point.baseCoords.y + depth});
       const aboveAndBelow = (gridPoint: GridPoint) => {
         return [gridPoint.coords, underneath(gridPoint)] as [Coords, Coords];

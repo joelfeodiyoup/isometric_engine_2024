@@ -26,7 +26,7 @@ const initialState: GameControlState = {
   value: {
     clickAction: "raise",
     highlightType: "corner",
-    zoomLevel: 0,
+    zoomLevel: 4,
     rotation: 0,
   },
 };
