@@ -4,6 +4,7 @@ import { ModalInstance } from "../layout-utilities/Modal"
 import { useState } from "react"
 import { StyledForm, StyledFormInput, StyledFormLabel, StyledFormRow } from "../elements/Form"
 import { closeModal } from "../../state/features/ui/uiSlice"
+import { resetGameControls } from "../../state/features/gameControls/gameControlsSlice"
 
 export const NewGameModal = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ export const NewGameModal = () => {
   return <ModalInstance heading="new game" actions={[
     {label: "new game", onClick: () => {
       dispatch(setGameDimensions(dimensions));
+      dispatch(resetGameControls());
       dispatch(closeModal());
     }}
   ]}>

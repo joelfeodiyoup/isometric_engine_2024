@@ -56,6 +56,9 @@ export const clickActionSlice = createSlice({
     },
     rotate: (state, action: PayloadAction<{direction: "clockwise" | "counterclockwise"}>) => {
       state.value = {...state.value, rotation: (state.value.rotation + (action.payload.direction === "clockwise" ? -1 : 1) + 4) % 4}
+    },
+    resetGameControls: (state) => {
+      state.value = initialState.value;
     }
   },
 });
@@ -66,7 +69,8 @@ export const {
   toggleGridHighlightType,
   increaseZoom,
   decreaseZoom,
-  rotate
+  rotate,
+  resetGameControls
 } = clickActionSlice.actions;
 
 export const gameControls = clickActionSlice.reducer;
