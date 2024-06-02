@@ -6,7 +6,8 @@ import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords, Isometric } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
-import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderGridCanvas, RenderHoverCanvas, RenderMinimapCanvas, RenderedGrid } from "./rendered-grid";
+import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderHoverCanvas, RenderMinimapCanvas, RenderedGrid } from "./rendered-grid";
+import { RenderGridCanvas } from "./canvas-renderers/render-grid";
 
 type GameOptions = {
   dimensions: { width: number; height: number };
@@ -63,6 +64,7 @@ export class GameRender {
   public reset(options: GameOptions) {
     this.initialise(options);
     this.redraw();
+    this.centreScreen();
   }
 
   /**
@@ -104,10 +106,13 @@ export class GameRender {
       debug: new Canvas(elements.debugCanvas),
       minimap: new Canvas(this.minimapElement),
     }
-  }
 
-  private setupMinimap() {
-    
+    this.canvases.minimap.setListeners({
+      onClick: (x: number, y: number) => {
+        console.log(`x: ${x} y: ${y}`)
+        this.centreScreenToCell(y, x);
+      }
+    });
   }
 
   private setCanvasDimensions(dimensions: {width: number, height: number}) {
@@ -232,10 +237,21 @@ export class GameRender {
   }
 
   private centreScreen() {
-    const canvasDimensions = this.grid.isometric.minDimensions();
-    const centredOffsetLeft = (this.canvasStage.clientWidth / 2) - (canvasDimensions.width / 2);
-    const centredOffsetTop = (this.canvasStage.clientHeight / 2) - (canvasDimensions.height / 2);
+    const centre = {
+      row: Math.floor(this.grid.gridCells.length / 2),
+      col: Math.floor(this.grid.gridCells[0].length / 2)
+    };
+    this.centreScreenToCell(centre.row, centre.col);
+  }
+  
+  private centreScreenToCell(row: number, col: number) {
+    const cell = this.grid.gridPoints[row][col];
+    const width = cell.coords.x;
+    const height = cell.coords.y;
+    const centredOffsetLeft = (this.canvasStage.clientWidth / 2) - width;
+    const centredOffsetTop = (this.canvasStage.clientHeight / 2) - height;
     this.moveScreenHandler.setScreenPosition({x: centredOffsetLeft, y: centredOffsetTop});
+
   }
 
   /**

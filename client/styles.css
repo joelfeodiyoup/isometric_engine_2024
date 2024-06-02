@@ -18,6 +18,10 @@ html {
   background-size: cover;
 }
 
+#canvas-container {
+  transition: left 1s, top 1s;
+}
+
 #canvas-stage canvas {
   position: absolute;
   overflow: visible;
@@ -27,7 +31,8 @@ html {
 .map-container {
   margin: 2rem auto;
   transform: rotate(-45deg);
-border: 2px solid #39B0E1;
+  /* transform: rotate(-45deg); */
+  border: 2px solid #39B0E1;
   height: 100px;
   width: 100px;
   box-sizing:content-box;
