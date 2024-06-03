@@ -193,3 +193,5 @@ some tasks I could could do...
 - render height lines on minimap?
 - move the "sub terrain" thing out of the grid canvas, onto its own one.
 - investigate some patterns to be able to memoise some calculation results. e.g. polygon calculations for rendering. If none of the points change, then everything should be able to stay the same, and not need a recalculation. However, I'm not sure how easy an implementation would be to make all of that happen.
+- when adjusting point height, I've hard coded some "7" values. I should move this to somewhere more central.
+- implement something to enforce that adjacent points can only be one height unit apart.

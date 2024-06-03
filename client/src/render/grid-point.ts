@@ -117,7 +117,7 @@ export class GridPoint implements Subject {
 
   public adjustHeight(direction: 'raise' | 'lower') {
     // * 10 because of the perlin noise. I need to figure out what this should really be...
-    const newHeight = this.height + (direction === "raise" ? 1 : -1) * 10 ;
+    const newHeight = this.height + (direction === "raise" ? 1 : -1) * 7 ;
     this.setHeight(newHeight);
     this.notify();
   }
