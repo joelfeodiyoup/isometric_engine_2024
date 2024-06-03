@@ -205,6 +205,13 @@ export class GameRender {
 
       },
       (start: GridPoint, end: GridPoint, isIntermediate: boolean) => {
+        // TODO: dragging on a selected point isn't implemented yet.
+        // dragging points currently (always?) resizes the land.
+        // to do this for an intermediate one, I'd need to somehow keep track of the terrain heights at the beginning,
+        // so that, if this "intermediate" isn't finalised (by finishing the click before moving to some other area),
+        // then those land heights could be restored.
+        // There also will probably be a problem with rendering changes to the heights, becauase I think this is a fairly expensive render currently.
+        if (isIntermediate) { return; }
         const points = this.grid.rotateGrid(this.grid.subArray(start, end, this.grid.gridPoints));
 
         // figure out which action to do for this point that was clicked
@@ -213,7 +220,7 @@ export class GameRender {
           case "debug":
             console.log(points);
             return;
-          case "lower": // both lower and raise are currently doing the same thing. Switch statement fall through.
+          case "lower":
           case "raise":
             this.handlePointClicked(points.flat(), start.height);
             return;

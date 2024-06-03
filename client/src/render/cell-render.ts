@@ -33,6 +33,10 @@ export class CellRender {
     this.polygons = this.calculatePolygonSet();
   }
 
+  public recalculate() {
+    this.polygons = this.calculatePolygonSet();
+  }
+
   /**
    * The corners as seen from the view perspective.
    * This changes according to rotation.

@@ -1,13 +1,25 @@
 import { store } from "../state/app/store";
 import { Grid } from "./grid";
+import { GridCell } from "./grid-cell";
 import { Coords, Isometric } from "./isometric";
+import { Observer, Subject } from "./utils/observable";
 
 /**
  * Represents a point on the map.
  * Each point has a single height.
  * Four points would make a cell, which will be represented by another object
  */
-export class GridPoint {
+export class GridPoint implements Subject {
+  private observers: Set<GridCell> = new Set();
+  attach(observer: GridCell) {
+    this.observers.add(observer);
+  }
+  detach(observer: GridCell) {
+    this.observers.delete(observer);
+  }
+  notify() {
+    this.observers.forEach(observer => observer.update(this));
+  }
   /** the col number for this point */
   public get x() {
     return this.xyAtRotation[this.rotation].x;
@@ -107,11 +119,13 @@ export class GridPoint {
     // * 10 because of the perlin noise. I need to figure out what this should really be...
     const newHeight = this.height + (direction === "raise" ? 1 : -1) * 10 ;
     this.setHeight(newHeight);
+    this.notify();
   }
   
   public setHeight(height: number) {
     this.height = height;
     this.coords.y = this.baseCoords.y + this.scaledHeight;
+    this.notify();
   }
 
   public distanceToPoint(point: Coords) {

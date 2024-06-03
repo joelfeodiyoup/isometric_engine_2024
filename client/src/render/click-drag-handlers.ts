@@ -174,7 +174,7 @@ export class SelectMultipleCells extends ClickAndDragHandler {
       if (!this.lastEndingPoint) { this.lastEndingPoint = end; }
       if (
         start && end && 
-        (this.isNewEndingPoint(end) || isIntermediate)
+        (this.isNewEndingPoint(end) || !isIntermediate)
       ) {
         this.lastEndingPoint = end;
         this.handleMultiplePointsSelected(start, end, isIntermediate);

@@ -5,12 +5,16 @@ import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 import { lineParameters } from "./utils/maths";
 import { CellRender } from "./cell-render";
+import { Observer } from "./utils/observable";
 
 /**
  * Represents a rectangular area of the grid, defined by the points topLeft, topRight, etc.
  * Also contains some methods to check things about this. i.e. "is some point in the cell"
  */
-export class GridCell {
+export class GridCell implements Observer {
+  update(point: GridPoint) {
+    this.cellRender.recalculate();
+  }
   public isFilled = true;
   public avgHeight = 0;
   /**
@@ -71,6 +75,9 @@ export class GridCell {
     this.cellRender = new CellRender(
       {west: this._topLeft, north: this._topRight, east: this._bottomRight, south: this._bottomLeft}
     );
+    [this._bottomLeft, this._bottomRight, this._topLeft, this._topRight].forEach(point => {
+      point.attach(this);
+    })
   }
 
   public isPointInsideCell(point: Coords): boolean {
