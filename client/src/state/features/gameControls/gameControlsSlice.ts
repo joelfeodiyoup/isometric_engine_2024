@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 
 /**
  * The different things that the render should do when the user clicks into it
@@ -74,3 +75,4 @@ export const {
 } = clickActionSlice.actions;
 
 export const gameControls = clickActionSlice.reducer;
+export const selectZoom = (state: RootState) => state.gameControls.value.zoomLevel;

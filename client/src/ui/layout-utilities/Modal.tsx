@@ -24,8 +24,8 @@ export const Modal = ({
       {children && isOpen && (
         <StyledModal>
           <ModalContentStack>
-          <MenuButton className='inverted' onClick={onClose}>close</MenuButton>
           {isOpen && children}
+          <MenuButton className='inverted' onClick={onClose}>close</MenuButton>
           </ModalContentStack>
         </StyledModal>
       )}

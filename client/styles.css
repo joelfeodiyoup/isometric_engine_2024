@@ -4,6 +4,19 @@ html {
   font-family: arial;
 }
 
+ul.list {
+  list-style: disc;
+}
+ul.list li {
+  margin-left: 1rem;
+}
+a {
+  color: rgb(233, 233, 233);
+}
+a:hover {
+  color: red;
+}
+
 #canvas-stage, #canvas-container {
   position: relative;
   height: 400px;
@@ -19,7 +32,7 @@ html {
 }
 
 #canvas-container {
-  transition: left 1s, top 1s;
+  /* transition: left 1s, top 1s; */
 }
 
 #canvas-stage canvas {
@@ -30,15 +43,31 @@ html {
 
 .map-container {
   margin: 2rem auto;
-  transform: rotate(-45deg);
   /* transform: rotate(-45deg); */
   border: 2px solid #39B0E1;
   height: 100px;
   width: 100px;
   box-sizing:content-box;
 }
+.map-container.rotation-0 {
+  transform: rotate(-45deg);
+}
+.map-container.rotation-1 {
+  transform: rotate(225deg);
+}
+.map-container.rotation-2 {
+  transform: rotate(135deg);
+}
+.map-container.rotation-3 {
+  transform: rotate(45deg);
+}
+
 #minimap-canvas {
   transform-origin: 0 0;
   border: none !important;
   image-rendering: pixelated;;
+}
+
+.zoom-2 #canvas-grid, .zoom-1 #canvas-grid {
+  opacity: 0.5;
 }

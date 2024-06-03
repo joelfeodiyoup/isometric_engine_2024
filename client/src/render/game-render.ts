@@ -6,7 +6,7 @@ import { GridPoint } from "./grid-point";
 import { MoveScreenHandler, SelectMultipleCells } from "./click-drag-handlers";
 import { Coords, Isometric } from "./isometric";
 import { BuildHtmlElement } from "./build-html-element";
-import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderHoverCanvas, RenderMinimapCanvas, RenderedGrid } from "./rendered-grid";
+import { RenderBaseCanvas, RenderBuildCanvas, RenderDebugCanvas, RenderHoverCanvas, RenderMinimapCanvas, RenderedGrid } from "./canvas-renderers/rendered-grid";
 import { RenderGridCanvas } from "./canvas-renderers/render-grid";
 
 type GameOptions = {

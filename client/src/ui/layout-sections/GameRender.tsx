@@ -10,12 +10,15 @@ import { Container } from "../layout-utilities/Container";
 import { useSelector } from "react-redux";
 import { selectGameDimensions } from "../../state/features/gameState/gameStateSlice";
 import { store } from "../../state/app/store";
+import { selectZoom } from "../../state/features/gameControls/gameControlsSlice";
 
 // the order of this logic is a little bit off.
 const gameRender = new GameRender({ dimensions: store.getState().gameState.value.dimensions });
 const canvasStage = gameRender.element();
 export const GameRenderComponent = () => {
   const dimensions = useSelector(selectGameDimensions);
+  const zoom = useSelector(selectZoom);
+  // const zoom = 2;
   useEffect(() => {
     // I think it could be better to have the game render class itself handle this,
     // through having that thing subscribe to the state?
@@ -23,15 +26,16 @@ export const GameRenderComponent = () => {
     // I think the state change should have some side-effect that calls the class to reset
     gameRender.reset({dimensions});
   }, [dimensions]);
-  return <Container style={{ height: "100%" }} child={canvasStage}></Container>
+  return <Container className={`zoom-${zoom}`} style={{ height: "100%" }} child={canvasStage}></Container>
 };
 
 const minimapElement = gameRender.minimap();
 
 export const MinimmapRenderComponent = () => {
+  const rotation = store.getState().gameControls.value.rotation;
   const dimensions = useSelector(selectGameDimensions);
   useEffect(() => {
     
   }, [dimensions]);
-  return <Container className="map-container" child={minimapElement}></Container>
+  return <Container className={`map-container rotation-${rotation}`} child={minimapElement}></Container>
 }

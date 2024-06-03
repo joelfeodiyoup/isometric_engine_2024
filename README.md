@@ -135,6 +135,12 @@ A token attached to the header 'authorization'. Used to look up a user at the se
 
 - apollo graphql playground (i.e. the thing running on localhost:4000) constantly polls the server to check the schema. This can be a little annoying if I want to set breakpoints in there. I could turn off that automatic polling: https://stackoverflow.com/questions/58038945/apollo-graphql-keeps-receiving-requests-with-no-queries-or-mutations-being-made 
 
+**grid draw order**
+
+When drawing the images, it needs to be from back to front, so that things closer to the screen are drawn last, and overlap the things further back. This order depends on the rotation.
+
+![alt text](documentation/rotation_draw_order.png)
+
 ## TODO tasks
 
 some tasks I could could do...
@@ -184,3 +190,6 @@ some tasks I could could do...
 - render cell as collection of triangles for better height indication
 - fix: rotation has a bug in the calculation of points when rotated away from the initial rotation
 - there's some duplications in `SelectMultipleCells` that would be nice to fix up. `client/src/render/click-drag-handlers.ts`
+- render height lines on minimap?
+- move the "sub terrain" thing out of the grid canvas, onto its own one.
+- investigate some patterns to be able to memoise some calculation results. e.g. polygon calculations for rendering. If none of the points change, then everything should be able to stay the same, and not need a recalculation. However, I'm not sure how easy an implementation would be to make all of that happen.

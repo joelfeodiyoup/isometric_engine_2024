@@ -63,7 +63,10 @@ const useTopMenuOptions = () => {
     {heading: "Help", children: [
       {label: "Glossary"},
       {label: "Manual"},
-      {label: "Credits"},
+      {label: "About", onClick: () => {
+        dispatch(setModal("about"));
+        dispatch(openModal());
+      }},
     ]},
   ]);
   return menuOptions;

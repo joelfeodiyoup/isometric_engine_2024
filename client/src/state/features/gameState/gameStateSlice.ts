@@ -11,8 +11,8 @@ type GameState = {
 const initialState: {value: GameState} = {
   value: {
     dimensions: {
-      width: 10,
-      height: 10,
+      width: 20,
+      height: 20,
     }
   }
 }

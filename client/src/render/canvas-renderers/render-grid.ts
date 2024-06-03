@@ -5,7 +5,7 @@ import { Grid } from "../grid";
 import { GridCell } from "../grid-cell";
 import { GridPoint } from "../grid-point";
 import { Coords } from "../isometric";
-import { RenderedGrid } from "../rendered-grid";
+import { RenderedGrid } from "./rendered-grid";
 
 export class RenderGridCanvas extends RenderedGrid {
   drawCells(cells: GridCell[]): void {
@@ -29,11 +29,11 @@ export class RenderGridCanvas extends RenderedGrid {
       row.forEach(col => {
         const east = col.neighbours(grid).east;
         if (east) {
-          this.canvas.drawLine(col.coords, east.coords, gridColor);
+          // this.canvas.drawLine(col.coords, east.coords, gridColor);
         }
         const south = col.neighbours(grid).south;
         if (south) {
-          this.canvas.drawLine(col.coords, south.coords, gridColor);
+          // this.canvas.drawLine(col.coords, south.coords, gridColor);
         }
       })
     })
@@ -42,7 +42,8 @@ export class RenderGridCanvas extends RenderedGrid {
     const showSubterrain = true;
     if (showSubterrain) {
       // this should be calculated from the height of cells, because it changes according to zoom.
-      const depth = Math.abs(grid[0][0].coords.y - grid[1][0].coords.y) * 4;
+      const depth = Math.abs(grid[0][0].coordsAtSeaLevel.y - grid[1][0].coordsAtSeaLevel.y) * 4;
+      console.log(`depth: ${depth}`);
       const underneath = (point: GridPoint) => ({x: point.coords.x, y: point.baseCoords.y + depth});
       const aboveAndBelow = (gridPoint: GridPoint) => {
         return [gridPoint.coords, underneath(gridPoint)] as [Coords, Coords];

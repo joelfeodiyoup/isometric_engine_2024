@@ -5,6 +5,11 @@ import { Coords, Isometric } from "./isometric";
 import { generateGrid } from "./utils/perlin-noise";
 
 export class Grid {
+  public readonly heightStats: {
+    min: number,
+    max: number,
+    // avg: 
+  } = {min: Number.MAX_VALUE, max: Number.MIN_VALUE};
   public readonly gridPoints: GridPoint[][];
   public readonly gridCells: GridCell[][];
 
@@ -60,7 +65,9 @@ export class Grid {
 
         // height is between 0 and 1. So scale it a bit
         const height = grid[heightGridIndex];
-        const scaledHeight = height * 10;
+        const scaledHeight = height * 7;
+        this.heightStats.max = Math.max(this.heightStats.max, scaledHeight);
+        this.heightStats.min = Math.min(this.heightStats.min, scaledHeight);
 
         const cell = new GridPoint(col, row, this.isometric, scaledHeight);
         return cell;
@@ -69,11 +76,6 @@ export class Grid {
 
     const centrePoint = this.gridPoints[Math.floor(this.gridPoints.length / 2)][Math.floor(this.gridPoints[0].length / 2)];
     this.isometric.setPosition(centrePoint.coords);
-    // this.gridPoints = grid.map((row, index) => {
-    //   const rowIndex = Math.floor(index / width);
-    //   const colIndex = index % width;
-    //   return new GridPoint(colIndex, rowIndex, this.isometric, height))
-    // })
 
     this.gridCells = this.gridPoints.map(row => {
       return row.reduce((gridCells, gridPoint) => {

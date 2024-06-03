@@ -1,7 +1,8 @@
 import { throwServerError } from "@apollo/client";
-import { Canvas } from "./canvas";
-import { Grid } from "./grid";
-import { GridCell } from "./grid-cell";
+import { Canvas } from "../canvas";
+import { Grid } from "../grid";
+import { GridCell } from "../grid-cell";
+import { colors } from "../../ui/useColours";
 
 /**
  * Each canvas has some slightly different build functions.
@@ -62,8 +63,13 @@ export class RenderBaseCanvas extends RenderedGrid {
   }
   redraw() {
     this.grid.gridCells.flat().forEach((cell) => {
-      const color = cell.isFilled ? cell.color : "green";
-      this.canvas.draw.drawFilledRectangle([cell], color);
+      // const color = cell.isFilled ? cell.color : "green";
+      cell.polygons.forEach(polygon => {
+        console.log(polygon.coords);
+        const brightness = polygon.brightness;
+        // this.canvas.drawFilledPolygon(polygon.coords, `hsl(120, ${80 + polygon.brightness * 5}%, ${25 + polygon.brightness * 5}%)`)
+        this.canvas.drawFilledPolygon(polygon.coords, `hsl(90, ${0.5 * (80 + brightness * 5)}%, ${55 + brightness * 3}%)`)
+      })
     })
   }
   drawCells(cells: GridCell[]) {
@@ -122,12 +128,25 @@ export class RenderDebugCanvas extends RenderedGrid {
 }
 
 export class RenderMinimapCanvas extends RenderedGrid {
+  private lowHeightColor = {red: 110, green: 143, blue: 77};
+  private highHeightColor = {red: 163, green: 207, blue: 120};
+  private difference = {
+    red: this.highHeightColor.red - this.lowHeightColor.red,
+    green: this.highHeightColor.green - this.lowHeightColor.green,
+    blue: this.highHeightColor.blue - this.lowHeightColor.blue,
+  };
   redraw(): void {
     this.canvas.drawPixels(this.grid.gridCells.flat(), (cell: GridCell) => {
       if(cell.hasImage) {
         return {red: 55, green: 111, blue: 70};
       } else {
-        return {red: 163, green: 207, blue: 120};
+        const heightDifference = (cell.avgHeight - this.grid.heightStats.min) / this.grid.heightStats.max;
+        return {
+          red: this.lowHeightColor.red + heightDifference * this.difference.red,
+          green: this.lowHeightColor.green + heightDifference * this.difference.green,
+          blue: this.lowHeightColor.blue + heightDifference * this.difference.blue,
+        }
+        // return {red: 163, green: 207, blue: 120};
       }
   });
   }
