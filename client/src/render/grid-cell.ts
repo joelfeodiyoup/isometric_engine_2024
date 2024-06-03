@@ -4,6 +4,7 @@ import { Canvas, ImageSource, LoadedImage } from "./canvas";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
 import { lineParameters } from "./utils/maths";
+import { CellRender } from "./cell-render";
 
 /**
  * Represents a rectangular area of the grid, defined by the points topLeft, topRight, etc.
@@ -12,68 +13,13 @@ import { lineParameters } from "./utils/maths";
 export class GridCell {
   public isFilled = true;
   public avgHeight = 0;
-  public polygons: {coords: Coords[], brightness: number}[] = [
-
-  ];
-
-  private recalculatePolygons() {
-    let polygonHeights: {
-      coords: Coords[];
-      brightness: number;
-    }[] = [];
-    if (
-      this.topLeft.height === this.topRight.height
-      && this.topRight.height === this.bottomRight.height
-      && this.bottomRight.height === this.bottomLeft.height
-    ) {
-      const p = {topRight: this.topRight, bottomRight: this.bottomRight, bottomLeft: this.bottomLeft, topLeft: this.topLeft};
-      polygonHeights = [this.calculateBrightness(p)];
-    } else if (this.topLeft.height === this.bottomRight.height) {
-      const p1 = {topLeft: this.topLeft, bottomRight: this.bottomRight, bottomLeft: this.bottomLeft};
-      const p2 = {topLeft: this.topLeft, topRight: this.topRight, bottomRight: this.bottomRight};
-      
-      polygonHeights = [p1, p2].map(x => this.calculateBrightness(x));
-    } else if (this.topRight.height === this.bottomLeft.height) {
-      const p1 = {topRight: this.topRight, bottomLeft: this.bottomLeft, bottomRight: this.bottomRight};
-      const p2 = {topRight: this.topRight, bottomLeft: this.bottomLeft, topLeft: this.topLeft};
-      
-      polygonHeights = [p1, p2].map(x => this.calculateBrightness(x));
-    } else {
-      const p = {topRight: this.topRight, bottomRight: this.bottomRight, bottomLeft: this.bottomLeft, topLeft: this.topLeft};
-      polygonHeights = [this.calculateBrightness(p)];
-    }
-    this.polygons = polygonHeights;
-  }
-
-  private calculateBrightness(points: {[key in "topLeft" | "topRight" | "bottomLeft" | "bottomRight"]?: GridPoint}) {
-    let brightness = 0;
-    brightness += this.brightness(points.bottomLeft, points.topLeft, 3);
-    brightness += this.brightness(points.bottomLeft, points.bottomRight);
-    brightness += this.brightness(points.bottomRight, points.topRight, 3);
-    brightness += this.brightness(points.topLeft, points.topRight);
-    return {coords: Object.values(points).map(x => x.coords), brightness}
-  }
-  // public color: string | null = "green";
-
   /**
-   * color is calculated from the angle of the tile
-   * This needs to be calculated only when the points change.
+   * polygons of points to render this cell, including a brightness value.
    */
-  public get color() {
-    let brightness = 0;
-    // brightness += this.brightness(this.bottomLeft.height, this.topLeft.height, 2);
-    // brightness += this.brightness(this.bottomLeft.height, this.bottomRight.height);
-    // brightness += this.brightness(this.bottomRight.height, this.topRight.height, 2);
-    // brightness += this.brightness(this.topLeft.height, this.topRight.height);
-    return `hsl(90, ${0.5 * (80 + brightness * 5)}%, ${55 + brightness * 3}%)`;
-    // return `hsl(120, ${80 + brightness * 5}%, ${25 + brightness * 5}%)`;
+  public get polygons() {
+    return this.cellRender.polygonsForRendering;
   }
-
-  private brightness(southernHeight?: GridPoint, northernHeight?: GridPoint, weighting = 1) {
-    if (!southernHeight || !northernHeight) { return 0; }
-    return weighting * (southernHeight.height === northernHeight.height ? 0
-      : southernHeight.height < northernHeight.height ? 1 : -1);
-  }
+  private cellRender: CellRender;
 
   /**
    * Todo: find some way for each cell to say which image it should render.
@@ -122,7 +68,9 @@ export class GridCell {
     public readonly y: number,
   ) {
     this.avgHeight = (this.topLeft.height + this.topRight.height + this.bottomRight.height + this.bottomLeft.height) / 4;
-    this.recalculatePolygons();
+    this.cellRender = new CellRender(
+      {west: this._topLeft, north: this._topRight, east: this._bottomRight, south: this._bottomLeft}
+    );
   }
 
   public isPointInsideCell(point: Coords): boolean {

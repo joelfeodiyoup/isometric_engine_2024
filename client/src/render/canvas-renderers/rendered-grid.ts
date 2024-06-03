@@ -63,11 +63,8 @@ export class RenderBaseCanvas extends RenderedGrid {
   }
   redraw() {
     this.grid.gridCells.flat().forEach((cell) => {
-      // const color = cell.isFilled ? cell.color : "green";
       cell.polygons.forEach(polygon => {
-        console.log(polygon.coords);
         const brightness = polygon.brightness;
-        // this.canvas.drawFilledPolygon(polygon.coords, `hsl(120, ${80 + polygon.brightness * 5}%, ${25 + polygon.brightness * 5}%)`)
         this.canvas.drawFilledPolygon(polygon.coords, `hsl(90, ${0.5 * (80 + brightness * 5)}%, ${55 + brightness * 3}%)`)
       })
     })

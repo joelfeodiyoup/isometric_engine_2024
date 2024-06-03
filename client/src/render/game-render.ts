@@ -109,7 +109,6 @@ export class GameRender {
 
     this.canvases.minimap.setListeners({
       onClick: (x: number, y: number) => {
-        console.log(`x: ${x} y: ${y}`)
         this.centreScreenToCell(y, x);
       }
     });

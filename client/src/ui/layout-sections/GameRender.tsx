@@ -26,7 +26,7 @@ export const GameRenderComponent = () => {
     // I think the state change should have some side-effect that calls the class to reset
     gameRender.reset({dimensions});
   }, [dimensions]);
-  return <Container className={`zoom-${zoom}`} style={{ height: "100%" }} child={canvasStage}></Container>
+  return <Container style={{ height: "100%" }} child={canvasStage}></Container>
 };
 
 const minimapElement = gameRender.minimap();

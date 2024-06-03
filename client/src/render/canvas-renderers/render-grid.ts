@@ -25,26 +25,27 @@ export class RenderGridCanvas extends RenderedGrid {
 
     const gridColor: Colors = "white";
     // const gridColor: Colors = "lightgrey";
-    grid.forEach(row => {
-      row.forEach(col => {
-        const east = col.neighbours(grid).east;
-        if (east) {
-          // this.canvas.drawLine(col.coords, east.coords, gridColor);
-        }
-        const south = col.neighbours(grid).south;
-        if (south) {
-          // this.canvas.drawLine(col.coords, south.coords, gridColor);
-        }
+    const generateGridLines = false;
+    if (generateGridLines) {
+
+      grid.forEach(row => {
+        row.forEach(col => {
+          const east = col.neighbours(grid).east;
+          if (east) {
+            // this.canvas.drawLine(col.coords, east.coords, gridColor);
+          }
+          const south = col.neighbours(grid).south;
+          if (south) {
+            // this.canvas.drawLine(col.coords, south.coords, gridColor);
+          }
+        })
       })
-    })
+    }
 
     // I'd like to render something so that underneath the land there is an underground area.
     const showSubterrain = true;
     if (showSubterrain) {
-      // this should be calculated from the height of cells, because it changes according to zoom.
-      const depth = Math.abs(grid[0][0].coordsAtSeaLevel.y - grid[1][0].coordsAtSeaLevel.y) * 4;
-      console.log(`depth: ${depth}`);
-      const underneath = (point: GridPoint) => ({x: point.coords.x, y: point.baseCoords.y + depth});
+      const underneath = (point: GridPoint) => point.calculateSubTerrainPoint();
       const aboveAndBelow = (gridPoint: GridPoint) => {
         return [gridPoint.coords, underneath(gridPoint)] as [Coords, Coords];
       }
