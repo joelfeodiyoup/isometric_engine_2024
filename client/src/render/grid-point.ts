@@ -67,7 +67,7 @@ export class GridPoint implements Subject {
     // rather than do some weird mathematical formula mapping (which I might do some time), I'll just have a look up table.
     // 'zoom' will act as the index, and then the value found there is the zoom multipler.
     // index '4' should keep the zoom just the same.
-    const zoomMultiplierMapping = [0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
+    const zoomMultiplierMapping = [0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64];
     return zoomMultiplierMapping[zoom] ?? 1;
   }
   private get dimensions() {

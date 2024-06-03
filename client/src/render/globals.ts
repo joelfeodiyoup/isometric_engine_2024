@@ -1,3 +1,3 @@
 export const globals = {
-  displayDebugCanvas: false,
+  displayDebugCanvas: true,
 }
