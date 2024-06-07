@@ -4,6 +4,8 @@ import { colors } from "../useColours";
 import { MenuButton } from "../elements/Buttons";
 import { Stack } from "./layout-partials";
 import { ModalHeading } from "../elements/Headings";
+import { closeAllModals } from "../../state/features/ui/uiSlice";
+import { useDispatch } from "react-redux";
 
 
 const img = document.createElement("img");   
@@ -16,11 +18,9 @@ img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAE
  */
 export const Modal = ({
   children,
-  isOpen,
   onClose,
 }: {
   children: ReactElement | null;
-  isOpen: boolean;
   onClose: () => void;
 }) => {
   const modalContainerRef = useRef<HTMLElement>(null);
@@ -51,10 +51,12 @@ export const Modal = ({
 
     setRelativePosition(movedAmount);
   }
+  const dispatch = useDispatch();
 
   return (
     <>
-      {children && isOpen && (
+      {/* {children && isOpen && ( */}
+      {(
         /** I think this is actually not the intended use of the draggable attribute
          * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/draggable
          * It seems to me that this is more about dragging some **data** to somewhere else.
@@ -66,7 +68,7 @@ export const Modal = ({
           style={{
             left: relativePosition.left,
             top: relativePosition.top,
-            position: 'relative'
+            position: 'absolute'
           }}
           >
           <TopPanel>
@@ -87,6 +89,8 @@ export const Modal = ({
               }}
               onDrag={handleDrag}
             />
+            {/* <CloseButton onClick={() => {}}>X</CloseButton> */}
+            <CloseButton onClick={() => dispatch(closeAllModals())}>All</CloseButton>
             <CloseButton onClick={onClose}>X</CloseButton>
           </TopPanel>
           <ModalContentStack style={{pointerEvents: isDragging ? 'none' : 'initial'}}>
@@ -106,7 +110,7 @@ const DraggableArea = styled.div`
   background: ${colors.darkBlue};
   flex-grow: 1;
   cursor: pointer;
-  margin: 4.2px 1rem;
+  margin: 4.2px;
   border: 4px inset grey;
   cursor: crosshair;
 `;
@@ -144,6 +148,8 @@ export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {headi
 
 const ModalContentStack = styled(Stack)`
   padding: 2rem;
+  padding-block: 1rem;
+  padding-block-end: 3rem;
 `;
 
 const StyledModal = styled.section`

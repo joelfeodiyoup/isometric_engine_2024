@@ -18,12 +18,12 @@ const App = () => {
 
   // The ModalComponentContent gets changed based on the string stored in redux state
   // I think it's an interesting problem, and I'm sure there are also other ways that redux state could dynamically switch react component.
-  const [ModalComponentContent, setModalComponentContent] = useState<
-    () => JSX.Element | null
-  >(getModal(uiState.modal));
-  useEffect(() => {
-    setModalComponentContent(getModal(uiState.modal));
-  }, [uiState.modal]);
+  // const [ModalComponentContent, setModalComponentContent] = useState<
+  //   () => JSX.Element | null
+  // >(getModal(uiState.modal));
+  // useEffect(() => {
+  //   setModalComponentContent(getModal(uiState.modal));
+  // }, [uiState.modal]);
 
   return (
     <>
@@ -32,14 +32,16 @@ const App = () => {
           top: <TopNav />,
           side: <SideNav />,
           gameRender: <GameRenderComponent />,
-          modal: (
-            <Modal
-              isOpen={uiState.isModalOpen}
-              onClose={() => dispatch(closeModal())}
-            >
-              <ModalComponentContent />
+          modal: <>
+            {uiState.modal.map((modalKey, i) => {
+            const ModalInstance = getModal(modalKey);
+              return <Modal
+                onClose={() => dispatch(closeModal(modalKey))}
+                >
+                <ModalInstance/>
             </Modal>
-          ),
+            })}
+            </>
         }}
       </Layout>
     </>

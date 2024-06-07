@@ -17,6 +17,11 @@ a:hover {
   color: red;
 }
 
+p {
+  max-width: 70ch;
+  text-align: center;
+}
+
 #canvas-stage, #canvas-container {
   position: relative;
   height: 400px;
@@ -33,6 +38,7 @@ a:hover {
 
 #canvas-container {
   /* transition: left 1s, top 1s; */
+  transform-origin: 0 0;
 }
 
 #canvas-stage canvas {
