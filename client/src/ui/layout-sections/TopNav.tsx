@@ -39,21 +39,27 @@ type MenuOption = {
 
 const useTopMenuOptions = () => {
   const dispatch = useDispatch();
+  const handleOpenModal = (...modal: Parameters<typeof setModal>) => {
+    dispatch(setModal(modal[0]));
+    dispatch(openModal());
+  }
   const [menuOptions, setMenuOptions] = useState<MenuOption[]>([
     {heading: "File", children: [
       {label: "New Game", onClick: () => {
-        dispatch(setModal("newGame"));
-        dispatch(openModal());
+        handleOpenModal("newGame");
       }},
       {label: "Save", onClick: () => {
-        dispatch(setModal("saveModal"));
-        dispatch(openModal());
+        handleOpenModal("saveModal")
       }},
       {label: "Exit"}, 
     ]},
     {heading: "Options", children: [
-      {label: "Display Options"},
-      {label: "Sound Options"},
+      {label: "Display Options", onClick: () => {
+        handleOpenModal("advisors")
+      }},
+      {label: "Sound Options", onClick: () => {
+        handleOpenModal("finances")
+      }},
       {label: "Speed Options"},
       {label: "Difficulty"},
       {label: "Autosave - On"},
@@ -64,8 +70,7 @@ const useTopMenuOptions = () => {
       {label: "Glossary"},
       {label: "Manual"},
       {label: "About", onClick: () => {
-        dispatch(setModal("about"));
-        dispatch(openModal());
+        handleOpenModal("about");
       }},
     ]},
   ]);

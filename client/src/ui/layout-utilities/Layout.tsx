@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import styled from "styled-components";
 import { Panel } from "./layout-partials";
 import { colors } from "../useColours";
@@ -37,15 +37,15 @@ export const Layout = ({children}: {children: {
           position: "relative"
         }}>
           {children.gameRender}
-          {children.modal && <div style={{
+          <div style={{
             position: 'absolute',
             display: "flex",
             top: 0,right: 0, left: 0, bottom: 0,
             pointerEvents: "none",
-            padding: "5rem"
-            }}>
+            padding: "0rem"
+          }}>
             {children.modal}
-          </div> }
+          </div>
         </div>
         <SidePanel>
           {children.side}

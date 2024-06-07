@@ -1,9 +1,13 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useRef, useState } from "react";
 import styled from "styled-components";
 import { colors } from "../useColours";
 import { MenuButton } from "../elements/Buttons";
 import { Stack } from "./layout-partials";
 import { ModalHeading } from "../elements/Headings";
+
+
+const img = document.createElement("img");   
+img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 /**
  * This handles displaying a modal
@@ -19,19 +23,105 @@ export const Modal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const modalContainerRef = useRef<HTMLElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startOffset, setStartOffset] = useState({left: 0, top: 0});
+  const [relativePosition, setRelativePosition] = useState({left: 0, top: 0});
+  const [mouseDownPosition, setMouseDownPosition] = useState<{x: number, y: number} | null>(null);
+  const handleDrag = (event: React.DragEvent<HTMLElement>) => {
+    if (!mouseDownPosition) { return; }
+
+    // get the parent dimensions so that I can not allow moving the modal outside this.
+    // TODO: get a better element ref for this, rather than using parent, as this makes it susceptible to bugs when moving these around.
+    const parentWidth = modalContainerRef?.current?.parentElement?.offsetWidth ?? 0;
+    const parentHeight = modalContainerRef?.current?.parentElement?.offsetHeight ?? 0;
+
+    // get the dimensions of the modal
+    const elHeight = modalContainerRef.current?.offsetHeight ?? 0;
+    const elWidth = modalContainerRef.current?.offsetWidth ?? 0;
+
+    const leftOffset = startOffset.left + event.clientX - mouseDownPosition.x;
+    const topOffset = startOffset.top + event.clientY - mouseDownPosition.y;
+
+    const movedAmount = {
+      // don't allow left/top to put the modal outside the window
+      left: Math.max(0, Math.min(leftOffset, parentWidth - elWidth)),
+      top: Math.max(0, Math.min(topOffset, parentHeight - elHeight)),
+    };
+
+    setRelativePosition(movedAmount);
+  }
+
   return (
     <>
       {children && isOpen && (
-        <StyledModal>
-          <ModalContentStack>
-          {isOpen && children}
-          <MenuButton className='inverted' onClick={onClose}>close</MenuButton>
+        /** I think this is actually not the intended use of the draggable attribute
+         * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/draggable
+         * It seems to me that this is more about dragging some **data** to somewhere else.
+         * E.g. it transfers something.
+         * What I'm doing here is clicking and dragging the element, to move its visual position.
+         */
+        <StyledModal
+          ref={modalContainerRef}
+          style={{
+            left: relativePosition.left,
+            top: relativePosition.top,
+            position: 'relative'
+          }}
+          >
+          <TopPanel>
+            <DraggableArea
+              draggable={true}
+              onDragStart={event => {
+                // disable the drag "ghost" image. i.e. just draw the actual element.
+                event.dataTransfer.setDragImage(img, 0, 0);
+                // when starting to drag, record the original offset.
+                setStartOffset(relativePosition);
+                // record the initial mouse down, so calculate difference between this and intermediate values
+                setMouseDownPosition({x: event.clientX, y: event.clientY});
+                setIsDragging(true);
+              }}
+              onDragEnd={event => {
+                handleDrag(event);
+                setIsDragging(false);
+              }}
+              onDrag={handleDrag}
+            />
+            <CloseButton onClick={onClose}>X</CloseButton>
+          </TopPanel>
+          <ModalContentStack style={{pointerEvents: isDragging ? 'none' : 'initial'}}>
+            {children}
           </ModalContentStack>
         </StyledModal>
       )}
     </>
   );
 };
+
+const Modals = () => {
+
+}
+
+const DraggableArea = styled.div`
+  background: ${colors.darkBlue};
+  flex-grow: 1;
+  cursor: pointer;
+  margin: 4.2px 1rem;
+  border: 4px inset grey;
+  cursor: crosshair;
+`;
+const CloseButton = styled.button`
+  padding: 0.1rem 1rem;
+  font-weight: bold;
+  &:hover {
+    color: white;
+  }
+`;
+const TopPanel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`
 
 /**
  * This component helps to make all the modals look consistent
@@ -53,10 +143,7 @@ export const ModalInstance = (props: React.ComponentPropsWithRef<"div"> & {headi
 }
 
 const ModalContentStack = styled(Stack)`
-  min-width: 20rem;
-  > *:nth-child(1) {
-    margin-bottom:2rem;
-  }
+  padding: 2rem;
 `;
 
 const StyledModal = styled.section`
@@ -66,8 +153,7 @@ const StyledModal = styled.section`
   align-items: center;
   justify-content: flex-start;
   pointer-events: initial;
-  margin-inline: auto;
+  box-sizing: border-box;
   height: fit-content;
-  padding: 2rem;
   border: ${colors.borderWidth} solid ${colors.border};
 `;
