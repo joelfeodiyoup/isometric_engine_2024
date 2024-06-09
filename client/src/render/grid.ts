@@ -120,10 +120,10 @@ export class Grid {
 
     // first go through each grid cell and just find the ones it could potentially be.
     const withinBoundingCell = this.gridCells.flat().filter(cell => {
-      const isWithinBoundingCorners = cell.topLeft.coords.x < x
-        && cell.bottomRight.coords.x > x
-        && cell.bottomLeft.coords.y > y
-        && cell.topRight.coords.y < y;
+      const isWithinBoundingCorners = cell.topLeft.coords.x <= x
+        && cell.bottomRight.coords.x >= x
+        && cell.bottomLeft.coords.y >= y
+        && cell.topRight.coords.y <= y;
       return isWithinBoundingCorners;
     });
 

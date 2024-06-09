@@ -1,3 +1,4 @@
+import { store } from "../state/app/store";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
 import { Coords } from "./isometric";
@@ -59,22 +60,67 @@ abstract class ClickAndDragHandler {
  */
 export class MoveScreenHandler extends ClickAndDragHandler {
   private originClickPosition = null as null | Coords;
+  public offset: {x: number, y: number} = {x: 0, y: 0};
+
+  /** if the midpoint of the screen is exactly in the middle of canvas, then this is 0.5, 0.5.
+   * or if the grid is off to the right of screen, then this would be something like -1, 0.5
+   * Keeping track of this allows zooming etc.
+   */
+  private midpointOnCanvas = {x: 0.5, y: 0.5};
   constructor(
     element: HTMLElement,
     private originElementPosition: {x: number, y: number} = {x: 0, y: 0},
-    private setPosition: ({x, y}: {x: number, y: number}) => void
+    private setPosition: ({x, y}: {x: number, y: number}) => void,
+    private canvasSize: {width: number, height: number},
+    private containerDimensions: {width: number, height: number},
   ) {
     super(element);
-    setPosition(originElementPosition);
+    this.updatePosition(originElementPosition);
   }
-  public setScreenPosition(position: {x: number, y: number}) {
-    this.setPosition(position);
+  public setScreenPosition(position?: {x: number, y: number}) {
+    this.updatePosition(position);
   }
+  private updatePosition(newPosition?: {x: number, y: number}) {
+    this.offset = newPosition ?? this.offset;
+    const scaledPosition = {x: this.offset.x, y: this.offset.y};
+    this.updateMidpointRatio();
+    this.setPosition(scaledPosition);
+  }
+
+  private updateMidpointRatio() {
+    this.midpointOnCanvas = {
+      x: ((this.containerDimensions.width / 2) - this.offset.x) / this.canvasSize.width,
+      y: ((this.containerDimensions.height / 2) - this.offset.y) / this.canvasSize.height,
+    };
+  }
+
+  /**
+   * On zoom, basically the left/top offset values need to be recalculated.
+   * This is essentially because now the canvases have a changed width/height dimension
+   * @param updatedCanvasDimensions 
+   */
+  onZoom(updatedCanvasDimensions: DOMRect) {
+    this.canvasSize = updatedCanvasDimensions;
+
+    /**
+     * For the offset, take the midpoint of the viewable screen (the container midpoint),
+     * then subtract the ratio of the canvas that should exist at this point.
+     */
+    const offset = {
+      x: (this.containerDimensions.width / 2) - this.midpointOnCanvas.x * this.canvasSize.width,
+      y: (this.containerDimensions.height / 2) - this.midpointOnCanvas.y * this.canvasSize.height,
+    };
+    this.updatePosition(offset);
+  }
+
+
   onStartClick(args: ClickHandlerArguments): void {
     if (args.clickType !== "right") {
       return;
     }
     this.originClickPosition = {x: args.screenX, y: args.screenY};
+    this.originElementPosition.x = this.offset.x;
+    this.originElementPosition.y = this.offset.y;
   }
   onEndClick(args: ClickHandlerArguments): void {
     if (args.clickType !== "right") {
@@ -83,14 +129,16 @@ export class MoveScreenHandler extends ClickAndDragHandler {
     const totalMoveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     this.originElementPosition.x = this.originElementPosition.x - totalMoveAmount.x;
     this.originElementPosition.y = this.originElementPosition.y - totalMoveAmount.y;
+
     this.originClickPosition = null;
-    this.setPosition(this.originElementPosition);
+    this.updatePosition(this.originElementPosition);
   }
+
   onMidClick(args: ClickHandlerArguments): void {
     if (!this.originClickPosition) { return; }
     const moveAmount = this.inProgressMoveAmount(args.screenX, args.screenY);
     const newPosition = {x: this.originElementPosition.x - moveAmount.x, y: this.originElementPosition.y - moveAmount.y};
-    this.setPosition(newPosition);
+    this.updatePosition(newPosition);
   }
 
   /**

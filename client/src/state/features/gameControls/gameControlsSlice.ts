@@ -19,18 +19,43 @@ interface GameControlState {
   value: {
     clickAction: ClickActionTypes;
     highlightType: HighlightTypes;
-    zoomLevel: number;
+    zoomLevel: {prev: number, curr: number};
     rotation: number;
   };
 }
+
+/**
+ * A simple class to abstract going forwards / backwards in zoom, blocking problems with out of bounds
+ */
+class ZoomIterator {
+  constructor(private array: number[], private index: number) {
+      if (index < 0 || index >= array.length) {
+          throw new Error ("index out of bounds");
+      }
+  }
+  get value() {
+      return this.array[this.index];
+  }
+  get next() {
+      this.index = Math.min(this.index + 1, this.array.length - 1);
+      return this.array[this.index];
+  }
+  get prev() {
+      this.index = Math.max(0, this.index - 1);
+      return this.array[this.index];
+  }
+}
+
+const iterator = new ZoomIterator([0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64], 6);
 const initialState: GameControlState = {
   value: {
     clickAction: "raise",
     highlightType: "corner",
-    zoomLevel: 4,
+    zoomLevel: {prev: iterator.value, curr: iterator.value},
     rotation: 0,
   },
 };
+
 
 export const clickActionSlice = createSlice({
   name: "clickAction",
@@ -50,10 +75,10 @@ export const clickActionSlice = createSlice({
       }
     },
     increaseZoom: (state) => {
-      state.value = { ...state.value, zoomLevel: state.value.zoomLevel + 1};
+      state.value = { ...state.value, zoomLevel: {prev: iterator.value, curr: iterator.next}};
     },
     decreaseZoom: (state) => {
-      state.value = { ...state.value, zoomLevel: Math.max(1, state.value.zoomLevel - 1 )};
+      state.value = { ...state.value, zoomLevel: {prev: iterator.value, curr: iterator.prev}};
     },
     rotate: (state, action: PayloadAction<{direction: "clockwise" | "counterclockwise"}>) => {
       state.value = {...state.value, rotation: (state.value.rotation + (action.payload.direction === "clockwise" ? -1 : 1) + 4) % 4}

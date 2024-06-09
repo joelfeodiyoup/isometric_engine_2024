@@ -5,6 +5,8 @@ type CanvasIds = "canvas-build" | "canvas-base" | "canvas-grid" | "canvas-hover"
  * This builds all the html needed for the render.
  * This includes things like canvas elements, containers for the canvas, etc
  * At times this needs to be recreated, e.g. for a new game, where old event listeners are removed, new ones created, etc.
+ * -> And, possibly, a better way would be to keep the elements and throw out the event listeners. I'm not sure. This at least makes the html more easily programmable, for adjustments,
+ * -> e.g. one future idea is to have a grid of canvas elements, to split the screen into parts, for performance reasons etc (canvas has a maximum area size)
  */
 export class BuildHtmlElement {
   public static getRenderElement(dimensions: {width: number, height: number}) {

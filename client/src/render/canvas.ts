@@ -108,15 +108,11 @@ export class Canvas {
   }
 
   drawImage(center: Coords, src: LoadedImage) {
-    const zoom = store.getState().gameControls.value.zoomLevel;
-    const multiplier = zoom / 4;
     // assets.load([`${tree_01}`]).then((img) => {
       // const img = assets.loadedAsset.images[tree_01];
       const img = src;
-      // const width = 70; // todo: this should be the cell width, probably
-      // const height = 100; // todo: this should be the actual image width, but scaled according to cell width, etc.
-      const width = img.width * multiplier; // todo: this should be the cell width, probably
-      const height = img.height * multiplier; // todo: this should be the actual image width, but scaled according to cell width, etc.
+      const width = img.width;
+      const height = img.height;
       
       // The actual bottom midpoint of the image will be somewhere slightly above the bottom of the image.
       // just due to how the tree (or whatever) would be drawn.

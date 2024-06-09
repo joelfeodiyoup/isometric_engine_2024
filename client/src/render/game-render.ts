@@ -53,12 +53,14 @@ export class GameRender {
   }
 
   private zoom() {
-    console.log('received zoom');
+    // scale the container to some percentage.
     const zoom = store.getState().gameControls.value.zoomLevel;
-    this.grid.isometric.setZoom(zoom);
-    this.setCanvasDimensions(this.grid.isometric.minDimensions());
-    this.centreScreen();
-    this.redraw();
+    this.container.style.transform = `scale(${zoom.curr})`;
+
+    // after the container has been scaled, send the new dimensions to the move screen handler,
+    // so that it can figure out the new left/top offsets to keep it in the same position.
+    const newCanvasDimensions = this.canvases.canvasBase.canvas.getBoundingClientRect();
+    this.moveScreenHandler.onZoom(newCanvasDimensions);
   }
 
   public reset(options: GameOptions) {
@@ -156,7 +158,12 @@ export class GameRender {
           this.container.style.left = `${x}px`;
           this.container.style.top = `${y}px`;
         }
-      }
+      },
+      {
+        width: this.canvases.canvasBase.canvas.clientWidth,
+        height: this.canvases.canvasBase.canvas.clientHeight
+      },
+      {width: this.canvasStage.clientWidth, height: this.canvasStage.clientHeight}
     );
 
     const elementForMouseHandler = this.canvases.canvasMouseHandler;
@@ -165,7 +172,9 @@ export class GameRender {
     });
     this.selectMultiplCellsHandler = new SelectMultipleCells(
       elementForMouseHandler.canvas,
-      (coords: Coords) => this.grid.closestCell(coords.x, coords.y),
+      (coords: Coords) => {
+        return this.grid.closestCell(coords.x, coords.y)
+      },
       (coords: Coords) => this.grid.closestPoint(coords.x, coords.y).point,
       (start: GridCell, end: GridCell, isIntermediate: boolean) => {
         const selectedCells = this.grid.rotateGrid(this.grid
@@ -251,9 +260,10 @@ export class GameRender {
   }
   
   private centreScreenToCell(row: number, col: number) {
+    const zoom = store.getState().gameControls.value.zoomLevel;
     const cell = this.grid.gridPoints[row][col];
-    const width = cell.coords.x;
-    const height = cell.coords.y;
+    const width = cell.coords.x * zoom.curr;
+    const height = cell.coords.y * zoom.curr;
     const centredOffsetLeft = (this.canvasStage.clientWidth / 2) - width;
     const centredOffsetTop = (this.canvasStage.clientHeight / 2) - height;
     this.moveScreenHandler.setScreenPosition({x: centredOffsetLeft, y: centredOffsetTop});

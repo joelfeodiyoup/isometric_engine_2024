@@ -75,10 +75,6 @@ export class Isometric {
     this.initialPosition = {x: (this.windowDimensions.x / 2) - currentElementPosition.x, y: (this.windowDimensions.y / 2) - currentElementPosition.y};
   }
 
-  setZoom(n: number) {
-    this.zoomMultiplier = n / 4;
-  }
-
   /**
    * return screen coordinates for any x/y grid pair
    * @param x

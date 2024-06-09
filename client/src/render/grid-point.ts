@@ -55,7 +55,7 @@ export class GridPoint implements Subject {
 
   public calculateSubTerrainPoint(): Coords {
     const subTerrainDepth = 70;
-    return {x: this.baseCoords.x * this.zoomMultiplier, y: (this.baseCoords.y + subTerrainDepth) * this.zoomMultiplier};
+    return {x: this.baseCoords.x, y: (this.baseCoords.y + subTerrainDepth)};
   }
 
   private get rotation() {
@@ -68,13 +68,13 @@ export class GridPoint implements Subject {
     // 'zoom' will act as the index, and then the value found there is the zoom multipler.
     // index '4' should keep the zoom just the same.
     const zoomMultiplierMapping = [0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64];
-    return zoomMultiplierMapping[zoom] ?? 1;
+    return zoomMultiplierMapping[zoom.curr] ?? 1;
   }
   private get dimensions() {
     return store.getState().gameState.value.dimensions;
   }
   public get coords(): Coords {
-    return {x: this.baseCoords.x * this.zoomMultiplier, y: (this.baseCoords.y - this.scaledHeight) * this.zoomMultiplier}
+    return {x: this.baseCoords.x, y: (this.baseCoords.y - this.scaledHeight)}
   }
 
   public height;
