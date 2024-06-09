@@ -146,7 +146,7 @@ export class Canvas {
     const ctx = this.canvas.getContext('2d')!;
     const imageData = ctx.createImageData(this.canvas.width, this.canvas.height);
     const data = imageData.data;
-    for(let i = 0; i < (this.canvas.width * this.canvas.height * 4); i+=4) {
+    for(let i = 0; i < (this.canvas.width * (this.canvas.height - 1) * 4); i+=4) {
       const c = color(cells[i / 4]);
       data[i + 0 ] = c.red;
       data[i + 1 ] = c.green;

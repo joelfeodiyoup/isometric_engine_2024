@@ -72,9 +72,6 @@ export class Grid {
       });
     });
 
-    const centrePoint = this.gridPoints[Math.floor(this.gridPoints.length / 2)][Math.floor(this.gridPoints[0].length / 2)];
-    // this.isometric.setPosition(centrePoint.coords);
-
     this.gridCells = this.gridPoints.map(row => {
       return row.reduce((gridCells, gridPoint) => {
         const topLeft = gridPoint;
@@ -96,7 +93,7 @@ export class Grid {
         ));
         return gridCells;
       }, [] as GridCell[])
-    })
+    }).slice(0, -1)
   }
 
   public subArray<T extends Coords>(start: T, end: T, array: T[][]): T[][] {
@@ -111,13 +108,38 @@ export class Grid {
     const bottomRight = {x: Math.max(start.x, end.x), y: Math.max(start.y, end.y)};
     return {y1: topLeft.y, y2: bottomRight.y + 1, x1: topLeft.x, x2: bottomRight.x + 1};
   }
+
+  /**
+   * to search the grid for cells matching a screen point, instead of iterating through the entire grid,
+   * we could instead narrow it down to a search area. This returns the grid x/y min max range to do this.
+   * @param x 
+   * @param y 
+   */
+  private minMaxSearchArea(screenX: number, screenY: number, nRows: number, nCols: number) {
+    const xMin = this.isometric.inverse(screenX, screenY);
+    const minX = Math.max(0, Math.min(xMin.x - 2, nRows - 1));
+    const minY = Math.max(0, Math.min(xMin.y - 2, nCols - 1));
+    const maxX = Math.max(0, Math.min(xMin.x + 2, nRows - 1));
+    const maxY = Math.max(0, Math.min(xMin.y + 2, nCols - 1));
+    return {min: {row: minX, col: minY}, max: {row: maxX, col: maxY}};
+  }
   
   closestCell(x: number, y: number) {
+    const area = this.minMaxSearchArea(x, y, this.gridCells.length, this.gridCells[0].length);
+    const subGrid = this.subArray(
+      this.gridCells
+        [area.min.row]
+        [area.min.col],
+      this.gridCells
+        [area.max.row]
+        [area.max.col],
+      this.gridCells
+    )
     // the tricky thing in finding the closest point is that the edges of the cell
     // can be weird shapes due to the heigh differences at the edges
 
     // first go through each grid cell and just find the ones it could potentially be.
-    const withinBoundingCell = this.gridCells.flat().filter(cell => {
+    const withinBoundingCell = subGrid.flat().filter(cell => {
       const isWithinBoundingCorners = cell.topLeft.coords.x <= x
         && cell.bottomRight.coords.x >= x
         && cell.bottomLeft.coords.y >= y
@@ -133,7 +155,17 @@ export class Grid {
   }
 
   closestPoint(x: number, y: number) {
-    return this.gridPoints.flat().reduce((closest, point) => {
+    const area = this.minMaxSearchArea(x, y, this.gridPoints.length, this.gridPoints[0].length);
+    const subGrid = this.subArray(
+      this.gridPoints
+        [area.min.row]
+        [area.min.col],
+      this.gridPoints
+        [area.max.row]
+        [area.max.col],
+      this.gridPoints);
+    
+    return subGrid.flat().reduce((closest, point) => {
       const distance = point.distanceToPoint({x, y});
       if (distance < closest.distance) {
         closest = {point, distance};
