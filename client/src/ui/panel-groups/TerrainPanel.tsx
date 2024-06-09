@@ -10,15 +10,15 @@ export const TerrainPanel = () => {
   const dispatch = useAppDispatch();
   const buttons: SidePanelSectionButtonAction[] = [
     {label: "raise", action: () => {
-      dispatch(setClickAction("raise"));
+      dispatch(setClickAction({type: "raise", value: "tree"}));
       dispatch(setGridHighlightType("corner"));
     }},
     {label: "lower", action: () => {
-      dispatch(setClickAction("lower"));
+      dispatch(setClickAction({type: "lower", value: "tree"}));
       dispatch(setGridHighlightType("corner"));
     }},
     {label: "build", action: () => {
-      dispatch(setClickAction("build"));
+      dispatch(setClickAction({type: "build", value: "tree"}));
       dispatch(setGridHighlightType("cell"));
     }},
   ]

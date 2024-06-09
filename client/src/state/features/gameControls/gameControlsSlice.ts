@@ -6,6 +6,7 @@ import { RootState } from "../../app/store";
  * For example, it could be modifying terrain, or building something (a building/road/etc)
  */
 export type ClickActionTypes = "raise" | "lower" | "build" | "debug";
+export type ClickActionValue = "tree" | "road";
 /**
  * when highlight an area of the grid, we could be trying to highlight the entire cell, or just a corner (or, later, an edge)
  * These different types could have different actions.
@@ -17,7 +18,7 @@ export type ClickActionTypes = "raise" | "lower" | "build" | "debug";
 type HighlightTypes = "cell" | "corner";
 interface GameControlState {
   value: {
-    clickAction: ClickActionTypes;
+    clickAction: {type: ClickActionTypes, value: ClickActionValue};
     highlightType: HighlightTypes;
     zoomLevel: {prev: number, curr: number};
     rotation: number;
@@ -49,7 +50,7 @@ class ZoomIterator {
 const iterator = new ZoomIterator([0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64], 6);
 const initialState: GameControlState = {
   value: {
-    clickAction: "raise",
+    clickAction: {type: "raise", value: "road"},
     highlightType: "corner",
     zoomLevel: {prev: iterator.value, curr: iterator.value},
     rotation: 0,
@@ -61,7 +62,7 @@ export const clickActionSlice = createSlice({
   name: "clickAction",
   initialState,
   reducers: {
-    setClickAction: (state, action: PayloadAction<ClickActionTypes>) => {
+    setClickAction: (state, action: PayloadAction<{type: ClickActionTypes, value: "tree"}>) => {
       state.value = { ...state.value, clickAction: action.payload };
     },
     setGridHighlightType: (state, action: PayloadAction<HighlightTypes>) => {

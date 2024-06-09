@@ -21,7 +21,6 @@ export class Isometric {
     return this._yStep * this.zoomMultiplier;
   };
 
-  private initialPosition: {x: number, y: number};
   private get c1() {
     /** how far to translate everything horizontally.
      * This is important to make sure that everything fits inside the containing element
@@ -57,9 +56,8 @@ export class Isometric {
 
   // constructor(private xStep = 14,
   //   private yStep = 10) {}
-  constructor(xStep = Math.sqrt(3) * 10, yStep = 10 * 2, private gridSize = {rows: 500, cols: 500}, private windowDimensions: {x: number, y: number}) {
-    this.setScale(xStep, yStep);
-    this.initialPosition = {x: 0, y: 0};
+  constructor(xStep = 10, yStep = 10, private gridSize = {rows: 500, cols: 500}) {
+    this.setScale(Math.sqrt(3) * xStep, 2 * yStep);
   }
 
   private setScale(xStep: number, yStep: number) {
@@ -67,13 +65,13 @@ export class Isometric {
     this._yStep = yStep;
   }
 
-  /**
-   * set the camera position so that it's centred on a specified cell.
-   * @param currentElementPosition - the current screen position of an element.
-   */
-  public setPosition(currentElementPosition: {x: number, y: number}) {
-    this.initialPosition = {x: (this.windowDimensions.x / 2) - currentElementPosition.x, y: (this.windowDimensions.y / 2) - currentElementPosition.y};
-  }
+  // /**
+  //  * set the camera position so that it's centred on a specified cell.
+  //  * @param currentElementPosition - the current screen position of an element.
+  //  */
+  // public setPosition(currentElementPosition: {x: number, y: number}) {
+  //   this.initialPosition = {x: (this.windowDimensions.x / 2) - currentElementPosition.x, y: (this.windowDimensions.y / 2) - currentElementPosition.y};
+  // }
 
   /**
    * return screen coordinates for any x/y grid pair

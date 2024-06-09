@@ -1,12 +1,11 @@
 import { Colors, Draw } from "./draw";
-import { Coords } from "./isometric";
+import { Coords, Isometric } from "./isometric";
 
 import road from "./../images/road.png";
 import tree_01 from "./../images/trees/tree_01.png";
 import tree_02 from "./../images/trees/tree_02.png";
 import tree_03 from "./../images/trees/tree_03.png";
 import tree_04 from "./../images/trees/tree_04.png";
-import { store } from "../state/app/store";
 
 export type ImageSource = {path: string, width: number, height: number};
 export type LoadedImage = {
@@ -21,6 +20,7 @@ export class Canvas {
   
   constructor(
     canvas: HTMLCanvasElement,
+    private isometric: Isometric
   ) {
     // This is a bit of a timing issue that'll arrive sometime.
     // When this class gets initialised, I load the assets to begin with.
@@ -41,10 +41,10 @@ export class Canvas {
 
   private initAssetsLoad() {
     assets.load([
-      {path: tree_01, width: 70, height: 100},
-      {path: tree_02, width: 90, height: 140},
-      {path: tree_03, width: 90, height: 140},
-      {path: tree_04, width: 90, height: 140},
+      {path: tree_01, width: 622, height: 1103},
+      {path: tree_02, width: 2172, height: 4337},
+      {path: tree_03, width: 2172, height: 4337},
+      {path: tree_04, width: 2172, height: 4337},
     ]);
   }
 
@@ -108,11 +108,9 @@ export class Canvas {
   }
 
   drawImage(center: Coords, src: LoadedImage) {
-    // assets.load([`${tree_01}`]).then((img) => {
-      // const img = assets.loadedAsset.images[tree_01];
       const img = src;
-      const width = img.width;
-      const height = img.height;
+      const width = this.isometric.xStep * 4;
+      const height = this.isometric.yStep * 3 * (img.height / img.width);
       
       // The actual bottom midpoint of the image will be somewhere slightly above the bottom of the image.
       // just due to how the tree (or whatever) would be drawn.
@@ -122,7 +120,16 @@ export class Canvas {
 
       // canvas takes the top left coordinate to draw from.
       // So the height of the image needs to be subtracted from the y coordinate to find this y point.
+
+      this.ctx.save();
+      // this.ctx.translate(center.x, center.y);
+      // this.ctx.rotate(45);
+      // this.ctx.translate(-center.x,-center.y);
+      
+      
       this.ctx.drawImage(img.element!, center.x - (width / 2), center.y - height + offsetOfImageAboveCenter, width, height);
+      // this.ctx.drawImage(img.element!, center.x - (width / 2), center.y - height + offsetOfImageAboveCenter, width, height);
+      this.ctx.restore();
     // })
   }
 
@@ -187,16 +194,16 @@ const assets = {
     })
   },
   loadImage(source: ImageSource, loadHandler: (image: HTMLImageElement) => void) {
-    // if (!this.loadedAsset.images[source]) { 
       let image = new Image();
-      image.addEventListener("load", () => loadHandler(image), false);
-      // image.addEventListener("load", loadHandler(image), false);
+      image.addEventListener("load", () => {
+        loadHandler(image);
+      }, false);
+      image.src = source.path;
       this.loadedAsset.images[source.path] = {
         element: image,
         width: source.width,
         height: source.height,
       };
-      image.src = source.path;
     // } else {
     //   loadHandler();
     // }

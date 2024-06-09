@@ -75,7 +75,7 @@ export class GameRender {
    * (this might not be necessary, ultimately. But it does it currently)
    * Event listeners can also be added to those specific elements
    */
-  private setupElements() {
+  private setupElements(isometric: Isometric) {
     const dimensions = store.getState().gameState.value.dimensions;
     const elements = BuildHtmlElement.getRenderElement(dimensions);
 
@@ -102,11 +102,11 @@ export class GameRender {
 
     this.canvases = {
       ...Object.entries(elements.canvases).reduce((obj, [key, val]) => {
-        obj[key as keyof typeof elements.canvases] = new Canvas(val);
+        obj[key as keyof typeof elements.canvases] = new Canvas(val, isometric);
         return obj;
       }, {} as Record<keyof typeof elements.canvases, Canvas>),
-      debug: new Canvas(elements.debugCanvas),
-      minimap: new Canvas(this.minimapElement),
+      debug: new Canvas(elements.debugCanvas, isometric),
+      minimap: new Canvas(this.minimapElement, isometric),
     }
 
     this.canvases.minimap.setListeners({
@@ -131,15 +131,19 @@ export class GameRender {
    * @param options 
    */
   private initialise(options: GameOptions) {
-    this.setupElements();
-
+    const isometric = new Isometric(2,2, {
+      rows: options.dimensions.width,
+      cols: options.dimensions.height
+    });
+    this.setupElements(isometric);
     this.grid = new Grid(
       // width and height are actually the number of points.
       // So I'll just add one, so that it'll be the number of cells.
       options.dimensions.width + 1,
       options.dimensions.height + 1,
-      {x: this.canvasStage.clientWidth, y: this.canvasStage.clientHeight}
+      isometric
     );
+
     const canvasDimensions = this.grid.isometric.minDimensions();
 
     this.setCanvasDimensions(canvasDimensions);
@@ -184,7 +188,7 @@ export class GameRender {
         // I need to figure out what should be done, when clicking the cell. E.g. build something, debug something, remove something, ... something else?
         // This might want to be abstracted. Firstly, let's see how it looks, non-abstracted...
         const actionType = store.getState().gameControls.value.clickAction;
-        switch (actionType) {
+        switch (actionType.type) {
           case "debug":
             // A bit crude. But sometimes you just want to quickly click a cell and see what it contains.
             console.log(selectedCells);
@@ -225,7 +229,7 @@ export class GameRender {
 
         // figure out which action to do for this point that was clicked
         const actionType = store.getState().gameControls.value.clickAction;
-        switch (actionType) {
+        switch (actionType.type) {
           case "debug":
             console.log(points);
             return;
@@ -294,7 +298,7 @@ export class GameRender {
   private handlePointClicked(points: GridPoint[], firstCellHeight: number) {
     const actionType = store.getState().gameControls.value.clickAction;
 
-    switch (actionType) {
+    switch (actionType.type) {
       case "raise":
       case "lower":
         // if the user selects a lot of points, make all of those points the same height as the first on.
@@ -302,9 +306,9 @@ export class GameRender {
         if (makeAllSameHeight) {
           const height = firstCellHeight ?? 0;
           points.forEach((point) => point.setHeight(height));
-        } else if (actionType === "raise" || actionType === "lower") {
+        } else if (actionType.type === "raise" || actionType.type === "lower") {
           // we're adjusting just one point, so just adjust it.
-          points[0]?.adjustHeight(actionType);
+          points[0]?.adjustHeight(actionType.type);
         }
         this.redraw();
         return;
