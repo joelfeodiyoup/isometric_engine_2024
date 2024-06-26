@@ -6,12 +6,14 @@ import tree_01 from "./../images/trees/tree_01.png";
 import tree_02 from "./../images/trees/tree_02.png";
 import tree_03 from "./../images/trees/tree_03.png";
 import tree_04 from "./../images/trees/tree_04.png";
+import house_01 from "./../images/houses/house_01.png";
 
-export type ImageSource = {path: string, width: number, height: number};
+export type ImageSource = {path: string, width: number, height: number, top?: number};
 export type LoadedImage = {
   element: HTMLImageElement,
   width: number,
   height: number,
+  top: number
 }
 export class Canvas {
   protected ctx: CanvasRenderingContext2D;
@@ -41,10 +43,12 @@ export class Canvas {
 
   private initAssetsLoad() {
     assets.load([
-      {path: tree_01, width: 622, height: 1103},
-      {path: tree_02, width: 2172, height: 4337},
-      {path: tree_03, width: 2172, height: 4337},
-      {path: tree_04, width: 2172, height: 4337},
+      // {path: tree_01, width: 622, height: 1103},
+      // {path: tree_02, width: 2172, height: 4337},
+      // {path: tree_03, width: 2172, height: 4337},
+      // {path: tree_04, width: 2172, height: 4337},
+      // {path: house_01, width: 657, height: 675, top: 180},
+      {path: house_01, width: 657, height: 675, top: 1500},
     ]);
   }
 
@@ -94,7 +98,7 @@ export class Canvas {
 
   drawPoint(point: Coords) {
     this.ctx.beginPath();
-    const radius = 5;
+    const radius = this.isometric.xStep * 0.4;
     this.ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
     this.ctx.strokeStyle = "white";
     this.ctx.stroke();
@@ -116,7 +120,9 @@ export class Canvas {
       // just due to how the tree (or whatever) would be drawn.
       // I should ideally record this in some meta file for each image.
       // I'll work on that...
-      const offsetOfImageAboveCenter = 7;
+      const offsetOfImageAboveCenter = src.top / src.width * 10;
+      // console.log(`offset: ${offsetOfImageAboveCenter}`);
+
 
       // canvas takes the top left coordinate to draw from.
       // So the height of the image needs to be subtracted from the y coordinate to find this y point.
@@ -146,7 +152,7 @@ export class Canvas {
     const ctx = this.canvas.getContext('2d')!;
     const imageData = ctx.createImageData(this.canvas.width, this.canvas.height);
     const data = imageData.data;
-    for(let i = 0; i < (this.canvas.width * (this.canvas.height - 1) * 4); i+=4) {
+    for(let i = 0; i < (this.canvas.width * (this.canvas.height) * 4); i+=4) {
       const c = color(cells[i / 4]);
       data[i + 0 ] = c.red;
       data[i + 1 ] = c.green;
@@ -203,6 +209,7 @@ const assets = {
         element: image,
         width: source.width,
         height: source.height,
+        top: source.top ?? 0
       };
     // } else {
     //   loadHandler();

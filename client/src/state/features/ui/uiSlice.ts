@@ -25,7 +25,6 @@ export const uiSlice = createSlice({
       state.value = {...state.value, isModalOpen: true};
     },
     closeModal: (state, action: PayloadAction<ModalKeys>) => {
-      // state.value = {...state.value, isModalOpen: false};
       state.value = {...state.value, modal: state.value.modal.filter(x => x !== action.payload)};
     },
     closeAllModals: (state) => {

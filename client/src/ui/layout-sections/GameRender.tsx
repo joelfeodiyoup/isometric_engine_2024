@@ -8,15 +8,23 @@ import { useEffect } from "react";
 import { GameRender } from "../../render/game-render";
 import { Container } from "../layout-utilities/Container";
 import { useSelector } from "react-redux";
-import { selectGameDimensions } from "../../state/features/gameState/gameStateSlice";
+import {
+  selectGameDimensions,
+  selectGameState,
+} from "../../state/features/gameState/gameStateSlice";
 import { store } from "../../state/app/store";
 import { selectZoom } from "../../state/features/gameControls/gameControlsSlice";
+import { getHeightMap } from "../../render/heightmap";
 
-// the order of this logic is a little bit off.
-const gameRender = new GameRender({ dimensions: store.getState().gameState.value.dimensions });
-const canvasStage = gameRender.element();
+const dimensions = store.getState().gameState.value.dimensions;
+// getHeightMap(dimensions.width, dimensions.height).then((h) => {
+  // the order of this logic is a little bit off.
+  const gameRender = new GameRender(store.getState().gameState.value);
+  const canvasStage = gameRender.element();
+// });
 export const GameRenderComponent = () => {
-  const dimensions = useSelector(selectGameDimensions);
+  // const gameState = useSelector(selectGameState);
+  const gameState = useSelector(selectGameState);
   const zoom = useSelector(selectZoom);
   // const zoom = 2;
   useEffect(() => {
@@ -24,9 +32,9 @@ export const GameRenderComponent = () => {
     // through having that thing subscribe to the state?
     // or... rather than having a useEffect trigger this,
     // I think the state change should have some side-effect that calls the class to reset
-    gameRender.reset({dimensions});
-  }, [dimensions]);
-  return <Container style={{ height: "100%" }} child={canvasStage}></Container>
+    gameRender.reset(gameState);
+  }, [gameState]);
+  return <Container style={{ height: "100%" }} child={canvasStage}></Container>;
 };
 
 const minimapElement = gameRender.minimap();
@@ -34,8 +42,11 @@ const minimapElement = gameRender.minimap();
 export const MinimmapRenderComponent = () => {
   const rotation = store.getState().gameControls.value.rotation;
   const dimensions = useSelector(selectGameDimensions);
-  useEffect(() => {
-    
-  }, [dimensions]);
-  return <Container className={`map-container rotation-${rotation}`} child={minimapElement}></Container>
-}
+  useEffect(() => {}, [dimensions]);
+  return (
+    <Container
+      className={`map-container rotation-${rotation}`}
+      child={minimapElement}
+    ></Container>
+  );
+};

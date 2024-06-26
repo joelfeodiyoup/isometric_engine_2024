@@ -34,6 +34,10 @@ export class GridCell implements Observer {
   public hasImage: boolean = false;
   public imageSource = Canvas.randomTree;
 
+  public get isAboveGround() {
+    return this.topLeft.height > 0 && this.topRight.height > 0 && this.bottomRight.height > 0 && this.bottomLeft.height > 0;
+  }
+
   public setImage(src: LoadedImage) {
     this.imageSource = src;
   }

@@ -34,23 +34,30 @@ export class Isometric {
     // return {a: 2 * this.xStep, b: 2 * this.xStep, c: this.initialPosition.x};
   }
   private get c2() {
+    // I'm doing weird stuff rendering an ocean. Everything needs to be pushed odwn a bit more.
+    const tempHeightOffset = 200;
     /** How much to offset vertically, so that everything is drawn inside the containing element
      * 
      * This basically needs to be half the height, because it's calculated for the "top left" element, whcih is the one at the left (...)
     */
     const verticalOffset = 
       Math.ceil(this.gridSize.rows / 2) * (this.yStep * 2)
-      + (this.yStep * 4);
+      + (this.yStep * 4) + tempHeightOffset;
     return {a: -1 * this.yStep, b: this.yStep, c: verticalOffset};
   }
 
   public minDimensions() {
     const len = Math.max(this.gridSize.cols, this.gridSize.rows);
     const width = this.xStep * len * 4;
+    // const width = this.xStep * this.gridSize.cols * 4;
     // The height also needs a bit extra for the underground rendered terrain.
     // ... just estimate this for now...
     const underGroundRenderedTerrainHeight = this.yStep * 15;
-    const height = this.yStep * 2 * len + underGroundRenderedTerrainHeight;
+
+    // I'm doing some weird stuff with rendering an ocean.
+    const tempHeightModifier = 20;
+    const height = this.yStep * 2 * len + underGroundRenderedTerrainHeight * tempHeightModifier;
+    // const height = this.yStep * 2 * this.gridSize.rows + underGroundRenderedTerrainHeight;
     return {width, height};
   }
 

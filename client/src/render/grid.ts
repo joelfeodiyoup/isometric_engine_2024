@@ -1,6 +1,7 @@
 import { store } from "../state/app/store";
 import { GridCell } from "./grid-cell";
 import { GridPoint } from "./grid-point";
+import { getHeightMap } from "./heightmap";
 import { Coords, Isometric } from "./isometric";
 import { generateGrid } from "./utils/perlin-noise";
 
@@ -47,14 +48,23 @@ export class Grid {
   public get gridCellDrawOrder(): GridCell[] {
     return this.gridRotated.flat();
   }
+
   constructor(
     width: number, height: number,
-    public isometric: Isometric
+    public isometric: Isometric,
   ) {
 
     // this gets returned as a one dimensional array, of length width * height
     // i.e. it's a flattened 2 dimensional array.
-    const grid = generateGrid(width, height);
+    // const oldgrid = generateGrid(width, height);
+    // console.log(oldgrid);
+
+    const perlinMap = generateGrid(width, height);
+    // const realMap = getHeightMap(width, height).flat();
+    const grid = perlinMap;
+    const min = grid.reduce((min, curr) => min = Math.min(curr, min), Number.MAX_VALUE);
+    console.log(min);
+    // console.log(grid);
 
     this.gridPoints = Array.from(Array(height), (_, row) => {
       return Array.from(Array(width), (_, col) => {
@@ -64,8 +74,11 @@ export class Grid {
         // height is between 0 and 1. So scale it a bit
         const height = grid[heightGridIndex];
         const scaledHeight = height * 7;
-        this.heightStats.max = Math.max(this.heightStats.max, scaledHeight);
-        this.heightStats.min = Math.min(this.heightStats.min, scaledHeight);
+        if (height >= 0) {
+
+          this.heightStats.max = Math.max(this.heightStats.max, scaledHeight);
+          this.heightStats.min = Math.min(this.heightStats.min, scaledHeight);
+        }
 
         const cell = new GridPoint(col, row, this.isometric, scaledHeight);
         return cell;
@@ -122,6 +135,10 @@ export class Grid {
     const maxX = Math.max(0, Math.min(xMin.x + 2, nRows - 1));
     const maxY = Math.max(0, Math.min(xMin.y + 2, nCols - 1));
     return {min: {row: minX, col: minY}, max: {row: maxX, col: maxY}};
+  }
+
+  private convertToRotatedGridRowCol(x: number, y: number) {
+
   }
   
   closestCell(x: number, y: number) {

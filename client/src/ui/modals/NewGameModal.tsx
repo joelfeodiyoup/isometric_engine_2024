@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { selectGameDimensions, setGameDimensions } from "../../state/features/gameState/gameStateSlice"
+import { selectGameDimensions, selectGameState, setGameDimensions, setGameState } from "../../state/features/gameState/gameStateSlice"
 import { ModalInstance } from "../layout-utilities/Modal"
 import { useState } from "react"
 import { StyledForm, StyledFormInput, StyledFormLabel, StyledFormRow } from "../elements/Form"
@@ -8,12 +8,13 @@ import { resetGameControls } from "../../state/features/gameControls/gameControl
 
 export const NewGameModal = () => {
   const dispatch = useDispatch();
-  const [dimensions, setDimensions] = useState(useSelector(selectGameDimensions));
+  const gameState = useSelector(selectGameState);
+  const [tempGameState, setTempGameState] = useState(gameState);
   return <ModalInstance heading="new game" actions={[
     {label: "new game", onClick: () => {
-      dispatch(setGameDimensions(dimensions));
+      dispatch(setGameState(tempGameState));
       dispatch(resetGameControls());
-      dispatch(closeModal());
+      dispatch(closeModal("newGame"));
     }}
   ]}>
     <StyledForm>
@@ -23,8 +24,14 @@ export const NewGameModal = () => {
         </StyledFormLabel>
         <StyledFormInput
           id="width"
-          value={dimensions.width}
-          onChange={event => setDimensions({...dimensions, width: Number(event.target.value)})}
+          value={tempGameState.dimensions.width}
+          onChange={event => setTempGameState({
+            ...tempGameState,
+            dimensions: {
+              ...tempGameState.dimensions,
+              width: Number(event.target.value)
+            }
+          })}
         />
       </StyledFormRow>
       <StyledFormRow>
@@ -33,8 +40,38 @@ export const NewGameModal = () => {
         </StyledFormLabel>
         <StyledFormInput
           id="height"
-          value={dimensions.height}
-          onChange={event => setDimensions({...dimensions, height: Number(event.target.value)})}
+          value={tempGameState.dimensions.height}
+          onChange={event => setTempGameState({
+            ...tempGameState,
+            dimensions: {
+              ...tempGameState.dimensions,
+              height: Number(event.target.value)
+            }
+          })}
+        />
+      </StyledFormRow>
+      <StyledFormRow>
+        <StyledFormLabel htmlFor="isometricX">
+          x-width:
+        </StyledFormLabel>
+        <StyledFormInput
+          id="isometricX"
+          value={tempGameState.isometric.xStep}
+          onChange={event => setTempGameState({
+            ...tempGameState,
+            isometric: {...tempGameState.isometric, xStep: Number(event.target.value)}})}
+        />
+      </StyledFormRow>
+      <StyledFormRow>
+        <StyledFormLabel htmlFor="isometricY">
+          y-width:
+        </StyledFormLabel>
+        <StyledFormInput
+          id="isometricY"
+          value={tempGameState.isometric.yStep}
+          onChange={event => setTempGameState({
+            ...tempGameState,
+            isometric: {...tempGameState.isometric, yStep: Number(event.target.value)}})}
         />
       </StyledFormRow>
     </StyledForm>

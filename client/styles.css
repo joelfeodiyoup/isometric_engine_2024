@@ -39,12 +39,17 @@ p {
 #canvas-container {
   /* transition: left 1s, top 1s; */
   transform-origin: 0 0;
+  image-rendering: pixelated;
 }
 
 #canvas-stage canvas {
   position: absolute;
   overflow: visible;
   cursor: pointer;
+}
+
+#canvas-ocean {
+  opacity: 0.5;
 }
 
 .map-container {

@@ -8,6 +8,9 @@ import { Coords } from "../isometric";
 import { RenderedGrid } from "./rendered-grid";
 
 export class RenderGridCanvas extends RenderedGrid {
+  drawPoints(points: GridPoint[]): void {
+    throw new Error("Method not implemented.");
+  }
   drawCells(cells: GridCell[]): void {
     throw new Error("Method not implemented.");
   }
@@ -80,6 +83,14 @@ export class RenderGridCanvas extends RenderedGrid {
         const endPiece = underneath(points[points.length - 1]);
         return [startPiece, ...points.map(p => p.coords), endPiece];
       }
+      const waterEdgeSet= (points: GridPoint[]) => {
+        return [points[0].baseCoords, underneath(points[0]), underneath(points[points.length - 1]), points[points.length - 1].baseCoords];
+      }
+
+      const oceanSideColor = "rgba(4,105,200,0.5)"
+      const oceanSideColorDarker = "rgba(0,44,126,0.5)"
+      this.canvas.drawFilledPolygon(waterEdgeSet(edges[0]), oceanSideColor);
+      this.canvas.drawFilledPolygon(waterEdgeSet(edges[1]), oceanSideColorDarker);
 
       this.canvas.drawFilledPolygon(terrainSet(edges[0]), "tan");
       this.canvas.drawFilledPolygon(terrainSet(edges[1]), "peru");

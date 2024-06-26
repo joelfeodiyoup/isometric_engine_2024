@@ -7,11 +7,11 @@ export const DebugPanel = () => {
   const dispatch = useAppDispatch();
   const buttons: SidePanelSectionButtonAction[] = [
     {label: "point", action: () => {
-      dispatch(setClickAction("debug"));
+      dispatch(setClickAction({type: "debug", value: "tree"}));
       dispatch(setGridHighlightType("corner"));
     }},
     {label: "cell", action: () => {
-      dispatch(setClickAction("debug"));
+      dispatch(setClickAction({type: "debug", value: "tree"}));
       dispatch(setGridHighlightType("cell"));
     }},
   ];

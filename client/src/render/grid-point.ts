@@ -54,8 +54,9 @@ export class GridPoint implements Subject {
   }
 
   public calculateSubTerrainPoint(): Coords {
-    const subTerrainDepth = this.isometric.yStep * 5;
-    return {x: this.baseCoords.x, y: (this.baseCoords.y + subTerrainDepth)};
+    // const subTerrainDepth = this.isometric.yStep * 15;
+    const subTerrainDepth = this.isometric.yStep * 1;
+    return {x: this.baseCoords.x, y: (this.baseCoords.y + subTerrainDepth * 4)};
   }
 
   private get rotation() {

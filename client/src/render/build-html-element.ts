@@ -15,6 +15,7 @@ export class BuildHtmlElement {
       canvasContainer: BuildHtmlElement.canvasContainer(),
       canvases: {
         canvasBase: BuildHtmlElement.canvasElement("canvas-base"),
+        canvasOcean: BuildHtmlElement.canvasElement("canvas-ocean"),
         canvasGrid: BuildHtmlElement.canvasElement("canvas-grid"),
         canvasBuild: BuildHtmlElement.canvasElement("canvas-build"),
         canvasBuildTemp: BuildHtmlElement.canvasElement("canvas-build-temp"),
